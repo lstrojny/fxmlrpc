@@ -8,6 +8,13 @@ use DateTimeZone;
 
 class XMLReaderParser implements ParserInterface
 {
+    public function __construct()
+    {
+        if (!extension_loaded('xmlreader')) {
+            throw new RuntimeException('PHP extension ext/xmlreader missing');
+        }
+    }
+
     public function parse($xmlString)
     {
         libxml_use_internal_errors(true);

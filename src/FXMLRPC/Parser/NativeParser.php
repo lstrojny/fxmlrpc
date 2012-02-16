@@ -4,9 +4,17 @@ namespace FXMLRPC\Parser;
 use DateTime;
 use DateTimeZone;
 use stdClass;
+use RuntimeException;
 
 class NativeParser implements ParserInterface
 {
+    public function __construct()
+    {
+        if (!extension_loaded('xmlrpc')) {
+            throw new RuntimeException('PHP extension ext/xmlrpc missing');
+        }
+    }
+
     public function parse($xmlString)
     {
         $result = xmlrpc_decode($xmlString, 'UTF-8');
