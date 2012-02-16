@@ -18,7 +18,6 @@ class Parser
         $reader->setParserProperty(XMLReader::LOADDTD, false);
 
 
-
         $aggregates = array();
         $ignoreWhitespace = true;
         $depth = 0;
@@ -173,21 +172,26 @@ class Parser
                     break;
 
                 case XMLReader::TEXT:
-                    $value = $reader->value;
                     switch ($type) {
                         case 'int':
                         case 'i4':
-                            $value = (int) $value;
+                            $value = (int) $reader->value;
                             break;
+
                         case 'boolean':
-                            $value = $value === '1';
+                            $value = $reader->value === '1';
                             break;
+
                         case 'double':
-                            $value = (double) $value;
+                            $value = (double) $reader->value;
                             break;
+
                         case 'dateTime.iso8601':
-                            $value = DateTime::createFromFormat('Ymd\TH:i:s', $value, new DateTimeZone('UTC'));
+                            $value = DateTime::createFromFormat('Ymd\TH:i:s', $reader->value, new DateTimeZone('UTC'));
                             break;
+
+                        default:
+                            $value = $reader->value;
                     }
                     $aggregates[$depth + 1] = $value;
                     $expected = array($type);
