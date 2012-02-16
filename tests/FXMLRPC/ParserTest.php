@@ -1,25 +1,52 @@
 <?php
 namespace FXMLRPC;
 
+use DateTime;
+use DateTimeZone;
+
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
-    public function __construct()
+    public function setUp()
     {
         $this->parser = new Parser();
     }
 
-    public function testParsingSimpleMethodResponse()
+    public static function provideSimpleTypes()
     {
-        $string = '<?xml version="1.0"?>
-            <methodResponse>
-              <params>
-                <param>
-                  <value><string>Ümlaut String</string></value>
-                </param>
-              </params>
-            </methodResponse>';
+        return array(
+            array('Value', 'string', 'Value'),
+            array(12, 'i4', '12'),
+            array(12, 'int', '12'),
+            array(false, 'boolean', '0'),
+            array(true, 'boolean', '1'),
+            array(1.2, 'double', '1.2'),
+            array(
+                DateTime::createFromFormat('Y-m-d H:i:s', '1998-07-17 14:08:55', new DateTimeZone('UTC')),
+                'dateTime.iso8601',
+                '19980717T14:08:55'
+            ),
+        );
+    }
 
-        $this->assertSame(array('Ümlaut String'), $this->parser->parse($string));
+    /**
+     * @dataProvider provideSimpleTypes
+     */
+    public function testParsingSimpleTypes($expectedValue, $serializedType, $serializedValue)
+    {
+        $xml = sprintf(
+            '<?xml version="1.0"?>
+                <methodResponse>
+                <params>
+                    <param>
+                    <value><%1$s>%2$s</%1$s></value>
+                    </param>
+                </params>
+                </methodResponse>',
+            $serializedType,
+            $serializedValue
+        );
+
+        $this->assertEquals(array($expectedValue), $this->parser->parse($xml));
     }
 
     public function testParsingMultiMethodResponse()

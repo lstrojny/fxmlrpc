@@ -3,6 +3,8 @@ namespace FXMLRPC;
 
 use XMLReader;
 use RuntimeException;
+use DateTime;
+use DateTimeZone;
 
 class Parser
 {
@@ -53,13 +55,18 @@ class Parser
                             break;
 
                         case 'value':
-                            $expected = array('string', 'array', 'struct');
+                            $expected = array('string', 'array', 'struct', 'int', 'i4', 'boolean', 'double', 'dateTime.iso8601');
                             break;
 
                         case 'string':
+                        case 'int':
+                        case 'i4':
+                        case 'boolean':
+                        case 'double':
+                        case 'dateTime.iso8601':
                             $expected = array('#text');
-                            $ignoreWhitespace = true;
-                            $type = 'string';
+                            $ignoreWhitespace = false;
+                            $type = $reader->name;
                             break;
 
                         case 'array':
@@ -115,11 +122,16 @@ class Parser
                             break;
 
                         case 'value':
-                            $expected = array('param', 'value', 'data', 'member', 'name');
+                            $expected = array('param', 'value', 'data', 'member', 'name', 'int', 'i4');
                             $aggregates[$depth][] = $aggregates[$depth + 1];
                             break;
 
                         case 'string':
+                        case 'int':
+                        case 'i4':
+                        case 'boolean':
+                        case 'double':
+                        case 'dateTime.iso8601':
                             $expected = array('value');
                             $ignoreWhitespace = true;
                             break;
@@ -161,7 +173,23 @@ class Parser
                     break;
 
                 case XMLReader::TEXT:
-                    $aggregates[$depth + 1] = $reader->value;
+                    $value = $reader->value;
+                    switch ($type) {
+                        case 'int':
+                        case 'i4':
+                            $value = (int) $value;
+                            break;
+                        case 'boolean':
+                            $value = $value === '1';
+                            break;
+                        case 'double':
+                            $value = (double) $value;
+                            break;
+                        case 'dateTime.iso8601':
+                            $value = DateTime::createFromFormat('Ymd\TH:i:s', $value, new DateTimeZone('UTC'));
+                            break;
+                    }
+                    $aggregates[$depth + 1] = $value;
                     $expected = array($type);
                     $ignoreWhitespace = true;
                     break;
