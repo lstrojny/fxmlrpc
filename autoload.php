@@ -1,4 +1,5 @@
 <?php
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/src');
 spl_autoload_register(function($className) {
-    require_once __DIR__ . '/src/' . strtr($className, '\\', DIRECTORY_SEPARATOR) . '.php';
+    require_once str_replace(array('\\', '_'), DIRECTORY_SEPARATOR, $className) . '.php';
 });

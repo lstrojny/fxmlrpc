@@ -1,20 +1,17 @@
 <?php
-namespace FXMLRPC;
+namespace FXMLRPC\Parser;
 
 use DateTime;
 use DateTimeZone;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->parser = new Parser();
-    }
-
     public static function provideSimpleTypes()
     {
         return array(
             array('Value', 'string', 'Value'),
+            array('foo & bar', 'string', 'foo &amp; bar'),
+            array('1 > 2', 'string', '1 &gt; 2'),
             array(12, 'i4', '12'),
             array(12, 'int', '12'),
             array(false, 'boolean', '0'),
@@ -25,6 +22,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'dateTime.iso8601',
                 '19980717T14:08:55'
             ),
+            array('foobar', 'base64', 'Zm9vYmFy'),
         );
     }
 
@@ -46,24 +44,27 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             $serializedValue
         );
 
-        $this->assertEquals(array($expectedValue), $this->parser->parse($xml));
+        $this->assertEquals($expectedValue, $this->parser->parse($xml));
     }
 
-    public function testParsingMultiMethodResponse()
+    /**
+     * @dataProvider provideSimpleTypes
+     */
+    public function testEmptyTags($expectedValue, $serializedType)
     {
-        $string = '<?xml version="1.0"?>
-            <methodResponse>
-              <params>
-                <param>
-                  <value><string>Ümlaut String</string></value>
-                </param>
-                <param>
-                  <value><string>Normal String</string></value>
-                </param>
-              </params>
-            </methodResponse>';
+        $xml = sprintf(
+            '<?xml version="1.0"?>
+                <methodResponse>
+                <params>
+                    <param>
+                    <value><%1$s></%1$s></value>
+                    </param>
+                </params>
+                </methodResponse>',
+            $serializedType
+        );
 
-        $this->assertSame(array('Ümlaut String', 'Normal String'), $this->parser->parse($string));
+        $this->assertEquals(null, $this->parser->parse($xml));
     }
 
     public function testParsingListResponse()
@@ -83,8 +84,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     </param>
                 </params>
             </methodResponse>';
-        $this->assertSame(array(array('Str 0', 'Str 1')), $this->parser->parse($string));
+        $this->assertSame(array('Str 0', 'Str 1'), $this->parser->parse($string));
     }
+
 
     public function testParsingNestedListResponse()
     {
@@ -118,7 +120,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
         $this->assertSame(
-            array(array(array('Str 00', 'Str 01'), array('Str 10', 'Str 11'))),
+            array(array('Str 00', 'Str 01'), array('Str 10', 'Str 11')),
             $this->parser->parse($string)
         );
     }
@@ -149,7 +151,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
         $this->assertSame(
-            array(array('FIRST' => 'ONE', 'SECOND' => 'TWO', 'THIRD' => 'THREE')),
+            array('FIRST' => 'ONE', 'SECOND' => 'TWO', 'THIRD' => 'THREE'),
             $this->parser->parse($string)
         );
     }
@@ -199,10 +201,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             </methodResponse>';
         $this->assertSame(
             array(
-                array(
-                    'FIRST' => array('ONE' => 1, 'TWO' => 2),
-                    'SECOND' => array('ONE ONE' => 11, 'TWO TWO' => 22),
-                )
+                'FIRST' => array('ONE' => 1, 'TWO' => 2),
+                'SECOND' => array('ONE ONE' => 11, 'TWO TWO' => 22),
             ),
             $this->parser->parse($string)
         );
@@ -224,16 +224,16 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                                                 <value>
                                                     <array>
                                                         <data>
-                                                            <value><string>Str 00</string></value>
-                                                            <value><string>Str 01</string></value>
+                                                            <value><string> Str 00</string></value>
+                                                            <value><string> Str 01</string></value>
                                                         </data>
                                                     </array>
                                                 </value>
                                                 <value>
                                                     <array>
                                                         <data>
-                                                            <value><string>Str 10</string></value>
-                                                            <value><string>Str 11</string></value>
+                                                            <value><string> Str 10</string></value>
+                                                            <value><string> Str 11</string></value>
                                                         </data>
                                                     </array>
                                                 </value>
@@ -273,12 +273,53 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             </methodResponse>';
         $this->assertSame(
             array(
-                array(
-                    'FIRST' => array(array('Str 00', 'Str 01'), array('Str 10', 'Str 11')),
-                    'SECOND' => array(array('Str 30', 'Str 31'), array('Str 40', 'Str 41')),
-                )
+                'FIRST' => array(array(' Str 00', ' Str 01'), array(' Str 10', ' Str 11')),
+                'SECOND' => array(array('Str 30', 'Str 31'), array('Str 40', 'Str 41')),
             ),
             $this->parser->parse($string)
+        );
+    }
+
+    public function testEmptyString()
+    {
+        $xml = '<?xml version="1.0"?>
+                <methodResponse>
+                <params>
+                    <param>
+                    <value><string> </string></value>
+                    </param>
+                </params>
+                </methodResponse>';
+
+        $this->assertSame(' ', $this->parser->parse($xml));
+    }
+
+    public function testParsingFaultCode()
+    {
+        $xml = '<?xml version="1.0"?>
+            <methodResponse>
+                <fault>
+                    <value>
+                        <struct>
+                            <member>
+                                <name>faultCode</name>
+                                <value><int>123</int></value>
+                            </member>
+                            <member>
+                                <name>faultString</name>
+                                <value><string>ERROR</string></value>
+                            </member>
+                        </struct>
+                    </value>
+                </fault>
+            </methodResponse>';
+
+        $this->assertSame(
+            array(
+                'faultCode' => 123,
+                'faultString' => 'ERROR',
+            ),
+            $this->parser->parse($xml)
         );
     }
 }
