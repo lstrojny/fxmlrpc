@@ -53,7 +53,7 @@ class Parser
                             break;
 
                         case 'value':
-                            $expected = array('string', 'array');
+                            $expected = array('string', 'array', 'struct');
                             break;
 
                         case 'string':
@@ -70,6 +70,23 @@ class Parser
 
                         case 'data':
                             $expected = array('value');
+                            break;
+
+                        case 'struct':
+                            $expected = array('member');
+                            ++$depth;
+                            $aggregates[$depth] = array();
+                            break;
+
+                        case 'member':
+                            $expected = array('name', 'value');
+                            ++$depth;
+                            $aggregates[$depth] = array();
+                            break;
+
+                        case 'name':
+                            $expected = array('#text');
+                            $type = 'name';
                             break;
 
                         default:
@@ -98,7 +115,7 @@ class Parser
                             break;
 
                         case 'value':
-                            $expected = array('param', 'value', 'data');
+                            $expected = array('param', 'value', 'data', 'member', 'name');
                             $aggregates[$depth][] = $aggregates[$depth + 1];
                             break;
 
@@ -112,6 +129,23 @@ class Parser
                             break;
 
                         case 'array':
+                            $expected = array('value');
+                            --$depth;
+                            break;
+
+                        case 'name':
+                            $expected = array('value', 'member');
+                            $aggregates[$depth]['name'] = $aggregates[$depth + 1];
+                            break;
+
+                        case 'member':
+                            $expected = array('struct', 'member');
+                            $aggregates[$depth - 1][$aggregates[$depth]['name']] = $aggregates[$depth][0];
+                            unset($aggregates[$depth], $aggregates[$depth + 1]);
+                            --$depth;
+                            break;
+
+                        case 'struct':
                             $expected = array('value');
                             --$depth;
                             break;

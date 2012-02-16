@@ -95,4 +95,35 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             $this->parser->parse($string)
         );
     }
+
+    public function testParsingStructs()
+    {
+        $string = '<?xml version="1.0"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>FIRST</name>
+                                    <value><string>ONE</string></value>
+                                </member>
+                                <member>
+                                    <value><string>TWO</string></value>
+                                    <name>SECOND</name>
+                                </member>
+                                <member>
+                                    <name>THIRD</name>
+                                    <value><string>THREE</string></value>
+                                </member>
+                            </struct>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+        $this->assertSame(
+            array(array('FIRST' => 'ONE', 'SECOND' => 'TWO', 'THIRD' => 'THREE')),
+            $this->parser->parse($string)
+        );
+    }
 }
