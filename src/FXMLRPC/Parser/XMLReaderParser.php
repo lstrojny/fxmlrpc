@@ -25,7 +25,7 @@ class XMLReaderParser implements ParserInterface
             'UTF-8',
             LIBXML_COMPACT | LIBXML_PARSEHUGE | LIBXML_NOCDATA | LIBXML_NOEMPTYTAG | LIBXML_NOBLANKS
         );
-        $xml->setParserProperty(XMLReader::VALIDATE, false);
+        $xml->setParserProperty(XMLReader::VALIDATE, true);
         $xml->setParserProperty(XMLReader::LOADDTD, false);
 
         $aggregates = array();
@@ -33,14 +33,11 @@ class XMLReaderParser implements ParserInterface
         $nextElements = array('methodResponse' => 1);
         while ($xml->read()) {
             $nodeType = $xml->nodeType;
-
-            if (!isset($nextElements['#text']) && $nodeType === XMLReader::SIGNIFICANT_WHITESPACE) {
+            if ($nodeType === XMLReader::SIGNIFICANT_WHITESPACE && !isset($nextElements['#text'])) {
                 continue;
             }
 
-            $tagName = (string) $xml->name;
-
-
+            $tagName = $xml->name;
             if (!isset($nextElements[$tagName])) {
                 throw new RuntimeException(
                     sprintf(
@@ -116,6 +113,7 @@ class XMLReaderParser implements ParserInterface
 
                         case 'base64':
                         case 'string':
+                        case 'dateTime.iso8601':
                             $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = '';
@@ -138,12 +136,6 @@ class XMLReaderParser implements ParserInterface
                             $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0.0;
-                            break;
-
-                        case 'dateTime.iso8601':
-                            $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
-                            $type = $tagName;
-                            $aggregates[$depth + 1] = '';
                             break;
 
                         default:
