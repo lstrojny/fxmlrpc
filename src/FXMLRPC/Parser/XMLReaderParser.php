@@ -25,7 +25,7 @@ class XMLReaderParser implements ParserInterface
             'UTF-8',
             LIBXML_COMPACT | LIBXML_PARSEHUGE | LIBXML_NOCDATA | LIBXML_NOEMPTYTAG | LIBXML_NOBLANKS
         );
-        $xml->setParserProperty(XMLReader::VALIDATE, true);
+        $xml->setParserProperty(XMLReader::VALIDATE, false);
         $xml->setParserProperty(XMLReader::LOADDTD, false);
 
         $aggregates = array();
