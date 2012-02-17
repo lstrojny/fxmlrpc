@@ -5,7 +5,7 @@ An object oriented XML/RPC client designed as a replacement for Zend_XmlRpc
 [![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.png)](http://travis-ci.org/lstrojny/fxmlrpc)
 
 
-### Preliminary benchmarks
+### Preliminary Benchmarking Results
 
 #### Parser
 ```
