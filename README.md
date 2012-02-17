@@ -38,7 +38,7 @@ $client = new FXMLRPC\Client(
 $client->call('remoteMethod', array('arg1', true));
 ```
 
-## Preliminary Benchmarking Results
+## How fast?
 
 ### Parser
 ```
