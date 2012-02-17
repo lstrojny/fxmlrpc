@@ -1,0 +1,139 @@
+<?php
+namespace FXMLRPC\Serializer;
+
+use XMLWriter;
+use Closure;
+use DateTime;
+
+class XMLWriterSerializer implements SerializerInterface
+{
+    private $writer;
+
+    public function __construct()
+    {
+        if (!extension_loaded('xmlwriter')) {
+            throw new RuntimeException('PHP extension ext/xmlwriter missing');
+        }
+
+        $this->writer = new XMLWriter();
+        $this->writer->openMemory();
+    }
+
+    public function serialize($methodName, array $params = array())
+    {
+        $writer = $this->writer;
+
+        $writer->startElement('methodCall');
+        $writer->writeElement('methodName', $methodName);
+        $writer->startElement('params');
+
+        $endNode = function() use ($writer) {
+            $writer->endElement();
+        };
+        $valueNode = function() use ($writer) {
+            $writer->startElement('value');
+        };
+
+        $toBeVisited = array_reverse($params);
+        if ($toBeVisited) {
+            array_push($toBeVisited, function() use ($writer) {
+                $writer->startElement('param');
+            });
+            array_unshift($toBeVisited, $endNode);
+        }
+
+        while ($toBeVisited) {
+            $node = array_pop($toBeVisited);
+
+            switch (gettype($node)) {
+                case 'array':
+
+                    /** Find out if it is a struct or an array */
+                    $isStruct = false;
+                    $length = count($node);
+                    for ($a = 0; $a < $length; ++$a) {
+                        if (!isset($node[$a])) {
+                            $isStruct = true;
+                            break;
+                        }
+                    }
+
+                    if (!$isStruct) {
+                        array_push($toBeVisited, $endNode);
+                        array_push($toBeVisited, $endNode);
+                        array_push($toBeVisited, $endNode);
+                        foreach (array_reverse($node) as $value) {
+                            array_push($toBeVisited, $value);
+                        }
+                        array_push($toBeVisited, function() use ($writer) {
+                            $writer->startElement('array');
+                            $writer->startElement('data');
+                        });
+                        array_push($toBeVisited, $valueNode);
+
+                    } else {
+                        $toBeVisited[] = $endNode;
+                        array_push($toBeVisited, $endNode);
+                        foreach (array_reverse($node) as $key => $value) {
+                            array_push($toBeVisited, $endNode);
+                            array_push($toBeVisited, $value);
+                            array_push($toBeVisited, function() use ($writer, $key) {
+                                $writer->writeElement('name', $key);
+                            });
+                            array_push($toBeVisited, function() use ($writer) {
+                                $writer->startElement('member');
+                            });
+                        }
+                        array_push($toBeVisited, function() use ($writer) {
+                            $writer->startElement('struct');
+                        });
+                        array_push($toBeVisited, $valueNode);
+                    }
+                    break;
+
+                case 'object':
+                    switch (true) {
+                        case $node instanceof Closure:
+                            $node();
+                            break;
+
+                        case $node instanceof DateTime:
+                            $writer->startElement('value');
+                            $writer->writeElement('dateTime.iso8601', $node->format('Ymd\TH:i:s'));
+                            $writer->endElement();
+                            break;
+                    }
+                    break;
+
+                case 'string':
+                    $writer->startElement('value');
+                    $writer->writeElement('string', $node);
+                    $writer->endElement();
+                    break;
+
+                case 'integer':
+                    $writer->startElement('value');
+                    $writer->writeElement('int', $node);
+                    $writer->endElement();
+                    break;
+
+                case 'double':
+                    $writer->startElement('value');
+                    $writer->writeElement('double', $node);
+                    $writer->endElement();
+                    break;
+
+                case 'boolean':
+                    $writer->startElement('value');
+                    $writer->writeElement('boolean', $node ? '1' : '0');
+                    $writer->endElement();
+                    break;
+            }
+        }
+
+        $writer->endElement();
+        $writer->endElement();
+
+        return $writer->flush(true);
+    }
+}

@@ -6,6 +6,11 @@ use DateTimeZone;
 
 abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ParserInterface
+     */
+    protected $parser;
+
     public static function provideSimpleTypes()
     {
         return array(
@@ -32,7 +37,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
     public function testParsingSimpleTypes($expectedValue, $serializedType, $serializedValue)
     {
         $xml = sprintf(
-            '<?xml version="1.0"?>
+            '<?xml version="1.0" encoding="UTF-8"?>
                 <methodResponse>
                 <params>
                     <param>
@@ -53,7 +58,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
     public function testEmptyTags($expectedValue, $serializedType)
     {
         $xml = sprintf(
-            '<?xml version="1.0"?>
+            '<?xml version="1.0" encoding="UTF-8"?>
                 <methodResponse>
                 <params>
                     <param>
@@ -69,7 +74,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParsingListResponse()
     {
-        $string = '<?xml version="1.0"?>
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>
                 <params>
                     <param>
@@ -90,7 +95,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParsingNestedListResponse()
     {
-        $string = '<?xml version="1.0"?>
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>
                 <params>
                     <param>
@@ -127,7 +132,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParsingStructs()
     {
-        $string = '<?xml version="1.0"?>
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>
                 <params>
                     <param>
@@ -158,7 +163,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParsingStructsInStructs()
     {
-        $string = '<?xml version="1.0"?>
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>
                 <params>
                     <param>
@@ -210,7 +215,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParsingListsInStructs()
     {
-        $string = '<?xml version="1.0"?>
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>
                 <params>
                     <param>
@@ -282,7 +287,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
     public function testEmptyString()
     {
-        $xml = '<?xml version="1.0"?>
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
                 <methodResponse>
                 <params>
                     <param>
@@ -296,7 +301,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParsingFaultCode()
     {
-        $xml = '<?xml version="1.0"?>
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>
                 <fault>
                     <value>

@@ -19,8 +19,8 @@ class NativeParser implements ParserInterface
     {
         $result = xmlrpc_decode($xmlString, 'UTF-8');
 
-        $heap = array(&$result);
-        while (isset($heap[0]) && $value = &$heap[0]) {
+        $toBeVisited = array(&$result);
+        while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
 
             switch (gettype($value)) {
                 case 'object':
@@ -42,12 +42,12 @@ class NativeParser implements ParserInterface
 
                 case 'array':
                     foreach ($value as &$element) {
-                        $heap[] = &$element;
+                        $toBeVisited[] = &$element;
                     }
                     break;
             }
 
-            array_shift($heap);
+            array_shift($toBeVisited);
         }
 
         return $result;
