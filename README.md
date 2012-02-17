@@ -13,3 +13,10 @@ FXMLRPC\Parser\XMLReaderParser: 3.4971699714661 sec
 FXMLRPC\Parser\NativeParser: 1.6693658828735 sec
 Zend_XmlRpc: 24.519498109818 sec
 ```
+
+### Serializer
+```
+FXMLRPC\Serializer\XMLWriterSerializer: 1.9878270626068 sec
+FXMLRPC\Serializer\NativeSerializer: 0.86053609848022 sec
+Zend_XmlRpc: 6.3274731636047 sec
+```
