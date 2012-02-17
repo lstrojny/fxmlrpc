@@ -19,7 +19,11 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
             array('double', 1.2, '1.2'),
             array('boolean', true, '1'),
             array('boolean', false, '0'),
-            array('dateTime.iso8601', DateTime::createFromFormat('Y-m-d H:i:s', '1998-07-17 14:08:55', new DateTimeZone('UTC')), '19980717T14:08:55'),
+            array(
+                'dateTime.iso8601',
+                DateTime::createFromFormat('Y-m-d H:i:s', '1998-07-17 14:08:55', new DateTimeZone('UTC')),
+                '19980717T14:08:55'
+            ),
         );
     }
 
@@ -195,5 +199,10 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
             $xml,
             $this->serializer->serialize('method', array(array('FIRST' => array('ONE', 'TWO'), 'SECOND' => 'TWO', 'THIRD' => 'THREE')))
         );
+    }
+
+    public function testXmlDeclaration()
+    {
+        $this->assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>', $this->serializer->serialize('methodName'));
     }
 }

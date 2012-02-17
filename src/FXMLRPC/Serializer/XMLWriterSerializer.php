@@ -23,6 +23,7 @@ class XMLWriterSerializer implements SerializerInterface
     {
         $writer = $this->writer;
 
+        $writer->startDocument('1.0', 'UTF-8');
         $writer->startElement('methodCall');
         $writer->writeElement('methodName', $methodName);
         $writer->startElement('params');
