@@ -36,9 +36,9 @@ class XMLWriterSerializer implements SerializerInterface
 
         $toBeVisited = array_reverse($params);
         if ($toBeVisited) {
-            array_push($toBeVisited, function() use ($writer) {
+            $toBeVisited[] = function() use ($writer) {
                 $writer->startElement('param');
-            });
+            };
             array_unshift($toBeVisited, $endNode);
         }
 
@@ -59,35 +59,35 @@ class XMLWriterSerializer implements SerializerInterface
                     }
 
                     if (!$isStruct) {
-                        array_push($toBeVisited, $endNode);
-                        array_push($toBeVisited, $endNode);
-                        array_push($toBeVisited, $endNode);
+                        $toBeVisited[] = $endNode;
+                        $toBeVisited[] = $endNode;
+                        $toBeVisited[] = $endNode;
                         foreach (array_reverse($node) as $value) {
-                            array_push($toBeVisited, $value);
+                            $toBeVisited[] = $value;
                         }
-                        array_push($toBeVisited, function() use ($writer) {
+                        $toBeVisited[] = function() use ($writer) {
                             $writer->startElement('array');
                             $writer->startElement('data');
-                        });
-                        array_push($toBeVisited, $valueNode);
+                        };
+                        $toBeVisited[] = $valueNode;
 
                     } else {
                         $toBeVisited[] = $endNode;
-                        array_push($toBeVisited, $endNode);
+                        $toBeVisited[] = $endNode;
                         foreach (array_reverse($node) as $key => $value) {
-                            array_push($toBeVisited, $endNode);
-                            array_push($toBeVisited, $value);
-                            array_push($toBeVisited, function() use ($writer, $key) {
+                            $toBeVisited[] = $endNode;
+                            $toBeVisited[] = $value;
+                            $toBeVisited[] = function() use ($writer, $key) {
                                 $writer->writeElement('name', $key);
-                            });
-                            array_push($toBeVisited, function() use ($writer) {
+                            };
+                            $toBeVisited[] = function() use ($writer) {
                                 $writer->startElement('member');
-                            });
+                            };
                         }
-                        array_push($toBeVisited, function() use ($writer) {
+                        $toBeVisited[] = function() use ($writer) {
                             $writer->startElement('struct');
-                        });
-                        array_push($toBeVisited, $valueNode);
+                        };
+                        $toBeVisited[] = $valueNode;
                     }
                     break;
 
