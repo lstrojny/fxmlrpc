@@ -7,7 +7,7 @@ An object oriented XML/RPC client designed as a replacement for Zend_XmlRpc
 ## Usage
 
 ### Basic Usage
-```
+```php
 <?php
 $client = new FXMLRPC\Client('http://endpoint.com');
 $client->call('remoteMethod', array('arg1', true));
@@ -15,7 +15,7 @@ $client->call('remoteMethod', array('arg1', true));
 
 
 ### Using native (ext/xmlrpc based) serializer/parser (for even better performance)
-```
+```php
 <?php
 $client = new FXMLRPC\Client(
     'http://endpoint.com',
@@ -27,9 +27,8 @@ $client->call('remoteMethod', array('arg1', true));
 ```
 
 ### Integrate with Buzz HTTP client
-```
+```php
 <?php
-
 $browser = new Buzz\Browser();
 $browser->...();
 $client = new FXMLRPC\Client(
