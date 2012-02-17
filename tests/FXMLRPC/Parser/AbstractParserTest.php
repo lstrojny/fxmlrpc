@@ -72,6 +72,27 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->parser->parse($xml));
     }
 
+    /**
+     * @dataProvider provideSimpleTypes
+     */
+    public function testEmptyValue($expectedValue, $serializedType)
+    {
+        $xml = sprintf('<?xml version="1.0" encoding="UTF-8"?>
+                <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <%s/>
+                        </value>
+                    </param>
+                </params>
+                </methodResponse>',
+            $serializedType
+        );
+
+        $this->assertEquals(null, $this->parser->parse($xml));
+    }
+
     public function testParsingListResponse()
     {
         $string = '<?xml version="1.0" encoding="UTF-8"?>

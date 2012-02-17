@@ -116,32 +116,32 @@ class XMLReaderParser implements ParserInterface
 
                         case 'base64':
                         case 'string':
-                            $nextElements = array('#text' => 1, $tagName => 1);
+                            $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = '';
                             break;
 
                         case 'int':
                         case 'i4':
-                            $nextElements = array('#text' => 1, $tagName => 1);
+                            $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0;
                             break;
 
                         case 'boolean':
-                            $nextElements = array('#text' => 1, $tagName => 1);
+                            $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = false;
                             break;
 
                         case 'double':
-                            $nextElements = array('#text' => 1, $tagName => 1);
+                            $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0.0;
                             break;
 
                         case 'dateTime.iso8601':
-                            $nextElements = array('#text' => 1, $tagName => 1);
+                            $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = '';
                             break;
