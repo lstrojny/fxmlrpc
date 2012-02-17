@@ -7,7 +7,7 @@ An object oriented XML/RPC client designed as a replacement for Zend_XmlRpc
 
 ### Preliminary benchmarks
 
-#### Serializer
+#### Parser
 ```
 FXMLRPC\Parser\XMLReaderParser: 3.4971699714661 sec
 FXMLRPC\Parser\NativeParser: 1.6693658828735 sec
