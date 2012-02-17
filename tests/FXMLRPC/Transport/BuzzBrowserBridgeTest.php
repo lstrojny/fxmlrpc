@@ -26,12 +26,15 @@ class BuzzBrowserBridgeTest extends \PHPUnit_Framework_TestCase
                       ->method('post')
                       ->with('http://host', array(), 'REQUEST')
                       ->will($this->returnValue($this->response));
+
         $this->response->expects($this->at(0))
                        ->method('getStatusCode')
                        ->will($this->returnValue('404'));
+
         $this->response->expects($this->at(1))
                        ->method('getReasonPhrase')
                        ->will($this->returnValue('Not Found'));
+
         $this->setExpectedException('RuntimeException', 'Not Found');
         $this->transport->send('http://host', 'REQUEST');
     }
@@ -42,12 +45,15 @@ class BuzzBrowserBridgeTest extends \PHPUnit_Framework_TestCase
                       ->method('post')
                       ->with('http://host', array(), 'REQUEST')
                       ->will($this->returnValue($this->response));
+
         $this->response->expects($this->at(0))
                        ->method('getStatusCode')
                        ->will($this->returnValue('200'));
+
         $this->response->expects($this->at(1))
                        ->method('getContent')
                        ->will($this->returnValue('RESPONSE'));
+
         $this->assertSame('RESPONSE', $this->transport->send('http://host', 'REQUEST'));
     }
 }

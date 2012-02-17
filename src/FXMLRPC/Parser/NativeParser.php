@@ -50,6 +50,10 @@ class NativeParser implements ParserInterface
             array_shift($toBeVisited);
         }
 
+        if (is_array($result)) {
+            reset($result);
+        }
+
         return $result;
     }
 }
