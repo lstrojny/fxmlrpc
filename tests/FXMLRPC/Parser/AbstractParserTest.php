@@ -117,7 +117,10 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                     </param>
                 </params>
             </methodResponse>';
-        $this->assertSame(array('Str 0', 'Str 1'), $this->parser->parse($string));
+        $result = $this->parser->parse($string);
+        $this->assertSame(array('Str 0', 'Str 1'), $result);
+        $this->assertSame('Str 0', current($result));
+        $this->assertSame('Str 1', end($result));
     }
 
 
