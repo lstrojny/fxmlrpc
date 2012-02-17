@@ -42,14 +42,16 @@ $client->call('remoteMethod', array('arg1', true));
 
 ### Parser
 ```
-FXMLRPC\Parser\XMLReaderParser: 3.4971699714661 sec
-FXMLRPC\Parser\NativeParser: 1.6693658828735 sec
-Zend_XmlRpc: 24.519498109818 sec
+Zend\XmlRpc\Value (ZF2): 24.879510879517 sec
+Zend_XmlRpc_Value (ZF1): 24.3286921978 sec
+FXMLRPC\Parser\XMLReaderParser: 3.7781069278717 sec
+FXMLRPC\Parser\NativeParser: 1.8550541400909 sec
 ```
 
 ### Serializer
 ```
-FXMLRPC\Serializer\XMLWriterSerializer: 1.9878270626068 sec
-FXMLRPC\Serializer\NativeSerializer: 0.86053609848022 sec
-Zend_XmlRpc: 6.3274731636047 sec
+Zend\XmlRpc\Request (ZF2): 5.1440720558167 sec
+Zend_XmlRpc_Request (ZF1): 6.4965651035309 sec
+FXMLRPC\Serializer\XMLWriterSerializer: 2.3370549678802 sec
+FXMLRPC\Serializer\NativeSerializer: 0.97839784622192 sec
 ```

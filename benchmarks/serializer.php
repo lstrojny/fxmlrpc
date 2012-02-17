@@ -1,6 +1,5 @@
 <?php
 include __DIR__ . '/../autoload.php';
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../../Internations/source/in/vendor/zf/library/');
 
 $start = 0;
 $limit = 10;
@@ -15,29 +14,47 @@ for ($a = 0; $a < 1000; $a++) {
 }
 
 $r = null;
+$request = null;
+$serializer = null;
 
 $start = microtime(true);
-$serializer = new FXMLRPC\Serializer\XMLWriterSerializer();
 for ($a = 0; $a < $limit; ++$a) {
-    $r = $serializer->serialize('test', $args);
-}
-$end = microtime(true);
-printf("FXMLRPC\Serializer\XMLWriterSerializer: %s sec\n", $end - $start);
-
-$start = microtime(true);
-$serializer = new FXMLRPC\Serializer\NativeSerializer();
-for ($a = 0; $a < $limit; ++$a) {
-    $r = $serializer->serialize('test', $args);
-}
-$end = microtime(true);
-printf("FXMLRPC\Serializer\\NativeSerializer: %s sec\n", $end - $start);
-
-$start = microtime(true);
-$request = new Zend_XmlRpc_Request();
-for ($a = 0; $a < $limit; ++$a) {
+    $request = new Zend\XmlRpc\Request();
     $request->setMethod('test');
     $request->setParams($args);
     $r = $request->saveXml();
 }
 $end = microtime(true);
-printf("Zend_XmlRpc: %s sec\n", $end - $start);
+printf("Zend\\XmlRpc\\Request (ZF2): %s sec\n", $end - $start);
+
+
+
+$start = microtime(true);
+for ($a = 0; $a < $limit; ++$a) {
+    $request = new Zend_XmlRpc_Request();
+    $request->setMethod('test');
+    $request->setParams($args);
+    $r = $request->saveXml();
+}
+$end = microtime(true);
+printf("Zend_XmlRpc_Request (ZF1): %s sec\n", $end - $start);
+
+
+
+$start = microtime(true);
+for ($a = 0; $a < $limit; ++$a) {
+    $serializer = new FXMLRPC\Serializer\XMLWriterSerializer();
+    $r = $serializer->serialize('test', $args);
+}
+$end = microtime(true);
+printf("FXMLRPC\Serializer\XMLWriterSerializer: %s sec\n", $end - $start);
+
+
+
+$start = microtime(true);
+for ($a = 0; $a < $limit; ++$a) {
+    $serializer = new FXMLRPC\Serializer\NativeSerializer();
+    $r = $serializer->serialize('test', $args);
+}
+$end = microtime(true);
+printf("FXMLRPC\Serializer\\NativeSerializer: %s sec\n", $end - $start);
