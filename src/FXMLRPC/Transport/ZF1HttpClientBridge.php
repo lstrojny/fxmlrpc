@@ -19,7 +19,7 @@ class ZF1HttpClientBridge implements TransportInterface
                                   ->setRawData($request)
                                   ->request('POST');
 
-        if ($response->getStatus() != 200) {
+        if ($response->getStatus() !== 200) {
             throw new RuntimeException('HTTP error: ' . $response->getMessage());
         }
 

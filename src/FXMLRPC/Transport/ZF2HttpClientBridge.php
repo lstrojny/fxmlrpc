@@ -20,7 +20,7 @@ class ZF2HttpClientBridge implements TransportInterface
                                  ->setRawBody($request)
                                  ->send();
 
-        if ($response->getStatusCode() != 200) {
+        if ($response->getStatusCode() !== 200) {
             throw new RuntimeException('HTTP error: ' . $response->getReasonPhrase());
         }
 

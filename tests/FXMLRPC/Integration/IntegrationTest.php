@@ -13,6 +13,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     private $pos = 0;
 
     private static $server;
+
     private static $pipes;
 
     public static function setUpBeforeClass()
