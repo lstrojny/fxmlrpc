@@ -8,7 +8,8 @@ repo_install() {
         cd ..
     else
         echo "Installing $3"
-        [ "$1" = svn ] && svn checkout -q $2 || git clone -q $2
+        mkdir -p $3
+        [ "$1" = svn ] && svn checkout -q $2 $3 || git clone -q $2 $3
     fi
 }
 
@@ -19,4 +20,6 @@ repo_install git git://github.com/kriswallsmith/Buzz.git buzz
 repo_install git git://github.com/guzzle/guzzle.git guzzle
 repo_install git git://github.com/baalexander/node-xmlrpc.git node-xmlrpc
 repo_install git git://github.com/oozcitak/xmlbuilder-js.git xmlbuilder-js
+repo_install git git://github.com/symfony/EventDispatcher.git Symfony/Component/EventDispatcher
+repo_install git git://github.com/symfony/Validator.git Symfony/Component/Validator
 cd ..
