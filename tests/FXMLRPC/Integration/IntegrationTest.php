@@ -147,8 +147,19 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testString($client)
     {
-        $result = 'HELLO WORLD';
+        $result = 'HELLO WORLD <> &';
         $this->assertSame($result, $client->call('system.echo', array($result)));
+    }
+
+    /**
+     * @dataProvider getClients
+     */
+    public function testBase64($client)
+    {
+        $expected = new FXMLRPC\Value\Base64('HELLO WORLD');
+        $result = $client->call('system.echo', array($expected));
+        $this->assertSame($expected->getEncoded(), $result->getEncoded());
+        $this->assertSame($expected->getDecoded(), $result->getDecoded());
     }
 
     /**
