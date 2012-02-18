@@ -69,6 +69,14 @@ $client = new FXMLRPC\Client(
 
 ## How fast?
 
+IO performance is out of reach from a userspace perspective, but parsing and
+serialization speed is what matters. How fast can we generate the XML payload
+from PHP data structures and how fast can we parse the servers response? FXMLRPC
+uses stream based XML writers/readers to achieve it’s performance and heavily
+optimizes (read uglifies) for it. As as result the userland version is only
+around 2x slower than the native C implementation (ext/xmlrpc).
+
+
 ### Parser
 ```
 Zend\XmlRpc\Value (ZF2): 24.879510879517 sec
