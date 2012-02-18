@@ -32,6 +32,7 @@ $client->call('remoteMethod', array('arg1', true));
 ### Integrate with various HTTP client
 ```php
 <?php
+/** Buzz (https://github.com/kriswallsmith/Buzz) */
 $browser = new Buzz\Browser();
 $browser->...();
 $client = new FXMLRPC\Client(
@@ -39,6 +40,7 @@ $client = new FXMLRPC\Client(
     new FXMLRPC\Transport\BuzzBrowserBridge($browser)
 );
 
+/** Zend Framework 1 (http://framework.zend.com/) */
 $httpClient = new Zend_Http_Client();
 $httpClient->...();
 $client = new FXMLRPC\Client(
@@ -46,6 +48,7 @@ $client = new FXMLRPC\Client(
     new FXMLRPC\Transport\ZF1HttpClientBridge($httpClient)
 );
 
+/** Zend Framework 2 (http://framework.zend.com/zf2) */
 $httpClient = new Zend\Http\Client();
 $httpClient->...();
 $client = new FXMLRPC\Client(
@@ -53,6 +56,7 @@ $client = new FXMLRPC\Client(
     new FXMLRPC\Transport\ZF2HttpClientBridge($httpClient)
 );
 
+/** Guzzle (http://guzzlephp.org/) */
 $httpClient = new Guzzle\Http\Client();
 $httpClient->...();
 $client = new FXMLRPC\Client(
@@ -60,6 +64,7 @@ $client = new FXMLRPC\Client(
     new FXMLRPC\Transport\GuzzleBridge($httpClient)
 );
 
+/** PECL HTTP (http://pecl.php.net/pecl_http) */
 $request = new HttpRequest();
 $request->...();
 $client = new FXMLRPC\Client(
