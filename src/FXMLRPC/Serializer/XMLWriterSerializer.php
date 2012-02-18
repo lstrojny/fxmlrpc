@@ -5,7 +5,7 @@ use XMLWriter;
 use Closure;
 use DateTime;
 use stdClass;
-use FXMLRPC\Value\Base64;
+use FXMLRPC\Value\Base64Interface;
 
 class XMLWriterSerializer implements SerializerInterface
 {
@@ -107,7 +107,7 @@ class XMLWriterSerializer implements SerializerInterface
                             $writer->endElement();
                             break;
 
-                        case $node instanceof Base64:
+                        case $node instanceof Base64Interface:
                             $writer->startElement('value');
                             $writer->writeElement('base64', $node->getEncoded() . "\n");
                             $writer->endElement();

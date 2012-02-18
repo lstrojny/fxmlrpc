@@ -2,7 +2,7 @@
 namespace FXMLRPC\Serializer;
 
 use DateTime;
-use FXMLRPC\Value\Base64;
+use FXMLRPC\Value\Base64Interface;
 
 class NativeSerializer implements SerializerInterface
 {
@@ -32,7 +32,7 @@ class NativeSerializer implements SerializerInterface
                         break;
                     }
 
-                    if ($value instanceof Base64) {
+                    if ($value instanceof Base64Interface) {
                         $value = $value->getDecoded();
                         xmlrpc_set_type($value, 'base64');
                         break;
