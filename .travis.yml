@@ -5,6 +5,7 @@ php:
 
 before_script:
   - npm install git://github.com/baalexander/node-xmlrpc.git
+  - ./vendor.sh
 
 script:
   - phpunit
