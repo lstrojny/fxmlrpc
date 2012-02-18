@@ -4,7 +4,7 @@ php:
   - 5.4
 
 before_script:
-  - sudo aptitude install subversion
+  - sudo aptitude -y install subversion
   - npm install git://github.com/baalexander/node-xmlrpc.git
   - ./vendor.sh
 
