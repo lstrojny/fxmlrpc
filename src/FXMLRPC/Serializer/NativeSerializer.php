@@ -16,15 +16,23 @@ class NativeSerializer implements SerializerInterface
     {
         $toBeVisited = array(&$params);
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
-            if (is_array($value)) {
-                foreach ($value as &$v) {
-                    $toBeVisited[] = &$v;
-                }
-            } elseif ($value instanceof DateTime) {
-                $value = $value->format('Ymd\TH:i:s');
-                xmlrpc_set_type($value, 'datetime');
-            } elseif (is_object($value)) {
-                $value = get_object_vars($value);
+
+            switch (gettype($value)) {
+                case 'array':
+                    foreach ($value as &$v) {
+                        $toBeVisited[] = &$v;
+                    }
+                    break;
+
+                case 'object':
+                    if ($value instanceof DateTime) {
+                        $value = $value->format('Ymd\TH:i:s');
+                        xmlrpc_set_type($value, 'datetime');
+                        break;
+                    }
+
+                    $value = get_object_vars($value);
+                    break;
             }
 
             array_shift($toBeVisited);
