@@ -183,10 +183,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testDate($client)
     {
-        $result = new \DateTime('2011-01-12 23:12:10');
-        $this->assertSame(
-            $result->format('Y-m-d H:i:s'),
-            $client->call('system.echo', array($result))->format('Y-m-d H:i:s')
+        $result = new \DateTime('2011-01-12 23:12:10', new \DateTimeZone('UTC'));
+        $this->assertEquals(
+            $result,
+            $client->call('system.echo', array($result))
         );
     }
 
@@ -200,9 +200,18 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
                 'one', 'two', 'three'
             ),
             'el2' => array('first' => 'one', 'second' => 'two', 'third' => 'three'),
-            'el3' => range(1, 100)
+            'el3' => range(1, 100),
+            'el4' => array(
+                new \DateTime('2011-02-03 20:11:15', new \DateTimeZone('UTC')),
+                new \DateTime('2012-02-03 20:11:15', new \DateTimeZone('UTC')),
+            ),
+            'el5' => 'str',
+            'el6' => 1234,
+            'el7' => -1234,
+            'el8' => 1234.12434,
+            'el9' => -1234.3245023,
         );
-        $this->assertSame($result, $client->call('system.echo', array($result)));
+        $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
 
     /**
