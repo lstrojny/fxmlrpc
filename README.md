@@ -45,18 +45,18 @@ $client = new FXMLRPC\Client(
     new FXMLRPC\Transport\ZF1HttpClientBridge($client)
 );
 
-$client = new Zend\Http\Client();
-$client->...();
+$httpClient = new Zend\Http\Client();
+$httpClient->...();
 $client = new FXMLRPC\Client(
     'http://endpoint.com',
-    new FXMLRPC\Transport\ZF2HttpClientBridge($client)
+    new FXMLRPC\Transport\ZF2HttpClientBridge($httpClient)
 );
 
-$client = new Guzzle\Http\Client();
-$client->...();
+$httpClient = new Guzzle\Http\Client();
+$httpClient->...();
 $client = new FXMLRPC\Client(
     'http://endpoint.com',
-    new FXMLRPC\Transport\GuzzleBridge($client)
+    new FXMLRPC\Transport\GuzzleBridge($httpClient)
 );
 
 $request = new HttpRequest();
