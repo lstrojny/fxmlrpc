@@ -54,36 +54,40 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             new FXMLRPC\Serializer\XMLWriterSerializer(),
         );
 
+
         $browserSocket = new \Buzz\Browser();
         $browserSocket->setClient(new \Buzz\Client\FileGetContents());
-
-        $browserCurl = new \Buzz\Browser();
-        $browserCurl->setClient(new \Buzz\Client\Curl());
 
         $zf1HttpClientSocket = new \Zend_Http_Client();
         $zf1HttpClientSocket->setAdapter(new \Zend_Http_Client_Adapter_Socket());
 
-        $zf1HttpClientCurl = new \Zend_Http_Client();
-        $zf1HttpClientCurl->setAdapter(new \Zend_Http_Client_Adapter_Curl());
-
         $zf2HttpClientSocket = new \Zend\Http\Client();
         $zf2HttpClientSocket->setAdapter(new \Zend\Http\Client\Adapter\Socket());
-
-        $zf2HttpClientCurl = new \Zend\Http\Client();
-        $zf2HttpClientCurl->setAdapter(new \Zend\Http\Client\Adapter\Curl());
-
-        $guzzle = new \Guzzle\Http\Client();
 
         $transports = array(
             new FXMLRPC\Transport\StreamSocketTransport(),
             new FXMLRPC\Transport\BuzzBrowserBridge($browserSocket),
-            new FXMLRPC\Transport\BuzzBrowserBridge($browserCurl),
             new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientSocket),
-            new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientCurl),
             new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientSocket),
-            new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientCurl),
-            new FXMLRPC\Transport\GuzzleBridge($guzzle),
         );
+
+
+        if (extension_loaded('curl')) {
+            $browserCurl = new \Buzz\Browser();
+            $browserCurl->setClient(new \Buzz\Client\Curl());
+            $transports[] = new FXMLRPC\Transport\BuzzBrowserBridge($browserCurl);
+
+            $zf1HttpClientCurl = new \Zend_Http_Client();
+            $zf1HttpClientCurl->setAdapter(new \Zend_Http_Client_Adapter_Curl());
+            $transports[] = new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientCurl);
+
+            $zf2HttpClientCurl = new \Zend\Http\Client();
+            $zf2HttpClientCurl->setAdapter(new \Zend\Http\Client\Adapter\Curl());
+            $transports[] = new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientCurl);
+
+            $guzzle = new \Guzzle\Http\Client();
+            $transports[] = new FXMLRPC\Transport\GuzzleBridge($guzzle);
+        }
 
         $this->generateAllPossibleCombinations(array($transports, $parser, $serializer));
 
