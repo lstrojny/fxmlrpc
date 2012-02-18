@@ -1,14 +1,14 @@
 #!/bin/sh
 
 repo_install() {
-    if [ -d $3 ]; then
+    if [ -d "$3" ]; then
         echo "Updating $3"
         cd $3
-        [ $1 == svn ] && svn update -q || git pull -q
+        [ "$1" = svn ] && svn update -q || git pull -q
         cd ..
     else
         echo "Installing $3"
-        [ $1 == svn ] && svn checkout -q $2 || git clone -q $2
+        [ "$1" = svn ] && svn checkout -q $2 || git clone -q $2
     fi
 }
 
