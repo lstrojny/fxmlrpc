@@ -26,7 +26,7 @@ $client = new FXMLRPC\Client(
 $client->call('remoteMethod', array('arg1', true));
 ```
 
-### Integrate with Buzz HTTP client
+### Integrate with various HTTP client
 ```php
 <?php
 $browser = new Buzz\Browser();
@@ -35,7 +35,27 @@ $client = new FXMLRPC\Client(
     'http://endpoint.com',
     new FXMLRPC\Transport\BuzzBrowserBridge($browser)
 );
-$client->call('remoteMethod', array('arg1', true));
+
+$client = new Zend_Http_Client();
+$client->...();
+$client = new FXMLRPC\Client(
+    'http://endpoint.com',
+    new FXMLRPC\Transport\ZF1HttpClientBridge($browser)
+);
+
+$client = new Zend\Http\Client();
+$client->...();
+$client = new FXMLRPC\Client(
+    'http://endpoint.com',
+    new FXMLRPC\Transport\ZF2HttpClientBridge($browser)
+);
+
+$client = new Guzzle\Http\Client();
+$client->...();
+$client = new FXMLRPC\Client(
+    'http://endpoint.com',
+    new FXMLRPC\Transport\GuzzleBridge($browser)
+);
 ```
 
 ## How fast?
