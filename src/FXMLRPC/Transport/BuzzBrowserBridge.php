@@ -16,9 +16,9 @@ class BuzzBrowserBridge implements TransportInterface
         $this->browser = $browser;
     }
 
-    public function send($uri, $request)
+    public function send($uri, $payload)
     {
-        $response = $this->browser->post($uri, array(), $request);
+        $response = $this->browser->post($uri, array(), $payload);
 
         if ($response->getStatusCode() !== 200) {
             throw new RuntimeException('HTTP error: ' . $response->getReasonPhrase());

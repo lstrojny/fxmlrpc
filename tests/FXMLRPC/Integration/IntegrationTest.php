@@ -89,6 +89,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             $transports[] = new FXMLRPC\Transport\GuzzleBridge($guzzle);
         }
 
+        if (extension_loaded('http')) {
+            $transports[] = new FXMLRPC\Transport\PeclHttpBridge(new \HttpRequest());
+        }
+
         $this->generateAllPossibleCombinations(array($transports, $parser, $serializer));
 
         return $this->clients;

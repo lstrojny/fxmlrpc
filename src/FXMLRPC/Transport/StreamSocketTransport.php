@@ -5,14 +5,14 @@ use RuntimeException;
 
 class StreamSocketTransport implements TransportInterface
 {
-    public function send($uri, $request)
+    public function send($uri, $payload)
     {
         $context = stream_context_create(
             array(
                 'http' => array(
                     'method'  => 'POST',
                     'header'  => 'Content-Type: text/xml',
-                    'content' => $request,
+                    'content' => $payload,
                 )
             )
         );

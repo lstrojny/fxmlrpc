@@ -42,21 +42,28 @@ $client = new Zend_Http_Client();
 $client->...();
 $client = new FXMLRPC\Client(
     'http://endpoint.com',
-    new FXMLRPC\Transport\ZF1HttpClientBridge($browser)
+    new FXMLRPC\Transport\ZF1HttpClientBridge($client)
 );
 
 $client = new Zend\Http\Client();
 $client->...();
 $client = new FXMLRPC\Client(
     'http://endpoint.com',
-    new FXMLRPC\Transport\ZF2HttpClientBridge($browser)
+    new FXMLRPC\Transport\ZF2HttpClientBridge($client)
 );
 
 $client = new Guzzle\Http\Client();
 $client->...();
 $client = new FXMLRPC\Client(
     'http://endpoint.com',
-    new FXMLRPC\Transport\GuzzleBridge($browser)
+    new FXMLRPC\Transport\GuzzleBridge($client)
+);
+
+$request = new HttpRequest();
+$request->...();
+$client = new FXMLRPC\Client(
+    'http://endpoint.com',
+    new FXMLRPC\Transport\PeclHttpBridge($request)
 );
 ```
 

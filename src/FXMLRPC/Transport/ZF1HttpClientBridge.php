@@ -13,10 +13,10 @@ class ZF1HttpClientBridge implements TransportInterface
         $this->client = $client;
     }
 
-    public function send($url, $request)
+    public function send($url, $payload)
     {
         $response =  $this->client->setUri($url)
-                                  ->setRawData($request)
+                                  ->setRawData($payload)
                                   ->request('POST');
 
         if ($response->getStatus() !== 200) {

@@ -14,10 +14,10 @@ class GuzzleBridge implements TransportInterface
         $this->client = $client;
     }
 
-    public function send($uri, $request)
+    public function send($uri, $requestXml)
     {
         try {
-            $response = $this->client->post($uri, null, $request)
+            $response = $this->client->post($uri, null, $requestXml)
                                      ->send();
         } catch (BadResponseException $e) {
             throw new RuntimeException('HTTP error: ' . $e->getMessage());

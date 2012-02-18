@@ -44,18 +44,17 @@ class Client
 
     public function call($method, array $params = array())
     {
-        $request = $this->serializer->serialize($method, $params);
-        $response = $this->transport->send($this->uri, $request);
-
-        $data = $this->parser->parse($response, $isFault);
+        $requestPayload = $this->serializer->serialize($method, $params);
+        $responsePayload = $this->transport->send($this->uri, $requestPayload);
+        $response = $this->parser->parse($responsePayload, $isFault);
 
         if ($isFault) {
             throw new ResponseException(
-                isset($data['faultString']) ? $data['faultString'] : 'Unknown',
-                isset($data['faultCode']) ? $data['faultCode'] : 0
+                isset($response['faultString']) ? $response['faultString'] : 'Unknown',
+                isset($response['faultCode']) ? $response['faultCode'] : 0
             );
         }
 
-        return $data;
+        return $response;
     }
 }
