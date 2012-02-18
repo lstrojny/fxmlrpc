@@ -3,6 +3,7 @@ namespace FXMLRPC\Serializer;
 
 use DateTime;
 use DateTimeZone;
+use FXMLRPC\Value\Base64;
 
 abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,6 +27,7 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
                 DateTime::createFromFormat('Y-m-d H:i:s', '1998-07-17 14:08:55', new DateTimeZone('UTC')),
                 '19980717T14:08:55'
             ),
+            array('base64', new Base64('string'), "c3RyaW5n\n"),
         );
     }
 

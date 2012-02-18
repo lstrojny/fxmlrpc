@@ -5,6 +5,7 @@ use XMLWriter;
 use Closure;
 use DateTime;
 use stdClass;
+use FXMLRPC\Value\Base64;
 
 class XMLWriterSerializer implements SerializerInterface
 {
@@ -103,6 +104,12 @@ class XMLWriterSerializer implements SerializerInterface
                         case $node instanceof DateTime:
                             $writer->startElement('value');
                             $writer->writeElement('dateTime.iso8601', $node->format('Ymd\TH:i:s'));
+                            $writer->endElement();
+                            break;
+
+                        case $node instanceof Base64:
+                            $writer->startElement('value');
+                            $writer->writeElement('base64', $node->getEncoded() . "\n");
                             $writer->endElement();
                             break;
 

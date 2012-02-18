@@ -2,6 +2,7 @@
 namespace FXMLRPC\Serializer;
 
 use DateTime;
+use FXMLRPC\Value\Base64;
 
 class NativeSerializer implements SerializerInterface
 {
@@ -28,6 +29,12 @@ class NativeSerializer implements SerializerInterface
                     if ($value instanceof DateTime) {
                         $value = $value->format('Ymd\TH:i:s');
                         xmlrpc_set_type($value, 'datetime');
+                        break;
+                    }
+
+                    if ($value instanceof Base64) {
+                        $value = $value->getDecoded();
+                        xmlrpc_set_type($value, 'base64');
                         break;
                     }
 
