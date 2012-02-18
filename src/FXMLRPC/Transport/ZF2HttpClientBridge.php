@@ -15,10 +15,10 @@ class ZF2HttpClientBridge implements TransportInterface
 
     public function send($url, $request)
     {
-        $this->client->setMethod('POST');
-        $this->client->setUri($url);
-        $this->client->setRawBody($request);
-        $response = $this->client->send();
+        $response = $this->client->setMethod('POST')
+                                 ->setUri($url)
+                                 ->setRawBody($request)
+                                 ->send();
 
         if ($response->getStatusCode() != 200) {
             throw new RuntimeException('HTTP error: ' . $response->getReasonPhrase());
