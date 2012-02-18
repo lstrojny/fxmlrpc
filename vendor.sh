@@ -1,6 +1,6 @@
 #!/bin/sh
 
-function repo_install() {
+repo_install() {
     if [ -d $3 ]; then
         echo "Updating $3"
         cd $3
