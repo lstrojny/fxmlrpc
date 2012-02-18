@@ -5,6 +5,7 @@ use DateTime;
 use DateTimeZone;
 use stdClass;
 use RuntimeException;
+use FXMLRPC\Value\Base64;
 
 class NativeParser implements ParserInterface
 {
@@ -37,7 +38,11 @@ class NativeParser implements ParserInterface
                             break;
 
                         case 'base64':
-                            $value = $value->scalar;
+                            if ($value->scalar !== '') {
+                                $value = new Base64($value->scalar);
+                                break;
+                            }
+                            $value = null;
                             break;
                     }
                     break;

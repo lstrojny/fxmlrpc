@@ -1,6 +1,7 @@
 <?php
 namespace FXMLRPC\Parser;
 
+use FXMLRPC\Value\Base64;
 use XMLReader;
 use RuntimeException;
 use DateTime;
@@ -239,7 +240,7 @@ class XMLReaderParser implements ParserInterface
                             break;
 
                         case 'base64':
-                            $value = base64_decode($xml->value);
+                            $value = new Base64($xml->value, true);
                             break;
 
                         default:

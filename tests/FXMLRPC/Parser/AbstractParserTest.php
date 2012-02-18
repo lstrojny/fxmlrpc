@@ -3,6 +3,7 @@ namespace FXMLRPC\Parser;
 
 use DateTime;
 use DateTimeZone;
+use FXMLRPC\Value\Base64;
 
 abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,14 +35,14 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 'dateTime.iso8601',
                 '19980717T14:08:55'
             ),
-            array('foobar', 'base64', 'Zm9vYmFy'),
+            array(new Base64('Zm9vYmFy', true), 'base64', 'Zm9vYmFy', function($v){return $v->getDecoded();}),
         );
     }
 
     /**
      * @dataProvider provideSimpleTypes
      */
-    public function testParsingSimpleTypes($expectedValue, $serializedType, $serializedValue)
+    public function testParsingSimpleTypes($expectedValue, $serializedType, $serializedValue, $callback = null)
     {
         $xml = sprintf(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -56,7 +57,12 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             $serializedValue
         );
 
-        $this->assertEquals($expectedValue, $this->parser->parse($xml, $isFault));
+        $result = $this->parser->parse($xml, $isFault);
+        if ($callback === null) {
+            $this->assertEquals($expectedValue, $result);
+        } else {
+            $this->assertSame($callback($expectedValue), $callback($result));
+        }
         $this->assertFalse($isFault);
     }
 
