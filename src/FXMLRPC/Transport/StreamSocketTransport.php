@@ -19,7 +19,8 @@ class StreamSocketTransport implements TransportInterface
 
         $response = @file_get_contents($uri, false, $context);
         if ($response === false) {
-            throw new RuntimeException(error_get_last());
+            $error = error_get_last();
+            throw new RuntimeException('HTTP error: ' . $error['message']);
         }
 
         return $response;
