@@ -13,11 +13,11 @@ class PeclHttpBridge implements TransportInterface
         $this->request = $request;
     }
 
-    public function send($uri, $requestXml)
+    public function send($uri, $payload)
     {
         $this->request->setUrl($uri);
         $this->request->setMethod(HttpRequest::METH_POST);
-        $this->request->setRawPostData($requestXml);
+        $this->request->setRawPostData($payload);
         $response = $this->request->send();
 
         if ($response->getResponseCode() !== 200) {
