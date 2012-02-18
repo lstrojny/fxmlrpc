@@ -13,4 +13,4 @@ script:
 
 notifications:
   email:
-    - lstrojny@php.net
+    - lars@strojny.net
