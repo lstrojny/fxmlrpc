@@ -4,6 +4,7 @@ namespace FXMLRPC\Serializer;
 use XMLWriter;
 use Closure;
 use DateTime;
+use stdClass;
 
 class XMLWriterSerializer implements SerializerInterface
 {
@@ -73,6 +74,7 @@ class XMLWriterSerializer implements SerializerInterface
                         $toBeVisited[] = $valueNode;
 
                     } else {
+                        struct:
                         $toBeVisited[] = $endNode;
                         $toBeVisited[] = $endNode;
                         foreach (array_reverse($node) as $key => $value) {
@@ -103,6 +105,14 @@ class XMLWriterSerializer implements SerializerInterface
                             $writer->writeElement('dateTime.iso8601', $node->format('Ymd\TH:i:s'));
                             $writer->endElement();
                             break;
+
+                        case $node instanceof stdClass:
+                            $node = get_object_vars($node);
+                            goto struct;
+                            break;
+
+                        default:
+                            throw new RuntimeException('Cannot handle ' . get_class($node));
                     }
                     break;
 
