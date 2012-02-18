@@ -17,7 +17,7 @@ class XMLReaderParser implements ParserInterface
 
     public function parse($xmlString, &$isFault)
     {
-        libxml_use_internal_errors(true);
+        $useErrors = libxml_use_internal_errors(true);
 
         $xml = new XMLReader();
         $xml->xml(
@@ -252,6 +252,8 @@ class XMLReaderParser implements ParserInterface
                     break;
             }
         }
+
+        libxml_use_internal_errors($useErrors);
 
         return isset($aggregates[0][0]) ? $aggregates[0][0] : null;
     }
