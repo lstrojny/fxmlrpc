@@ -208,6 +208,22 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getClients
      */
+    public function testFault($client)
+    {
+        try {
+            $client->call('system.fault');
+            $this->fail('Expected exception');
+        } catch (FXMLRPC\Exception\ResponseException $e) {
+            $this->assertSame('ERROR', $e->getMessage());
+            $this->assertSame('ERROR', $e->getFaultString());
+            $this->assertSame(0, $e->getCode());
+            $this->assertSame(123, $e->getFaultCode());
+        }
+    }
+
+    /**
+     * @dataProvider getClients
+     */
     public function testServerReturnsInvalidResult($client)
     {
         $client->setUri('http://localhost:9091/');

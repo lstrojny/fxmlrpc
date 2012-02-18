@@ -7,6 +7,7 @@ use FXMLRPC\Parser\ParserInterface;
 use FXMLRPC\Parser\XMLReaderParser;
 use FXMLRPC\Serializer\SerializerInterface;
 use FXMLRPC\Serializer\XMLWriterSerializer;
+use FXMLRPC\Exception\ResponseException;
 
 class Client
 {
@@ -45,6 +46,12 @@ class Client
     {
         $request = $this->serializer->serialize($method, $params);
         $response = $this->transport->send($this->uri, $request);
-        return $this->parser->parse($response);
+
+        $data = $this->parser->parse($response);
+        if (is_array($data) && isset($data['faultCode'])) {
+            throw new ResponseException($data['faultString'], $data['faultCode']);
+        }
+
+        return $data;
     }
 }

@@ -8,7 +8,7 @@ xmlRpcServer.on('system.echo', function(err, params, callback) {
     callback(null, params[0]);
 });
 xmlRpcServer.on('system.fault', function(err, params, callback) {
-    callback({faultCode: 123, faulString: 'ERROR'});
+    callback({faultCode: 123, faultString: 'ERROR'});
 });
 
 
