@@ -3,6 +3,7 @@
  - A convenient, object oriented API (similar to Zend’s XmlRpc client)
  - Serializing and parsing is very fast
  - Provides integration with various HTTP clients like Buzz, ZF HTTP client, Guzzle
+ - Licensed under the terms of the liberal MIT license
 
 [![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.png)](http://travis-ci.org/lstrojny/fxmlrpc)
 
@@ -79,16 +80,16 @@ around 2x slower than the native C implementation (ext/xmlrpc).
 
 ### Parser
 ```
-Zend\XmlRpc\Value (ZF2): 24.879510879517 sec
-Zend_XmlRpc_Value (ZF1): 24.3286921978 sec
-FXMLRPC\Parser\XMLReaderParser: 3.7781069278717 sec
-FXMLRPC\Parser\NativeParser: 1.8550541400909 sec
+Zend\XmlRpc\Value (ZF2): 249.02972793579 sec
+Zend_XmlRpc_Value (ZF1): 253.88145494461 sec
+FXMLRPC\Parser\XMLReaderParser: 36.274516105652 sec
+FXMLRPC\Parser\NativeParser: 18.652323007584 sec
 ```
 
 ### Serializer
 ```
-Zend\XmlRpc\Request (ZF2): 5.1440720558167 sec
-Zend_XmlRpc_Request (ZF1): 6.4965651035309 sec
-FXMLRPC\Serializer\XMLWriterSerializer: 2.3370549678802 sec
-FXMLRPC\Serializer\NativeSerializer: 0.97839784622192 sec
+Zend\XmlRpc\Request (ZF2): 52.004573106766 sec
+Zend_XmlRpc_Request (ZF1): 65.042532920837 sec
+FXMLRPC\Serializer\XMLWriterSerializer: 23.652673006058 sec
+FXMLRPC\Serializer\NativeSerializer: 9.0790779590607 sec
 ```
