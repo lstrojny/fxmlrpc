@@ -23,6 +23,8 @@ class NativeSerializer implements SerializerInterface
             } elseif ($value instanceof DateTime) {
                 $value = $value->format('Ymd\TH:i:s');
                 xmlrpc_set_type($value, 'datetime');
+            } elseif (is_object($value)) {
+                $value = get_object_vars($value);
             }
 
             array_shift($toBeVisited);

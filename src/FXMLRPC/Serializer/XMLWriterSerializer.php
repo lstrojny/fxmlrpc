@@ -106,13 +106,10 @@ class XMLWriterSerializer implements SerializerInterface
                             $writer->endElement();
                             break;
 
-                        case $node instanceof stdClass:
+                        default:
                             $node = get_object_vars($node);
                             goto struct;
                             break;
-
-                        default:
-                            throw new RuntimeException('Cannot handle ' . get_class($node));
                     }
                     break;
 

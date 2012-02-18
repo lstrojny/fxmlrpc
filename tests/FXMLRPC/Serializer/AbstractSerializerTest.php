@@ -208,7 +208,7 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertStringStartsWith('<?xml version="1.0" encoding="UTF-8"?>', $this->serializer->serialize('methodName'));
     }
 
-    public function testSerializingObjects()
+    public function testSerializingStdClass()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
                 <methodCall>
@@ -232,4 +232,40 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
             $this->serializer->serialize('method', array((object)array('FOO' => 'BAR')))
         );
     }
+
+    public function testSerializingOtherClasses()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <struct>
+                                    <member>
+                                        <name>publicProperty</name>
+                                        <value><string>PUBLIC</string></value>
+                                    </member>
+                                </struct>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize('method', array(new Test()))
+        );
+    }
+}
+
+class Test
+{
+    public $publicProperty = 'PUBLIC';
+    protected $protectedProperty = 'PROTECTED';
+    private $privateProperty = 'PRIVATE';
+
+    public static $publicStatic = 'PUBLIC STATIC';
+    protected static $protectedStatic = 'PROTECTED STATIC';
+    private static $privateStatic = 'PRIVATE STATIC';
 }
