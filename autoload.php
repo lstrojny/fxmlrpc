@@ -19,5 +19,7 @@ spl_autoload_register(function($className) {
         include __DIR__ . '/vendor/buzz/lib/' . $file;
     } elseif (strpos($className, 'Guzzle\\') === 0) {
         include __DIR__ . '/vendor/guzzle/src/' . $file;
+    } elseif (strpos($className, 'Symfony\\') === 0) {
+        include __DIR__ . '/vendor/' . $file;
     }
 });

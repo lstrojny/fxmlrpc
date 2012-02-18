@@ -71,6 +71,8 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $zf2HttpClientCurl = new \Zend\Http\Client();
         $zf2HttpClientCurl->setAdapter(new \Zend\Http\Client\Adapter\Curl());
 
+        $guzzle = new \Guzzle\Http\Client();
+
         $transports = array(
             new FXMLRPC\Transport\StreamSocketTransport(),
             new FXMLRPC\Transport\BuzzBrowserBridge($browserSocket),
@@ -79,6 +81,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientCurl),
             new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientSocket),
             new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientCurl),
+            new FXMLRPC\Transport\GuzzleBridge($guzzle),
         );
 
         $this->generateAllPossibleCombinations(array($transports, $parser, $serializer));
@@ -209,11 +212,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $client->setUri('http://localhost:9091/');
 
-        try {
-            $client->call('system.failure');
-            $this->fail('Expected exception');
-        } catch (Exception $e) {
-            $this->assertStringStartsWith('HTTP error: ', $e->getMessage());
-        }
+        $this->setExpectedException('RuntimeException', 'HTTP error: ');
+        $client->call('system.failure');
     }
 }
