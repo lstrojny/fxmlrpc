@@ -3,5 +3,5 @@ namespace FXMLRPC\Parser;
 
 interface ParserInterface
 {
-    public function parse($xml);
+    public function parse($xmlString, &$isFault);
 }

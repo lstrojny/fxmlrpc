@@ -47,9 +47,13 @@ class Client
         $request = $this->serializer->serialize($method, $params);
         $response = $this->transport->send($this->uri, $request);
 
-        $data = $this->parser->parse($response);
-        if (is_array($data) && isset($data['faultCode'])) {
-            throw new ResponseException($data['faultString'], $data['faultCode']);
+        $data = $this->parser->parse($response, $isFault);
+
+        if ($isFault) {
+            throw new ResponseException(
+                isset($data['faultString']) ? $data['faultString'] : 'Unknown',
+                isset($data['faultCode']) ? $data['faultCode'] : 0
+            );
         }
 
         return $data;

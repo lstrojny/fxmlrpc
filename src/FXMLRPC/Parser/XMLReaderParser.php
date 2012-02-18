@@ -15,7 +15,7 @@ class XMLReaderParser implements ParserInterface
         }
     }
 
-    public function parse($xmlString)
+    public function parse($xmlString, &$isFault)
     {
         libxml_use_internal_errors(true);
 
@@ -59,11 +59,13 @@ class XMLReaderParser implements ParserInterface
 
                         case 'fault':
                             $nextElements = array('value' => 1);
+                            $isFault = true;
                             break;
 
                         case 'params':
                             $nextElements = array('param' => 1);
                             $aggregates[$depth] = array();
+                            $isFault = false;
                             break;
 
                         case 'param':

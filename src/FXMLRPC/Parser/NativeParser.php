@@ -15,9 +15,11 @@ class NativeParser implements ParserInterface
         }
     }
 
-    public function parse($xmlString)
+    public function parse($xmlString, &$isFault)
     {
         $result = xmlrpc_decode($xmlString, 'UTF-8');
+
+        $isFault = false;
 
         $toBeVisited = array(&$result);
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
@@ -52,6 +54,7 @@ class NativeParser implements ParserInterface
 
         if (is_array($result)) {
             reset($result);
+            $isFault = xmlrpc_is_fault($result);
         }
 
         return $result;
