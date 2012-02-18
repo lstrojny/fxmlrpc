@@ -38,11 +38,11 @@ $client = new FXMLRPC\Client(
     new FXMLRPC\Transport\BuzzBrowserBridge($browser)
 );
 
-$client = new Zend_Http_Client();
-$client->...();
+$httpClient = new Zend_Http_Client();
+$httpClient->...();
 $client = new FXMLRPC\Client(
     'http://endpoint.com',
-    new FXMLRPC\Transport\ZF1HttpClientBridge($client)
+    new FXMLRPC\Transport\ZF1HttpClientBridge($httpClient)
 );
 
 $httpClient = new Zend\Http\Client();
