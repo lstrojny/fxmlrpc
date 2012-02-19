@@ -52,7 +52,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             self::$pipes,
             __DIR__ . '/Fixtures'
         );
-        sleep(1);
+        sleep(2);
     }
 
     public static function tearDownAfterClass()
