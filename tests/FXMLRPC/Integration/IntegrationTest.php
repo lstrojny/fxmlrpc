@@ -280,7 +280,34 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $client->setUri('http://localhost:9091/');
 
-        $this->setExpectedException('RuntimeException', 'HTTP error: ');
-        $client->call('system.failure');
+        try {
+            $client->call('system.failure');
+            $this->fail('Exception expected');
+        } catch (\FXMLRPC\Exception\HttpException $e) {
+            $this->assertInstanceOf('FXMLRPC\Exception\TransportException', $e);
+            $this->assertInstanceOf('FXMLRPC\Exception\ExceptionInterface', $e);
+            $this->assertInstanceOf('RuntimeException', $e);
+            $this->assertStringStartsWith('An HTTP error occured', $e->getMessage());
+            $this->assertSame(500, $e->getCode());
+        }
+    }
+
+    /**
+     * @dataProvider getClients
+     */
+    public function testServerNotReachableViaTcpIp($client)
+    {
+        $client->setUri('http://localhost:23124/');
+
+        try {
+            $client->call('system.failure');
+            $this->fail('Exception expected');
+        } catch (\FXMLRPC\Exception\TcpException $e) {
+            $this->assertInstanceOf('FXMLRPC\Exception\TransportException', $e);
+            $this->assertInstanceOf('FXMLRPC\Exception\ExceptionInterface', $e);
+            $this->assertInstanceOf('RuntimeException', $e);
+            $this->assertStringStartsWith('A transport error occured', $e->getMessage());
+            $this->assertSame(0, $e->getCode());
+        }
     }
 }

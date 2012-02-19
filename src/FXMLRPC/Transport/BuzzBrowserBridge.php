@@ -26,6 +26,8 @@ namespace FXMLRPC\Transport;
 
 use Buzz\Browser;
 use RuntimeException;
+use FXMLRPC\Exception\TcpException;
+use FXMLRPC\Exception\HttpException;
 
 class BuzzBrowserBridge implements TransportInterface
 {
@@ -41,10 +43,17 @@ class BuzzBrowserBridge implements TransportInterface
 
     public function send($uri, $payload)
     {
-        $response = $this->browser->post($uri, array(), $payload);
+        try {
+            $response = $this->browser->post($uri, array(), $payload);
+        } catch (RuntimeException $e) {
+            throw new TcpException('A transport error occured', null, $e);
+        }
 
         if ($response->getStatusCode() !== 200) {
-            throw new RuntimeException('HTTP error: ' . $response->getReasonPhrase());
+            throw new HttpException(
+                'An HTTP error occured: ' . $response->getReasonPhrase(),
+                $response->getStatusCode()
+            );
         }
 
         return $response->getContent();

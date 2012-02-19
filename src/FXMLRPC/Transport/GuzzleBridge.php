@@ -26,7 +26,9 @@ namespace FXMLRPC\Transport;
 
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\BadResponseException;
-use RuntimeException;
+use Guzzle\Http\Curl\CurlException;
+use FXMLRPC\Exception\HttpException;
+use FXMLRPC\Exception\TcpException;
 
 class GuzzleBridge implements TransportInterface
 {
@@ -42,8 +44,14 @@ class GuzzleBridge implements TransportInterface
         try {
             $response = $this->client->post($uri, null, $payload)
                                      ->send();
+        } catch (CurlException $e) {
+            throw new TcpException('A transport error occured', null, $e);
         } catch (BadResponseException $e) {
-            throw new RuntimeException('HTTP error: ' . $e->getMessage());
+            throw new HttpException(
+                'An HTTP error occured: ' . $e->getMessage(),
+                $e->getResponse()->getStatusCode(),
+                $e
+            );
         }
 
         return $response->getBody(true);

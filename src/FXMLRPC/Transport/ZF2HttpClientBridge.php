@@ -25,7 +25,9 @@
 namespace FXMLRPC\Transport;
 
 use Zend\Http\Client;
-use RuntimeException;
+use Zend\Http\Client\Adapter\Exception\RuntimeException;
+use FXMLRPC\Exception\HttpException;
+use FXMLRPC\Exception\TcpException;
 
 class ZF2HttpClientBridge implements TransportInterface
 {
@@ -38,13 +40,20 @@ class ZF2HttpClientBridge implements TransportInterface
 
     public function send($url, $payload)
     {
-        $response = $this->client->setMethod('POST')
-                                 ->setUri($url)
-                                 ->setRawBody($payload)
-                                 ->send();
+        try {
+            $response = $this->client->setMethod('POST')
+                                    ->setUri($url)
+                                    ->setRawBody($payload)
+                                    ->send();
+        } catch (RuntimeException $e) {
+            throw new TcpException('A transport error occured', null, $e);
+        }
 
         if ($response->getStatusCode() !== 200) {
-            throw new RuntimeException('HTTP error: ' . $response->getReasonPhrase());
+            throw new HttpException(
+                'An HTTP error occured: ' . $response->getReasonPhrase(),
+                $response->getStatusCode()
+            );
         }
 
         return $response->getBody();

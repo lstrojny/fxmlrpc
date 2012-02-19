@@ -25,7 +25,9 @@
 namespace FXMLRPC\Transport;
 
 use HttpRequest;
-use RuntimeException;
+use HttpInvalidParamException;
+use FXMLRPC\Exception\HttpException;
+use FXMLRPC\Exception\TcpException;
 
 class PeclHttpBridge implements TransportInterface
 {
@@ -38,15 +40,22 @@ class PeclHttpBridge implements TransportInterface
 
     public function send($uri, $payload)
     {
-        $this->request->setUrl($uri);
-        $this->request->setMethod(HttpRequest::METH_POST);
-        $this->request->setRawPostData($payload);
-        $response = $this->request->send();
+        try {
+            $this->request->setUrl($uri);
+            $this->request->setMethod(HttpRequest::METH_POST);
+            $this->request->setRawPostData($payload);
+            $response = $this->request->send();
 
-        if ($response->getResponseCode() !== 200) {
-            throw new RuntimeException('HTTP error: ' . $response->getResponseStatus());
+            if ($response->getResponseCode() !== 200) {
+                throw new HttpException(
+                    'An HTTP error occured: ' . $response->getResponseStatus(),
+                    $response->getResponseCode()
+                );
+            }
+
+            return $response->getBody();
+        } catch (HttpInvalidParamException $e) {
+            throw new TcpException('A transport error occured', null, $e);
         }
-
-        return $response->getBody();
     }
 }

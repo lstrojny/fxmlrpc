@@ -26,7 +26,7 @@ namespace FXMLRPC\Exception;
 
 use RuntimeException;
 
-class ResponseException extends RuntimeException
+class ResponseException extends RuntimeException implements ExceptionInterface
 {
     private $faultCode;
 

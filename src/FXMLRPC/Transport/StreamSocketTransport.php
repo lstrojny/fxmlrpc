@@ -24,7 +24,8 @@
 
 namespace FXMLRPC\Transport;
 
-use RuntimeException;
+use FXMLRPC\Exception\HttpException;
+use FXMLRPC\Exception\TcpException;
 
 class StreamSocketTransport implements TransportInterface
 {
@@ -43,7 +44,13 @@ class StreamSocketTransport implements TransportInterface
         $response = @file_get_contents($uri, false, $context);
         if ($response === false) {
             $error = error_get_last();
-            throw new RuntimeException('HTTP error: ' . $error['message']);
+
+            if (strpos($error['message'], 'HTTP request failed')) {
+                preg_match('|HTTP/1.[0-1]\s+(\d+)|', $error['message'], $matches);
+                throw new HttpException('An HTTP error occured: ' . $error['message'], $matches[1]);
+            }
+
+            throw new TcpException('A transport error occured: ' . $error['message']);
         }
 
         return $response;

@@ -22,42 +22,8 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Transport;
+namespace FXMLRPC\Exception;
 
-use Zend_Http_Client;
-use Zend_Http_Client_Adapter_Exception;
-use Zend_Http_Client_Exception;
-use FXMLRPC\Exception\HttpException;
-use FXMLRPC\Exception\TcpException;
-
-class ZF1HttpClientBridge implements TransportInterface
+class HttpException extends TransportException
 {
-    private $client;
-
-    public function __construct(Zend_Http_Client $client)
-    {
-        $this->client = $client;
-    }
-
-    public function send($url, $payload)
-    {
-        try {
-            $response =  $this->client->setUri($url)
-                                    ->setRawData($payload)
-                                    ->request('POST');
-        } catch (Zend_Http_Client_Adapter_Exception $e) {
-            throw new TcpException('A transport error occured', null, $e);
-        } catch (Zend_Http_Client_Exception $e) {
-            throw new TcpException('A transport error occured', null, $e);
-        }
-
-        if ($response->getStatus() !== 200) {
-            throw new HttpException(
-                'An HTTP error occured: ' . $response->getMessage(),
-                $response->getStatus()
-            );
-        }
-
-        return $response->getBody();
-    }
 }
