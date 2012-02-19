@@ -94,7 +94,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientSocket),
         );
 
-
         if (extension_loaded('curl')) {
             $browserCurl = new \Buzz\Browser();
             $browserCurl->setClient(new \Buzz\Client\Curl());
@@ -227,10 +226,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     public function testDate($client)
     {
         $result = new \DateTime('2011-01-12 23:12:10', new \DateTimeZone('UTC'));
-        $this->assertEquals(
-            $result,
-            $client->call('system.echo', array($result))
-        );
+        $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
 
     /**
@@ -239,9 +235,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     public function testComplexStruct($client)
     {
         $result = array(
-            'el1' => array(
-                'one', 'two', 'three'
-            ),
+            'el1' => array('one', 'two', 'three'),
             'el2' => array('first' => 'one', 'second' => 'two', 'third' => 'three'),
             'el3' => range(1, 100),
             'el4' => array(
