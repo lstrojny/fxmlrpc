@@ -149,6 +149,15 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getClients
      */
+    public function testNil($client)
+    {
+        $result = null;
+        $this->assertSame($result, $client->call('system.echoNull', array($result)));
+    }
+
+    /**
+     * @dataProvider getClients
+     */
     public function testArray($client)
     {
         $result = range(0, 10);

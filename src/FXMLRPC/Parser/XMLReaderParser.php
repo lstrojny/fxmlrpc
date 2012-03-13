@@ -134,6 +134,7 @@ class XMLReaderParser implements ParserInterface
                                 'double'           => 1,
                                 'dateTime.iso8601' => 1,
                                 'base64'           => 1,
+                                'nil'              => 1,
                             );
                             break;
 
@@ -143,6 +144,12 @@ class XMLReaderParser implements ParserInterface
                             $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = '';
+                            break;
+
+                        case 'nil':
+                            $nextElements = array($tagName => 1, 'value' => 1);
+                            $type = $tagName;
+                            $aggregates[$depth + 1] = null;
                             break;
 
                         case 'int':
