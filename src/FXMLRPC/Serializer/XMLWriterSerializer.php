@@ -166,6 +166,12 @@ class XMLWriterSerializer implements SerializerInterface
                     $writer->writeElement('boolean', $node ? '1' : '0');
                     $writer->endElement();
                     break;
+
+                case 'NULL':
+                    $writer->startElement('value');
+                    $writer->writeElement('nil');
+                    $writer->endElement();
+                    break;
             }
         }
 
