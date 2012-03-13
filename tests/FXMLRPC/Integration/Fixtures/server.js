@@ -7,6 +7,10 @@ var xmlrpc = require('xmlrpc'),
 xmlRpcServer.on('system.echo', function(err, params, callback) {
     callback(null, params[0]);
 });
+
+xmlRpcServer.on('system.echoNull', function(err, params, callback) {
+    callback(null, null);
+});
 xmlRpcServer.on('system.fault', function(err, params, callback) {
     callback({faultCode: 123, faultString: 'ERROR'});
 });
