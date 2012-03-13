@@ -29,10 +29,13 @@ use Closure;
 use DateTime;
 use stdClass;
 use FXMLRPC\Value\Base64Interface;
+use FXMLRPC\ExtensionSupportInterface;
 
-class XMLWriterSerializer implements SerializerInterface
+class XMLWriterSerializer implements SerializerInterface, ExtensionSupportInterface
 {
     private $writer;
+
+    private $extension = array();
 
     public function __construct()
     {
@@ -44,6 +47,21 @@ class XMLWriterSerializer implements SerializerInterface
         $this->writer->openMemory();
     }
 
+    public function enableExtension($extension)
+    {
+        $this->extensions[$extension] = true;
+    }
+
+    public function disableExtension($extension)
+    {
+        $this->extensions[$extension] = false;
+    }
+
+    public function isExtensionEnabled($extension)
+    {
+        return isset($this->extensions[$extension]) ? $this->extensions[$extension] : true;
+    }
+
     public function serialize($methodName, array $params = array())
     {
         $writer = $this->writer;
@@ -52,6 +70,7 @@ class XMLWriterSerializer implements SerializerInterface
         $writer->startElement('methodCall');
         $writer->writeElement('methodName', $methodName);
         $writer->startElement('params');
+
 
         $endNode = function() use ($writer) {
             $writer->endElement();
@@ -67,6 +86,8 @@ class XMLWriterSerializer implements SerializerInterface
             };
             array_unshift($toBeVisited, $endNode);
         }
+
+        $nilTagName = $this->isExtensionEnabled(ExtensionSupportInterface::EXTENSION_NIL) ? 'nil' : 'string';
 
         while ($toBeVisited) {
             $node = array_pop($toBeVisited);
@@ -169,7 +190,7 @@ class XMLWriterSerializer implements SerializerInterface
 
                 case 'NULL':
                     $writer->startElement('value');
-                    $writer->writeElement('nil');
+                    $writer->writeElement($nilTagName);
                     $writer->endElement();
                     break;
             }
