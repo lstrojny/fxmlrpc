@@ -25,6 +25,7 @@
 namespace FXMLRPC\Parser;
 
 use FXMLRPC\Value\Base64;
+use FXMLRPC\Value\Configurable;
 use XMLReader;
 use RuntimeException;
 use DateTime;
@@ -32,6 +33,10 @@ use DateTimeZone;
 
 class XMLReaderParser implements ParserInterface
 {
+    const EXTENSION_NIL = 'nil';
+
+    private $extension = array();
+
     public function __construct()
     {
         if (!extension_loaded('xmlreader')) {

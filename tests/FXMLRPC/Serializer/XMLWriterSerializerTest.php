@@ -24,10 +24,43 @@
 
 namespace FXMLRPC\Serializer;
 
+use FXMLRPC\ExtensionSupportInterface;
+
 class XMLWriterSerializerTest extends AbstractSerializerTest
 {
     public function setUp()
     {
         $this->serializer = new XMLWriterSerializer();
+    }
+
+    public function testDisableNilExtension()
+    {
+        $this->assertInstanceOf('FXMLRPC\ExtensionSupportInterface', $this->serializer);
+        $nilXml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <nil></nil>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString($nilXml, $this->serializer->serialize('method', array(null)));
+        $this->assertNull($this->serializer->disableExtension(ExtensionSupportInterface::EXTENSION_NIL));
+        $stringXml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <string></string>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+        $this->assertXmlStringEqualsXmlString($stringXml, $this->serializer->serialize('method', array(null)));
     }
 }
