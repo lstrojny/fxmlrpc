@@ -398,4 +398,27 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertTrue($isFault);
     }
+
+    public function testNilValue()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <nil/>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $this->assertSame(
+            null,
+            $this->parser->parse($xml, $isFault)
+        );
+
+        $this->assertFalse($isFault);
+    }
+
+
 }
