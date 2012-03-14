@@ -61,7 +61,7 @@ class XMLReaderParser implements ParserInterface
                 continue;
             }
 
-            $tagName = $xml->name;
+            $tagName = $xml->localName;
             if (!isset($nextElements[$tagName])) {
                 throw new RuntimeException(
                     sprintf(
@@ -129,9 +129,15 @@ class XMLReaderParser implements ParserInterface
                                 'array'            => 1,
                                 'struct'           => 1,
                                 'int'              => 1,
+                                'biginteger'       => 1,
+                                'i8'               => 1,
                                 'i4'               => 1,
+                                'i2'               => 1,
+                                'i1'               => 1,
                                 'boolean'          => 1,
                                 'double'           => 1,
+                                'float'            => 1,
+                                'bigdecimal'       => 1,
                                 'dateTime.iso8601' => 1,
                                 'base64'           => 1,
                                 'nil'              => 1,
@@ -140,6 +146,8 @@ class XMLReaderParser implements ParserInterface
 
                         case 'base64':
                         case 'string':
+                        case 'biginteger':
+                        case 'i8':
                         case 'dateTime.iso8601':
                             $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
@@ -154,6 +162,8 @@ class XMLReaderParser implements ParserInterface
 
                         case 'int':
                         case 'i4':
+                        case 'i2':
+                        case 'i1':
                             $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0;
@@ -166,6 +176,8 @@ class XMLReaderParser implements ParserInterface
                             break;
 
                         case 'double':
+                        case 'float':
+                        case 'bigdecimal':
                             $nextElements = array('#text' => 1, $tagName => 1, 'value' => 1);
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0.0;
@@ -197,6 +209,8 @@ class XMLReaderParser implements ParserInterface
                                 'name'   => 1,
                                 'int'    => 1,
                                 'i4'     => 1,
+                                'i2'     => 1,
+                                'i1'     => 1,
                                 'base64' => 1,
                                 'fault'  => 1,
                             );
@@ -205,9 +219,15 @@ class XMLReaderParser implements ParserInterface
 
                         case 'string':
                         case 'int':
+                        case 'biginteger':
+                        case 'i8':
                         case 'i4':
+                        case 'i2':
+                        case 'i1':
                         case 'boolean':
                         case 'double':
+                        case 'float':
+                        case 'bigdecimal':
                         case 'dateTime.iso8601':
                         case 'base64':
                             $nextElements = array('value' => 1);
@@ -254,6 +274,8 @@ class XMLReaderParser implements ParserInterface
                     switch ($type) {
                         case 'int':
                         case 'i4':
+                        case 'i2':
+                        case 'i1':
                             $value = (int) $xml->value;
                             break;
 
@@ -262,6 +284,8 @@ class XMLReaderParser implements ParserInterface
                             break;
 
                         case 'double':
+                        case 'float':
+                        case 'bigdecimal':
                             $value = (double) $xml->value;
                             break;
 

@@ -37,4 +37,106 @@ class XMLReaderParserTest extends AbstractParserTest
 
         $this->parser = new XMLReaderParser();
     }
+
+    public function testApacheI1ExtensionValue()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse xmlns:ext="http://ws.apache.org/xmlrpc/namespaces/extensions">
+                <params>
+                    <param>
+                        <value>
+                            <ext:i1>1</ext:i1>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $this->assertSame(1, $this->parser->parse($xml, $isFault));
+        $this->assertFalse($isFault);
+    }
+
+    public function testApacheI2ExtensionValue()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse xmlns:ext="http://ws.apache.org/xmlrpc/namespaces/extensions">
+                <params>
+                    <param>
+                        <value>
+                            <ext:i2>1</ext:i2>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $this->assertSame(1, $this->parser->parse($xml, $isFault));
+        $this->assertFalse($isFault);
+    }
+
+    public function testApacheI8ExtensionValue()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse xmlns:ext="http://ws.apache.org/xmlrpc/namespaces/extensions">
+                <params>
+                    <param>
+                        <value>
+                            <ext:i8>9223372036854775808</ext:i8>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $this->assertSame('9223372036854775808', $this->parser->parse($xml, $isFault));
+        $this->assertFalse($isFault);
+    }
+
+    public function testApacheBigIntegerExtensionValue()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse xmlns:ext="http://ws.apache.org/xmlrpc/namespaces/extensions">
+                <params>
+                    <param>
+                        <value>
+                            <ext:biginteger>9223372036854775808</ext:biginteger>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $this->assertSame('9223372036854775808', $this->parser->parse($xml, $isFault));
+        $this->assertFalse($isFault);
+    }
+
+    public function testApacheBigDecimalExtensionValue()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse xmlns:ext="http://ws.apache.org/xmlrpc/namespaces/extensions">
+                <params>
+                    <param>
+                        <value>
+                            <ext:bigdecimal>-100000000000000000.1234</ext:bigdecimal>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml, $isFault));
+        $this->assertFalse($isFault);
+    }
+
+    public function testApacheFloatlExtensionValue()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse xmlns:ext="http://ws.apache.org/xmlrpc/namespaces/extensions">
+                <params>
+                    <param>
+                        <value>
+                            <ext:float>-100000000000000000.1234</ext:float>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml, $isFault));
+        $this->assertFalse($isFault);
+    }
 }
