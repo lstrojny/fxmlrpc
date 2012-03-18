@@ -50,7 +50,8 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
                 2 => array('pipe', 'r'),
             ),
             self::$pipes,
-            __DIR__ . '/Fixtures'
+            __DIR__ . '/Fixtures',
+            array('NODE_PATH' => __DIR__ . '/../../../vendor')
         );
         sleep(2);
     }
@@ -68,30 +69,63 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function getClients()
     {
-        $parser = array(
+        $transports = $this->getTransports();
+        $parser = $this->getParsers();
+        $serializer = $this->getSerializers();
+
+        $this->generateAllPossibleCombinations(array($transports, $parser, $serializer));
+
+        return $this->clients;
+    }
+
+    private function getParsers()
+    {
+        return array(
             new FXMLRPC\Parser\NativeParser(),
             new FXMLRPC\Parser\XMLReaderParser(),
         );
-        $serializer = array(
-            new FXMLRPC\Serializer\NativeSerializer(),
-            new FXMLRPC\Serializer\XMLWriterSerializer(),
+    }
+
+    private function getSerializers()
+    {
+        $nativeSerializer = new FXMLRPC\Serializer\NativeSerializer();
+
+        $xmlWriterSerializer = new FXMLRPC\Serializer\XMLWriterSerializer();
+
+        $xmlWriterNilExtensionDisabled = new FXMLRPC\Serializer\XMLWriterSerializer();
+        $xmlWriterNilExtensionDisabled->disableExtension('nil');
+
+        return array(
+            $nativeSerializer,
+            $xmlWriterSerializer,
+            $xmlWriterNilExtensionDisabled,
         );
+    }
 
-
+    private function getTransports()
+    {
         $browserSocket = new \Buzz\Browser();
         $browserSocket->setClient(new \Buzz\Client\FileGetContents());
 
         $zf1HttpClientSocket = new \Zend_Http_Client();
         $zf1HttpClientSocket->setAdapter(new \Zend_Http_Client_Adapter_Socket());
 
+        $zf1HttpClientProxy = new \Zend_Http_Client();
+        $zf1HttpClientProxy->setAdapter(new \Zend_Http_Client_Adapter_Proxy());
+
         $zf2HttpClientSocket = new \Zend\Http\Client();
         $zf2HttpClientSocket->setAdapter(new \Zend\Http\Client\Adapter\Socket());
+
+        $zf2HttpClientProxy = new \Zend\Http\Client();
+        $zf2HttpClientProxy->setAdapter(new \Zend\Http\Client\Adapter\Proxy());
 
         $transports = array(
             new FXMLRPC\Transport\StreamSocketTransport(),
             new FXMLRPC\Transport\BuzzBrowserBridge($browserSocket),
             new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientSocket),
+            new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientProxy),
             new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientSocket),
+            new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientProxy),
         );
 
         if (extension_loaded('curl')) {
@@ -115,9 +149,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             $transports[] = new FXMLRPC\Transport\PeclHttpBridge(new \HttpRequest());
         }
 
-        $this->generateAllPossibleCombinations(array($transports, $parser, $serializer));
-
-        return $this->clients;
+        return $transports;
     }
 
     private function generateAllPossibleCombinations($combinations)
