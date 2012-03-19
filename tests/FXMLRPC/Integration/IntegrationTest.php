@@ -50,10 +50,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
                 2 => array('pipe', 'r'),
             ),
             self::$pipes,
-            __DIR__ . '/Fixtures',
-            array('NODE_PATH' => __DIR__ . '/../../../vendor')
+            __DIR__ . '/Fixtures'
         );
-        sleep(5);
+        sleep(2);
     }
 
     public static function tearDownAfterClass()
