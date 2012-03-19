@@ -53,7 +53,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             __DIR__ . '/Fixtures',
             array('NODE_PATH' => __DIR__ . '/../../../vendor')
         );
-        sleep(2);
+        sleep(5);
     }
 
     public static function tearDownAfterClass()
