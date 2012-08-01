@@ -52,8 +52,8 @@ class MonologTimerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('addRecord')
             ->with(
-                'FXMLRPC call took 1.1000000000s',
                 Logger::DEBUG,
+                'FXMLRPC call took 1.1000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
 
@@ -67,8 +67,8 @@ class MonologTimerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('addRecord')
             ->with(
-                'FXMLRPC call took 1.1000000000s',
                 Logger::ALERT,
+                'FXMLRPC call took 1.1000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
 
@@ -82,8 +82,8 @@ class MonologTimerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('addRecord')
             ->with(
-                'Custom template 1.1s',
                 Logger::DEBUG,
+                'Custom template 1.1s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
 
