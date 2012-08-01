@@ -26,7 +26,7 @@ namespace FXMLRPC\Decorator;
 
 use FXMLRPC\ClientInterface;
 
-abstract class AbstractDecorator
+abstract class AbstractDecorator implements ClientInterface
 {
     protected $wrapped;
 
