@@ -27,6 +27,9 @@ namespace FXMLPRC\Integration;
 use FXMLRPC;
 use Exception;
 
+/**
+ * @large
+ */
 class IntegrationTest extends \PHPUnit_Framework_TestCase
 {
     private $clients = array();
