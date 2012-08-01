@@ -21,5 +21,7 @@ spl_autoload_register(function($className) {
         include __DIR__ . '/vendor/guzzle/src/' . $file;
     } elseif (strpos($className, 'Symfony\\') === 0) {
         include __DIR__ . '/vendor/' . $file;
+    } elseif (strpos($className, 'Monolog\\') === 0) {
+        include __DIR__ . '/vendor/monolog/src/' . $file;
     }
 });
