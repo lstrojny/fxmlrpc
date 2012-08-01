@@ -26,7 +26,7 @@ namespace FXMLRPC\Decorator\Timing;
 
 use Monolog\Logger;
 
-class MonologTimerBridge
+class MonologTimerBridge implements TimerInterface
 {
     /**
      * @var \Monolog\Logger
