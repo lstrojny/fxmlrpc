@@ -68,8 +68,8 @@ class MonologTimerBridge implements TimerInterface
     public function recordTiming($callTime, $method, array $arguments)
     {
         $this->logger->addRecord(
-            sprintf($this->messageTemplate, $callTime),
             $this->level,
+            sprintf($this->messageTemplate, $callTime),
             array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
         );
     }
