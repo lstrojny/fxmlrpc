@@ -32,16 +32,34 @@ use FXMLRPC\Serializer\SerializerInterface;
 use FXMLRPC\Serializer\XMLWriterSerializer;
 use FXMLRPC\Exception\ResponseException;
 
-class Client
+class Client implements ClientInterface
 {
+    /**
+     * @var string
+     */
     protected $uri;
 
+    /**
+     * @var Transport\TransportInterface
+     */
     protected $transport;
 
+    /**
+     * @var Parser\ParserInterface
+     */
     protected $parser;
 
+    /**
+     * @var Serializer\SerializerInterface
+     */
     protected $serializer;
 
+    /**
+     * @param string $uri
+     * @param Transport\TransportInterface $transport
+     * @param Parser\ParserInterface $parser
+     * @param Serializer\SerializerInterface $serializer
+     */
     public function __construct(
         $uri = null,
         TransportInterface $transport = null,
@@ -55,16 +73,34 @@ class Client
         $this->serializer = $serializer ?: new XMLWriterSerializer();
     }
 
+    /**
+     * Set endpoint URI
+     *
+     * @param string $uri
+     */
     public function setUri($uri)
     {
         $this->uri = $uri;
     }
 
+    /**
+     * Return endpoint URI
+     *
+     * @return string
+     */
     public function getUri()
     {
         return $this->uri;
     }
 
+    /**
+     * Execute remote call
+     *
+     * @param string $method
+     * @param array $params
+     * @return mixed
+     * @throws Exception\ResponseException
+     */
     public function call($method, array $params = array())
     {
         $requestPayload = $this->serializer->serialize($method, $params);
