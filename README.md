@@ -57,7 +57,7 @@ $client = new FXMLRPC\Client(
 $client->call('remoteMethod', array('arg1', true));
 ```
 
-### Integrate with various HTTP client
+### Integration for various HTTP clients
 ```php
 <?php
 /** Buzz (https://github.com/kriswallsmith/Buzz) */
