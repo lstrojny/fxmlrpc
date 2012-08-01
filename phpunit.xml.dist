@@ -6,7 +6,8 @@
          mapTestClassNameToCoveredClassName="true"
          bootstrap="autoload.php"
          verbose="true"
-         colors="true">
+         colors="true"
+         strict="true">
 
     <testsuites>
         <testsuite name="FXMLRPC">
