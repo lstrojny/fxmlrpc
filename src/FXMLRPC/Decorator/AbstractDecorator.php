@@ -45,7 +45,7 @@ abstract class AbstractDecorator implements ClientInterface
         return $this->wrapped->getUri();
     }
 
-    public function call($method, array $arguments)
+    public function call($method, array $arguments = array())
     {
         return $this->wrapped->call($method, $arguments);
     }

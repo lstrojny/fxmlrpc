@@ -38,7 +38,7 @@ class TimingDecorator extends AbstractDecorator
         $this->timer = $timer;
     }
 
-    public function call($method, array $arguments)
+    public function call($method, array $arguments = array())
     {
         $startTime = microtime(true);
 
