@@ -101,3 +101,20 @@ $client = new FXMLRPC\Client(
 );
 ```
 
+### Timing XML/RPC requests
+FXMLRPC allows you to time your XML/RPC request, to find out which took how long. It provides a
+`FXMLRPC\Decorator\Timing\TimingDecorator` which can be used with various timers implementing
+`FXMLRPC\Decorator\Timing\TimerInterface`. Currently implemented is a single logging bridge for Monolog.
+
+Usage:
+```php
+<?php
+$client = new FXMLRPC\Decorator\Timing\TimingDecorator(
+    new FXMLRPC\Client(...),
+    new FXMLRPC\Decorator\Timing\MonologTimerBridge(
+        $monolog,
+        Monolog\Logger::ALERT,
+        'My custom log message template %F'
+    )
+);
+```
