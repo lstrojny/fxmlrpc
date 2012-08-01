@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 repo_install() {
     if [ -d "$3" ]; then
