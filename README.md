@@ -8,6 +8,34 @@
 
 [![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.png)](http://travis-ci.org/lstrojny/fxmlrpc)
 
+
+## How fast?
+
+IO performance is out of reach from a userspace perspective, but parsing and
+serialization speed is what matters. How fast can we generate the XML payload
+from PHP data structures and how fast can we parse the servers response? FXMLRPC
+uses stream based XML writers/readers to achieve it’s performance and heavily
+optimizes (read uglifies) for it. As as result the userland version is only
+around 2x slower than the native C implementation (ext/xmlrpc).
+
+
+### Parser
+```
+Zend\XmlRpc\Value (ZF2): 249.02972793579 sec
+Zend_XmlRpc_Value (ZF1): 253.88145494461 sec
+FXMLRPC\Parser\XMLReaderParser: 36.274516105652 sec
+FXMLRPC\Parser\NativeParser: 18.652323007584 sec
+```
+
+### Serializer
+```
+Zend\XmlRpc\Request (ZF2): 52.004573106766 sec
+Zend_XmlRpc_Request (ZF1): 65.042532920837 sec
+FXMLRPC\Serializer\XMLWriterSerializer: 23.652673006058 sec
+FXMLRPC\Serializer\NativeSerializer: 9.0790779590607 sec
+```
+
+
 ## Usage
 
 ### Basic Usage
@@ -16,7 +44,6 @@
 $client = new FXMLRPC\Client('http://endpoint.com');
 $client->call('remoteMethod', array('arg1', true));
 ```
-
 
 ### Using native (ext/xmlrpc based) serializer/parser (for even better performance)
 ```php
@@ -74,28 +101,3 @@ $client = new FXMLRPC\Client(
 );
 ```
 
-## How fast?
-
-IO performance is out of reach from a userspace perspective, but parsing and
-serialization speed is what matters. How fast can we generate the XML payload
-from PHP data structures and how fast can we parse the servers response? FXMLRPC
-uses stream based XML writers/readers to achieve it’s performance and heavily
-optimizes (read uglifies) for it. As as result the userland version is only
-around 2x slower than the native C implementation (ext/xmlrpc).
-
-
-### Parser
-```
-Zend\XmlRpc\Value (ZF2): 249.02972793579 sec
-Zend_XmlRpc_Value (ZF1): 253.88145494461 sec
-FXMLRPC\Parser\XMLReaderParser: 36.274516105652 sec
-FXMLRPC\Parser\NativeParser: 18.652323007584 sec
-```
-
-### Serializer
-```
-Zend\XmlRpc\Request (ZF2): 52.004573106766 sec
-Zend_XmlRpc_Request (ZF1): 65.042532920837 sec
-FXMLRPC\Serializer\XMLWriterSerializer: 23.652673006058 sec
-FXMLRPC\Serializer\NativeSerializer: 9.0790779590607 sec
-```
