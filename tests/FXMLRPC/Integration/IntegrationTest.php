@@ -145,6 +145,8 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
             $guzzle = new \Guzzle\Http\Client();
             $transports[] = new FXMLRPC\Transport\GuzzleBridge($guzzle);
+
+            $transports[] = new FXMLRPC\Transport\CurlTransport();
         }
 
         if (extension_loaded('http')) {
