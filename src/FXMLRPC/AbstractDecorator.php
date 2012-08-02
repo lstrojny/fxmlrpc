@@ -22,14 +22,29 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Decorator\Timing;
+namespace FXMLRPC;
 
-interface TimerInterface
+abstract class AbstractDecorator implements ClientInterface
 {
-    /**
-     * @param float $callTime
-     * @param string $method
-     * @param array $arguments
-     */
-    public function recordTiming($callTime, $method, array $arguments);
+    protected $wrapped;
+
+    public function __construct(ClientInterface $wrapped)
+    {
+        $this->wrapped = $wrapped;
+    }
+
+    public function setUri($uri)
+    {
+        return $this->wrapped->setUri($uri);
+    }
+
+    public function getUri()
+    {
+        return $this->wrapped->getUri();
+    }
+
+    public function call($method, array $arguments = array())
+    {
+        return $this->wrapped->call($method, $arguments);
+    }
 }

@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Decorator\Timing;
+namespace FXMLRPC\Timing;
 
-use FXMLRPC\Decorator\Timing\TimingDecorator;
+use FXMLRPC\Timing\TimingDecorator;
 
 class TimingDecoratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,7 +41,7 @@ class TimingDecoratorTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->timer = $this
-            ->getMockBuilder('FXMLRPC\Decorator\Timing\TimerInterface')
+            ->getMockBuilder('FXMLRPC\Timing\TimerInterface')
             ->getMock();
         $this->decorator = new TimingDecorator($this->wrapped, $this->timer);
     }
