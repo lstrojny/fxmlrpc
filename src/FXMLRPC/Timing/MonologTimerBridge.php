@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Decorator\Timing;
+namespace FXMLRPC\Timing;
 
 use Monolog\Logger;
 

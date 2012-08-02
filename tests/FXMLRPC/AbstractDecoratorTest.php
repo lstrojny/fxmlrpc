@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Decorator;
+namespace FXMLRPC;
 
 class NullDecorator extends AbstractDecorator
 {

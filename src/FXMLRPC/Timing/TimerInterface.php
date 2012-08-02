@@ -22,30 +22,14 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Decorator\Timing;
+namespace FXMLRPC\Timing;
 
-use FXMLRPC\ClientInterface;
-use FXMLRPC\Decorator\AbstractDecorator;
-use FXMLRPC\Decorator\Timing\TimerInterface;
-
-class TimingDecorator extends AbstractDecorator
+interface TimerInterface
 {
-    private $timer;
-
-    public function __construct(ClientInterface $wrapped, TimerInterface $timer)
-    {
-        parent::__construct($wrapped);
-        $this->timer = $timer;
-    }
-
-    public function call($method, array $arguments = array())
-    {
-        $startTime = microtime(true);
-
-        $result = parent::call($method, $arguments);
-
-        $this->timer->recordTiming(microtime(true) - $startTime, $method, $arguments);
-
-        return $result;
-    }
+    /**
+     * @param float $callTime
+     * @param string $method
+     * @param array $arguments
+     */
+    public function recordTiming($callTime, $method, array $arguments);
 }
