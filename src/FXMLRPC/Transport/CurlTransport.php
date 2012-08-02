@@ -29,29 +29,56 @@ use FXMLRPC\Exception\TcpException;
 
 class CurlTransport implements TransportInterface
 {
+
+    /**
+     * @var resource
+     */
+    protected $handle;
+
+    public function __construct()
+    {
+        $this->handle = curl_init();
+    }
+
+    public function __destruct() {
+        if (is_resource($this->handle)) {
+            curl_close($this->handle);
+        }
+    }
+
+    public function __clone() {
+        $this->handle = curl_copy_handle($this->handle);
+    }
+
+    /**
+     * send a http post request
+     *
+     * @param   string  $uri        - url to send/post data to
+     * @param   string  $payload    - data
+     *
+     * @return  string              - http response body
+     *
+     * @throws  TcpException
+     */
     public function send($uri, $payload)
     {
-        $handle = curl_init();
+        curl_setopt($this->handle, CURLOPT_URL,               $uri);
+        curl_setopt($this->handle, CURLOPT_HTTPHEADER,        array('Content-Type: text/xml'));
+        curl_setopt($this->handle, CURLOPT_RETURNTRANSFER,    true);
+        curl_setopt($this->handle, CURLOPT_HEADER,            true);
+        curl_setopt($this->handle, CURLOPT_MAXREDIRS,         5);
+        curl_setopt($this->handle, CURLOPT_TIMEOUT_MS,        5000);
+        curl_setopt($this->handle, CURLOPT_CONNECTTIMEOUT_MS, 5000);
+        curl_setopt($this->handle, CURLOPT_POST,              true);
+        curl_setopt($this->handle, CURLOPT_POSTFIELDS,        $payload);
 
-        curl_setopt($handle, CURLOPT_URL,               $uri);
-        curl_setopt($handle, CURLOPT_HTTPHEADER,        array('Content-Type: text/xml'));
-        curl_setopt($handle, CURLOPT_RETURNTRANSFER,    true);
-        curl_setopt($handle, CURLOPT_HEADER,            true);
-        curl_setopt($handle, CURLOPT_MAXREDIRS,         5);
-        curl_setopt($handle, CURLOPT_TIMEOUT_MS,        5000);
-        curl_setopt($handle, CURLOPT_CONNECTTIMEOUT_MS, 5000);
-        curl_setopt($handle, CURLOPT_POST,              true);
-        curl_setopt($handle, CURLOPT_POSTFIELDS,        $payload);
-
-        $response = curl_exec($handle);
-        if ($response === false || strlen($response) < 1) {
-            throw new TcpException('Response was empty!' . "\n" . curl_error($handle), curl_errno($handle));
+        $response   = curl_exec($this->handle);
+        $code       = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
+        if (substr($code, 0, 1) != 2 || $response === false || strlen($response) < 1) {
+            throw new TcpException('Response was not OK!' . "\n" . curl_error($this->handle), curl_errno($this->handle));
         }
 
-        $body = substr($response, curl_getinfo($handle, CURLINFO_HEADER_SIZE));
-
-        curl_close($handle);
-
-        return $body;
+        return substr($response, curl_getinfo($this->handle, CURLINFO_HEADER_SIZE));
     }
+
 }
