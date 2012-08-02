@@ -75,12 +75,12 @@ class CurlTransport implements TransportInterface
 
         $response = curl_exec($this->handle);
         if ($response === false || strlen($response) < 1) {
-            throw new TcpException('A transport error occured' . "\n" . curl_error($this->handle), curl_errno($this->handle));
+            throw new TcpException('A transport error occured' . "\n" . curl_error($this->handle), 0);
         }
 
         $code = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
         if ($code != 200) {
-            throw new HttpException('An HTTP error occured' . "\n" . curl_error($this->handle), curl_errno($this->handle));
+            throw new HttpException('An HTTP error occured' . "\n" . curl_error($this->handle), $code);
         }
 
         return substr($response, curl_getinfo($this->handle, CURLINFO_HEADER_SIZE));
