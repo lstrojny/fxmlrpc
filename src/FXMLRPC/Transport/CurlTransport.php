@@ -48,42 +48,36 @@ class CurlTransport implements TransportInterface
         curl_setopt($this->handle, CURLOPT_POST,              true);
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         if (is_resource($this->handle)) {
             curl_close($this->handle);
         }
     }
 
-    public function __clone() {
-        $this->handle = curl_copy_handle($this->handle);
-    }
-
     /**
-     * send a http post request
+     * Send an http post request
      *
      * @param   string  $uri        - url to send/post data to
      * @param   string  $payload    - data
-     *
      * @return  string              - http response body
-     *
      * @throws  TcpException
      */
     public function send($uri, $payload)
     {
-        curl_setopt($this->handle, CURLOPT_URL,               $uri);
-        curl_setopt($this->handle, CURLOPT_POSTFIELDS,        $payload);
+        curl_setopt($this->handle, CURLOPT_URL, $uri);
+        curl_setopt($this->handle, CURLOPT_POSTFIELDS, $payload);
 
         $response = curl_exec($this->handle);
         if ($response === false || strlen($response) < 1) {
-            throw new TcpException('A transport error occured' . "\n" . curl_error($this->handle), 0);
+            throw new TcpException("A transport error occured\n" . curl_error($this->handle), 0);
         }
 
         $code = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
-        if ($code != 200) {
-            throw new HttpException('An HTTP error occured' . "\n" . curl_error($this->handle), $code);
+        if ($code !== 200) {
+            throw new HttpException("An HTTP error occured\n" . curl_error($this->handle), $code);
         }
 
         return substr($response, curl_getinfo($this->handle, CURLINFO_HEADER_SIZE));
     }
-
 }
