@@ -74,7 +74,7 @@ class CurlTransport implements TransportInterface
 
         $response   = curl_exec($this->handle);
         $code       = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
-        if (substr($code, 0, 1) != 2 || $response === false || strlen($response) < 1) {
+        if ($code == 200 || $response === false || strlen($response) < 1) {
             #throw new TcpException('Response was not OK!' . "\n" . curl_error($this->handle), curl_errno($this->handle));
             throw new TcpException('A transport error occured' . "\n" . curl_error($this->handle), curl_errno($this->handle));
         }
