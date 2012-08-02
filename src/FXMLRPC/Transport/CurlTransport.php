@@ -38,6 +38,14 @@ class CurlTransport implements TransportInterface
     public function __construct()
     {
         $this->handle = curl_init();
+
+        curl_setopt($this->handle, CURLOPT_HTTPHEADER,        array('Content-Type: text/xml'));
+        curl_setopt($this->handle, CURLOPT_RETURNTRANSFER,    true);
+        curl_setopt($this->handle, CURLOPT_HEADER,            true);
+        curl_setopt($this->handle, CURLOPT_MAXREDIRS,         5);
+        curl_setopt($this->handle, CURLOPT_TIMEOUT_MS,        5000);
+        curl_setopt($this->handle, CURLOPT_CONNECTTIMEOUT_MS, 5000);
+        curl_setopt($this->handle, CURLOPT_POST,              true);
     }
 
     public function __destruct() {
@@ -63,20 +71,16 @@ class CurlTransport implements TransportInterface
     public function send($uri, $payload)
     {
         curl_setopt($this->handle, CURLOPT_URL,               $uri);
-        curl_setopt($this->handle, CURLOPT_HTTPHEADER,        array('Content-Type: text/xml'));
-        curl_setopt($this->handle, CURLOPT_RETURNTRANSFER,    true);
-        curl_setopt($this->handle, CURLOPT_HEADER,            true);
-        curl_setopt($this->handle, CURLOPT_MAXREDIRS,         5);
-        curl_setopt($this->handle, CURLOPT_TIMEOUT_MS,        5000);
-        curl_setopt($this->handle, CURLOPT_CONNECTTIMEOUT_MS, 5000);
-        curl_setopt($this->handle, CURLOPT_POST,              true);
         curl_setopt($this->handle, CURLOPT_POSTFIELDS,        $payload);
 
-        $response   = curl_exec($this->handle);
-        $code       = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
-        if ($code == 200 || $response === false || strlen($response) < 1) {
-            #throw new TcpException('Response was not OK!' . "\n" . curl_error($this->handle), curl_errno($this->handle));
+        $response = curl_exec($this->handle);
+        if ($response === false || strlen($response) < 1) {
             throw new TcpException('A transport error occured' . "\n" . curl_error($this->handle), curl_errno($this->handle));
+        }
+
+        $code = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
+        if ($code != 200) {
+            throw new HttpException('An HTTP error occured' . "\n" . curl_error($this->handle), curl_errno($this->handle));
         }
 
         return substr($response, curl_getinfo($this->handle, CURLINFO_HEADER_SIZE));
