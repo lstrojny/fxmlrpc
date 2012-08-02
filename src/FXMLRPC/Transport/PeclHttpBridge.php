@@ -28,6 +28,7 @@ use HttpRequest;
 use HttpInvalidParamException;
 use FXMLRPC\Exception\HttpException;
 use FXMLRPC\Exception\TcpException;
+use ReflectionExtension;
 
 class PeclHttpBridge implements TransportInterface
 {
@@ -43,7 +44,12 @@ class PeclHttpBridge implements TransportInterface
         try {
             $this->request->setUrl($uri);
             $this->request->setMethod(HttpRequest::METH_POST);
-            $this->request->setRawPostData($payload);
+            $extension = new ReflectionExtension('http');
+            if (version_compare($extension->getVersion(), '1.5.0', '>=')) {
+                $this->request->setBody($payload);
+            } else {
+                $this->request->setRawPostData($payload);
+            }
             $response = $this->request->send();
 
             if ($response->getResponseCode() !== 200) {
