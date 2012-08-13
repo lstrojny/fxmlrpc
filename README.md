@@ -104,7 +104,8 @@ $client = new FXMLRPC\Client(
 ### Timing XML/RPC requests to find problematic calls
 FXMLRPC allows you to time your XML/RPC request, to find out which took how long. It provides a
 `FXMLRPC\Timing\TimingDecorator` which can be used with various timers implementing
-`FXMLRPC\Timing\TimerInterface`. Currently implemented is a single logging bridge for Monolog.
+`FXMLRPC\Timing\TimerInterface`. Currently implemented are bridges for Monolog, Zend Framework 1
+`Zend_Log` and Zend Framework 2 `Zend\Log`.
 
 Usage:
 ```php

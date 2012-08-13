@@ -28,7 +28,7 @@ use FXMLRPC\Timing\TimingDecorator;
 
 use Monolog\Logger;
 
-class MonologTimerTest extends \PHPUnit_Framework_TestCase
+class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
 {
     private $monolog;
 
