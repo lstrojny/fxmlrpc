@@ -28,7 +28,21 @@ interface ExtensionSupportInterface
 {
     const EXTENSION_NIL = 'nil';
 
+    /**
+     * @param string $extension
+     * @return void
+     */
     public function enableExtension($extension);
+
+    /**
+     * @param string $extension
+     * @return void
+     */
     public function disableExtension($extension);
+
+    /**
+     * @param string $extension
+     * @return boolean
+     */
     public function isExtensionEnabled($extension);
 }
