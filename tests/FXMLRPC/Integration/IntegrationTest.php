@@ -71,11 +71,14 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function getClients()
     {
-        $transports = $this->getTransports();
-        $parser = $this->getParsers();
-        $serializer = $this->getSerializers();
-
-        $this->generateAllPossibleCombinations(array($transports, $parser, $serializer));
+        $this->generateAllPossibleCombinations(
+            array(
+                $this->getTransports(),
+                $this->getParsers(),
+                $this->getSerializers(),
+                $this->getTimerBridges()
+            )
+        );
 
         return $this->clients;
     }
@@ -156,6 +159,24 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         return $transports;
     }
 
+    private function getTimerBridges()
+    {
+        $zf1Logger = new \Zend_Log(new \Zend_Log_Writer_Null());
+
+        $zf2Logger = new \Zend\Log\Logger();
+        $zf2Logger->addWriter(new \Zend\Log\Writer\Null());
+
+        $monolog = new \Monolog\Logger('test');
+        $monolog->pushHandler(new \Monolog\Handler\NullHandler());
+
+        return array(
+            new \FXMLRPC\Timing\ZF1TimerBridge($zf1Logger),
+            new \FXMLRPC\Timing\ZF2TimerBridge($zf2Logger),
+            new \FXMLRPC\Timing\MonologTimerBridge($monolog),
+            null
+        );
+    }
+
     private function generateAllPossibleCombinations($combinations)
     {
         if ($combinations) {
@@ -167,17 +188,16 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
                 $this->generateAllPossibleCombinations($temp);
             }
         } else {
-            $this->clients[] = array(
-                new FXMLRPC\Client(
-                    'http://localhost:9090/',
-                    $this->dependencies[0],
-                    $this->dependencies[1],
-                    $this->dependencies[2]
-                ),
+            $client = new FXMLRPC\Client(
+                'http://localhost:9090/',
                 $this->dependencies[0],
                 $this->dependencies[1],
                 $this->dependencies[2]
             );
+            if ($this->dependencies[3]) {
+                $client = new \FXMLRPC\Timing\TimingDecorator($client, $this->dependencies[3]);
+            }
+            $this->clients[] = array($client, $this->dependencies[0], $this->dependencies[1], $this->dependencies[2]);
         }
         $this->pos--;
     }
