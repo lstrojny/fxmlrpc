@@ -104,10 +104,7 @@ class Client implements ClientInterface
     public function call($method, array $params = array())
     {
         $response = $this->parser->parse(
-            $this->transport->send(
-                $this->uri,
-                $this->serializer->serialize($method, $params)
-            ),
+            $this->transport->send($this->uri, $this->serializer->serialize($method, $params)),
             $isFault
         );
 
