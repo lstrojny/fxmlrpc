@@ -103,9 +103,13 @@ class Client implements ClientInterface
      */
     public function call($method, array $params = array())
     {
-        $requestPayload = $this->serializer->serialize($method, $params);
-        $responsePayload = $this->transport->send($this->uri, $requestPayload);
-        $response = $this->parser->parse($responsePayload, $isFault);
+        $response = $this->parser->parse(
+            $this->transport->send(
+                $this->uri,
+                $this->serializer->serialize($method, $params)
+            ),
+            $isFault
+        );
 
         if ($isFault) {
             throw new ResponseException(
