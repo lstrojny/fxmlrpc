@@ -68,6 +68,10 @@ class NativeSerializer implements SerializerInterface
             array_shift($toBeVisited);
         }
 
-        return xmlrpc_encode_request($method, $params, array('encoding' => 'UTF-8'));
+        return xmlrpc_encode_request(
+            $method,
+            $params,
+            array('encoding' => 'UTF-8', 'escaping' => 'markup')
+        );
     }
 }

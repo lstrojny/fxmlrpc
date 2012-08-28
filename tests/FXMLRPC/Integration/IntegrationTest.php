@@ -234,7 +234,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testString($client)
     {
-        $result = 'HELLO WORLD <> &';
+        $result = 'HELLO WORLD <> & ÜÖÄ';
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
