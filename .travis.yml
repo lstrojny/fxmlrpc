@@ -4,9 +4,8 @@ php:
   - 5.4
 
 before_script:
-  - sudo aptitude -y install subversion
-  - npm install git://github.com/baalexander/node-xmlrpc.git
-  - ./vendor.sh
+  - wget http://getcomposer.org/composer.phar
+  - php composer.phar install
 
 script:
   - phpunit
