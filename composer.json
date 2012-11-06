@@ -18,14 +18,14 @@
         "guzzle/guzzle": "*",
         "monolog/monolog": "*",
         "ext-curl": "*",
-        "ext-http": "*"
     },
     "suggest": {
         "zendframework/zend-http": "To use ZF2 Zend\\Http\\Client as HTTP client",
         "zendframework/zendframework1": "To use ZF1 Zend_Http_Client as HTTP client",
         "kriswallsmith/buzz": "To integrate Buzz as HTTP client",
         "guzzle/guzzle": "To integrate Guzzle as HTTP client",
-        "monolog/monolog": "To integrate monolog as logger"
+        "monolog/monolog": "To integrate monolog as logger",
+        "ext-http": "Use ext/http as HTTP client"
     },
     "autoload": {
         "psr-0": {"FXMLRPC": "src/"}
