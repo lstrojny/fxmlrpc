@@ -4,18 +4,14 @@ php:
   - 5.4
 
 env:
-    - ZF2_VERSION=2.0.1      ZF1_VERSION=dev-release-1.10 GUZZLE_VERSION="2.7.*"    MONOLOG_VERSION="1.0.*"     BUZZ_VERSION=0.5
-    - ZF2_VERSION=2.0.2      ZF1_VERSION=dev-release-1.11 GUZZLE_VERSION="2.8.*"    MONOLOG_VERSION="1.1.*"     BUZZ_VERSION=0.6
-    - ZF2_VERSION=2.0.3      ZF1_VERSION=dev-release-1.12 GUZZLE_VERSION="3.0.*"    MONOLOG_VERSION="1.2.*"     BUZZ_VERSION=0.7
-    - ZF2_VERSION=dev-master ZF1_VERSION=dev-trunk        GUZZLE_VERSION=dev-master MONOLOG_VERSION=dev-master  BUZZ_VERSION=dev-master
+    - ZF2_VERSION=2.0.1   ZF1_VERSION="1.10.*"   GUZZLE_VERSION="2.7.*"    MONOLOG_VERSION="1.0.*"     BUZZ_VERSION=0.5
+    - ZF2_VERSION=2.0.2   ZF1_VERSION="1.11.*"   GUZZLE_VERSION="2.8.*"    MONOLOG_VERSION="1.1.*"     BUZZ_VERSION=0.6
+    - ZF2_VERSION=2.0.3   ZF1_VERSION="1.12.*"   GUZZLE_VERSION="3.0.*"    MONOLOG_VERSION="1.2.*"     BUZZ_VERSION=0.7
+    - ZF2_VERSION="2.0.*" ZF1_VERSION=dev-trunk  GUZZLE_VERSION=dev-master MONOLOG_VERSION=dev-master  BUZZ_VERSION=dev-master
 
 before_script:
   - wget http://getcomposer.org/composer.phar
-  - php composer.phar require zendframework/zend-http:${ZF2_VERSION}
-  - php composer.phar require zendframework/zendframework1:${ZF1_VERSION}
-  - php composer.phar require guzzle/guzzle:${GUZZLE_VERSION}
-  - php composer.phar require monolog/monolog:${MONOLOG_VERSION}
-  - php composer.phar require kriswallsmith/buzz:${BUZZ_VERSION}
+  - php composer.phar require zendframework/zend-http:${ZF2_VERSION} zendframework/zendframework1:${ZF1_VERSION} guzzle/guzzle:${GUZZLE_VERSION} monolog/monolog:${MONOLOG_VERSION} kriswallsmith/buzz:${BUZZ_VERSION}
   - php composer.phar install --dev
   - npm install git://github.com/baalexander/node-xmlrpc.git
 
