@@ -1,12 +1,10 @@
-# FXMLRPC: really fast XML/RPC for PHP
+# FXMLRPC: really fast XML/RPC for PHP [![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.png)](http://travis-ci.org/lstrojny/fxmlrpc)
 
  - A convenient, object oriented API (similar to the XML/RPC client in Zend Framework)
  - Serializing and parsing is very fast
  - Provides integration with various HTTP clients like Buzz, ZF HTTP client, Guzzle so you can use the one you already
    have
  - Licensed under the terms of the liberal MIT license
-
-[![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.png)](http://travis-ci.org/lstrojny/fxmlrpc)
 
 
 ## How fast?
