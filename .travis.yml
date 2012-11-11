@@ -15,11 +15,6 @@ before_script:
   - php composer.phar install --dev
   - npm install git://github.com/baalexander/node-xmlrpc.git
 
-script: phpunit --coverage-clover "clover"
-
-after_success:
-    - curl -sL https://bit.ly/artifact-uploader | php
-
 notifications:
   email:
     - lstrojny@php.net
