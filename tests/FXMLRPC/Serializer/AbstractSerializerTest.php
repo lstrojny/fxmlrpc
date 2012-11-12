@@ -51,6 +51,7 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
                 '19980717T14:08:55'
             ),
             array('base64', new Base64('string'), "c3RyaW5n\n"),
+            array('string', 'Ümläuts', '&#220;ml&#228;uts'),
         );
     }
 
