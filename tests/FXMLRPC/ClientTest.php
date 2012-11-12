@@ -26,6 +26,26 @@ namespace FXMLRPC;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \FXMLRPC\Serializer\SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var \FXMLRPC\Parser\ParserInterface
+     */
+    private $parser;
+
+    /**
+     * @var \FXMLRPC\Transport\TransportInterface
+     */
+    private $transport;
+
+    /**
+     * @var Client
+     */
+    private $client;
+
     public function setUp()
     {
         $this->serializer = $this->getMockBuilder('FXMLRPC\Serializer\SerializerInterface')

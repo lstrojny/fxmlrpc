@@ -34,7 +34,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 {
     private $clients = array();
 
-    private $dependencies = array();
+    private $clientDependencies = array();
 
     private $pos = 0;
 
@@ -182,7 +182,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         if ($combinations) {
             for ($i = 0; $i < count($combinations[0]); ++$i) {
                 $temp = $combinations;
-                $this->dependencies[$this->pos] = $combinations[0][$i];
+                $this->clientDependencies[$this->pos] = $combinations[0][$i];
                 array_shift($temp);
                 $this->pos++;
                 $this->generateAllPossibleCombinations($temp);
@@ -190,14 +190,14 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         } else {
             $client = new FXMLRPC\Client(
                 'http://localhost:9090/',
-                $this->dependencies[0],
-                $this->dependencies[1],
-                $this->dependencies[2]
+                $this->clientDependencies[0],
+                $this->clientDependencies[1],
+                $this->clientDependencies[2]
             );
-            if ($this->dependencies[3]) {
-                $client = new \FXMLRPC\Timing\TimingDecorator($client, $this->dependencies[3]);
+            if ($this->clientDependencies[3]) {
+                $client = new \FXMLRPC\Timing\TimingDecorator($client, $this->clientDependencies[3]);
             }
-            $this->clients[] = array($client, $this->dependencies[0], $this->dependencies[1], $this->dependencies[2]);
+            $this->clients[] = array($client, $this->clientDependencies[0], $this->clientDependencies[1], $this->clientDependencies[2]);
         }
         $this->pos--;
     }

@@ -35,7 +35,7 @@ class XMLWriterSerializer implements SerializerInterface, ExtensionSupportInterf
 {
     private $writer;
 
-    private $extension = array();
+    private $extensions = array();
 
     public function __construct()
     {
@@ -160,7 +160,6 @@ class XMLWriterSerializer implements SerializerInterface, ExtensionSupportInterf
                         default:
                             $node = get_object_vars($node);
                             goto struct;
-                            break;
                     }
                     break;
 

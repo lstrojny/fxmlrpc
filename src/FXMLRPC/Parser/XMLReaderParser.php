@@ -198,7 +198,6 @@ class XMLReaderParser implements ParserInterface
                         case 'param':
                         case 'fault':
                             break 3;
-                            break;
 
                         case 'value':
                             $nextElements = array(
