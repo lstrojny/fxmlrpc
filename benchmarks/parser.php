@@ -1,10 +1,10 @@
 <?php
-include __DIR__ . '/../autoload.php';
+include __DIR__ . '/../vendor/autoload.php';
 
 $start = 0;
 $limit = 100;
 $r = null;
-$xml = file_get_contents('response.xml');
+$xml = file_get_contents(__DIR__ . '/response.xml');
 
 
 
