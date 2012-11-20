@@ -50,13 +50,16 @@ class MonologTimerBridge implements TimerInterface
      * customization
      *
      * @param \Monolog\Logger $logger
-     * @param null $level
+     * @param null|array $level
      * @param null $messageTemplate
      */
     public function __construct(Logger $logger, $level = null, $messageTemplate = null)
     {
         $this->logger = $logger;
         $this->level = $level ?: Logger::DEBUG;
+        if (is_array($this->level)) {
+            krsort($this->level);
+        }
         $this->messageTemplate = $messageTemplate ?: 'FXMLRPC call took %01.10Fs';
     }
 
@@ -67,10 +70,33 @@ class MonologTimerBridge implements TimerInterface
      */
     public function recordTiming($callTime, $method, array $arguments)
     {
+        $level = $this->getLevel($callTime);
+
         $this->logger->addRecord(
-            $this->level,
+            $level,
             sprintf($this->messageTemplate, $callTime),
             array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
         );
+    }
+
+    /**
+     * Get log level by callTime
+     *
+     * @param float $callTime
+     * @return int
+     */
+    private function getLevel($callTime)
+    {
+        if (!is_array($this->level)) {
+            return $this->level;
+        }
+
+        foreach ($this->level as $threshold => $level) {
+            if ($callTime >= $threshold) {
+                return $level;
+            }
+        }
+
+        return $level;
     }
 }
