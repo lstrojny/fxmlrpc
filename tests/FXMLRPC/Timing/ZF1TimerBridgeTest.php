@@ -72,4 +72,55 @@ class ZF1TimerBridgeTest extends \PHPUnit_Framework_TestCase
 
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
+
+    public function testSpecifyingLoggingThresholds()
+    {
+        $bridge = new ZF1TimerBridge($this->log, array(1 => Zend_Log::DEBUG, 2 => Zend_Log::WARN, 3.5 => Zend_Log::ALERT));
+        $this->log
+            ->expects($this->at(0))
+            ->method('log')
+            ->with(
+                'FXMLRPC call took 0.1000000000s',
+                Zend_Log::DEBUG,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
+        $this->log
+            ->expects($this->at(1))
+            ->method('log')
+            ->with(
+                'FXMLRPC call took 1.1000000000s',
+                Zend_Log::DEBUG,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
+        $this->log
+            ->expects($this->at(2))
+            ->method('log')
+            ->with(
+                'FXMLRPC call took 2.5000000000s',
+                Zend_Log::WARN,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
+        $this->log
+            ->expects($this->at(3))
+            ->method('log')
+            ->with(
+                'FXMLRPC call took 3.5000000000s',
+                Zend_Log::ALERT,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
+        $this->log
+            ->expects($this->at(4))
+            ->method('log')
+            ->with(
+                'FXMLRPC call took 5.5000000000s',
+                Zend_Log::ALERT,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
+
+        $bridge->recordTiming(0.1, 'method', array('arg1', 'arg2'));
+        $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
+        $bridge->recordTiming(2.5, 'method', array('arg1', 'arg2'));
+        $bridge->recordTiming(3.5, 'method', array('arg1', 'arg2'));
+        $bridge->recordTiming(5.5, 'method', array('arg1', 'arg2'));
+    }
 }

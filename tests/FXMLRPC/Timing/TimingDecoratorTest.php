@@ -56,13 +56,13 @@ class TimingDecoratorTest extends \PHPUnit_Framework_TestCase
         $this->timer
             ->expects($this->once())
             ->method('recordTiming')
-            ->with(0.1, 'method', array('arg1', 'arg2'));
+            ->with(1, 'method', array('arg1', 'arg2'));
 
         $this->functions
             ->expects($this->exactly(2))
             ->method('microtime')
             ->with(true)
-            ->will($this->onConsecutiveCalls(1, 1.1));
+            ->will($this->onConsecutiveCalls(1, 2));
 
         $this->wrapped
             ->expects($this->once())

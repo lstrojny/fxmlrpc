@@ -24,40 +24,56 @@
 
 namespace FXMLRPC\Timing;
 
-use Monolog\Logger;
-
-class MonologTimerBridge extends AbstractTimerBridge
+abstract class AbstractTimerBridge implements TimerInterface
 {
     /**
-     * Create new monolog bridge
-     *
-     * Allows passing custom log level and message template (with sprintf() control characters) for log message
-     * customization
-     *
-     * @param \Monolog\Logger $logger
-     * @param null|array $level
-     * @param null $messageTemplate
+     * @var object
      */
-    public function __construct(Logger $logger, $level = null, $messageTemplate = null)
+    protected $logger;
+
+    /**
+     * @var array|int
+     */
+    protected $level;
+
+    /**
+     * @var string
+     */
+    protected $messageTemplate = 'FXMLRPC call took %01.10Fs';
+
+    /**
+     * Set log level
+     *
+     * @param mixed $level
+     * @param mixed $default
+     */
+    protected function setLevel($level, $default)
     {
-        $this->logger = $logger;
-        $this->setLevel($level, Logger::DEBUG);
-        $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
+        if (is_array($level)) {
+            krsort($level);
+        }
+
+        $this->level = $level ?: $default;
     }
 
     /**
+     * Get log level by callTime
+     *
      * @param float $callTime
-     * @param string $method
-     * @param array $arguments
+     * @return int
      */
-    public function recordTiming($callTime, $method, array $arguments)
+    protected function getLevel($callTime)
     {
-        $level = $this->getLevel($callTime);
+        if (!is_array($this->level)) {
+            return $this->level;
+        }
 
-        $this->logger->addRecord(
-            $level,
-            sprintf($this->messageTemplate, $callTime),
-            array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
-        );
+        foreach ($this->level as $threshold => $level) {
+            if ($callTime >= $threshold) {
+                return $level;
+            }
+        }
+
+        return $level;
     }
 }

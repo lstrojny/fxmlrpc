@@ -26,23 +26,8 @@ namespace FXMLRPC\Timing;
 
 use Zend\Log\LoggerInterface;
 
-class ZF2TimerBridge implements TimerInterface
+class ZF2TimerBridge extends AbstractTimerBridge
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var string
-     */
-    private $method;
-
-    /**
-     * @var string
-     */
-    private $messageTemplate;
-
     /**
      * @param \Zend\Log\LoggerInterface $logger
      * @param string $method
@@ -51,8 +36,8 @@ class ZF2TimerBridge implements TimerInterface
     public function __construct(LoggerInterface $logger, $method = null, $messageTemplate = null)
     {
         $this->logger = $logger;
-        $this->method = $method ?: 'debug';
-        $this->messageTemplate = $messageTemplate ?: 'FXMLRPC call took %01.10Fs';
+        $this->setLevel($method, 'debug');
+        $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
     /**
@@ -60,7 +45,8 @@ class ZF2TimerBridge implements TimerInterface
      */
     public function recordTiming($callTime, $method, array $arguments)
     {
-        $this->logger->{$this->method}(
+        $level = $this->getLevel($callTime);
+        $this->logger->{$level}(
             sprintf($this->messageTemplate, $callTime),
             array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
         );
