@@ -55,6 +55,16 @@ class Client implements ClientInterface
     protected $serializer;
 
     /**
+     * @var array
+     */
+    protected $prependParams = array();
+
+    /**
+     * @var array
+     */
+    protected $appendParams = array();
+
+    /**
      * @param string $uri
      * @param Transport\TransportInterface $transport
      * @param Parser\ParserInterface $parser
@@ -94,6 +104,42 @@ class Client implements ClientInterface
     }
 
     /**
+     * Set default params to be prepended for each call (e.g. authorization information)
+     *
+     * @param array $params
+     */
+    public function prependParams(array $params)
+    {
+        $this->prependParams = $params;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrependParams()
+    {
+        return $this->prependParams;
+    }
+
+    /**
+     * Set default params to be appended for each call (e.g. authorization information)
+     *
+     * @param array $params
+     */
+    public function appendParams(array $params)
+    {
+        $this->appendParams = $params;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAppendParams()
+    {
+        return $this->appendParams;
+    }
+
+    /**
      * Execute remote call
      *
      * @param string $method
@@ -103,6 +149,8 @@ class Client implements ClientInterface
      */
     public function call($method, array $params = array())
     {
+        $params = array_merge($this->prependParams, $params, $this->appendParams);
+
         $response = $this->parser->parse(
             $this->transport->send($this->uri, $this->serializer->serialize($method, $params)),
             $isFault
