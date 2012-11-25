@@ -30,6 +30,9 @@ use FXMLRPC\Timing\TimerInterface;
 
 class TimingDecorator extends AbstractDecorator
 {
+    /**
+     * @var TimerInterface
+     */
     private $timer;
 
     public function __construct(ClientInterface $wrapped, TimerInterface $timer)
@@ -41,9 +44,7 @@ class TimingDecorator extends AbstractDecorator
     public function call($method, array $arguments = array())
     {
         $startTime = microtime(true);
-
         $result = parent::call($method, $arguments);
-
         $this->timer->recordTiming(microtime(true) - $startTime, $method, $arguments);
 
         return $result;

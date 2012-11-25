@@ -34,8 +34,6 @@ class TimingDecoratorTest extends \PHPUnit_Framework_TestCase
 
     private $decorator;
 
-    private $functions;
-
     public function setUp()
     {
         $this->wrapped = $this
@@ -45,9 +43,6 @@ class TimingDecoratorTest extends \PHPUnit_Framework_TestCase
         $this->timer = $this
             ->getMockBuilder('FXMLRPC\Timing\TimerInterface')
             ->getMock();
-        $this->functions = \PHPUnit_Extension_FunctionMocker::start($this, __NAMESPACE__)
-            ->mockFunction('microtime')
-            ->getMock();
         $this->decorator = new TimingDecorator($this->wrapped, $this->timer);
     }
 
@@ -56,13 +51,7 @@ class TimingDecoratorTest extends \PHPUnit_Framework_TestCase
         $this->timer
             ->expects($this->once())
             ->method('recordTiming')
-            ->with(100, 'method', array('arg1', 'arg2'));
-
-        $this->functions
-            ->expects($this->exactly(2))
-            ->method('microtime')
-            ->with(true)
-            ->will($this->onConsecutiveCalls(100, 200));
+            ->with($this->equalTo(0, 0.1), 'method', array('arg1', 'arg2'));
 
         $this->wrapped
             ->expects($this->once())
