@@ -81,6 +81,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             $serializedValue
         );
 
+        $isFault = true;
         $result = $this->parser->parse($xml, $isFault);
         if ($callback === null) {
             $this->assertEquals($expectedValue, $result);
@@ -107,6 +108,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             $serializedType
         );
 
+        $isFault = true;
         $this->assertEquals(null, $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
     }
@@ -129,9 +131,9 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             $serializedType
         );
 
+        $isFault = true;
         $this->assertEquals(null, $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
-
     }
 
     public function testParsingListResponse()
@@ -151,6 +153,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                     </param>
                 </params>
             </methodResponse>';
+
+        $isFault = true;
         $result = $this->parser->parse($string, $isFault);
         $this->assertFalse($isFault);
         $this->assertSame(array('Str 0', 'Str 1'), $result);
@@ -190,6 +194,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                     </param>
                 </params>
             </methodResponse>';
+
+        $isFault = true;
         $this->assertSame(
             array(array('Str 00', 'Str 01'), array('Str 10', 'Str 11')),
             $this->parser->parse($string, $isFault)
@@ -222,6 +228,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                     </param>
                 </params>
             </methodResponse>';
+
+        $isFault = true;
         $this->assertSame(
             array('FIRST' => 'ONE', 'SECOND' => 'TWO', 'THIRD' => 'THREE'),
             $this->parser->parse($string, $isFault)
@@ -272,6 +280,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                     </param>
                 </params>
             </methodResponse>';
+
+        $isFault = true;
         $this->assertSame(
             array(
                 'FIRST' => array('ONE' => 1, 'TWO' => 2),
@@ -345,6 +355,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                     </param>
                 </params>
             </methodResponse>';
+
+        $isFault = true;
         $this->assertSame(
             array(
                 'FIRST' => array(array(' Str 00', ' Str 01'), array(' Str 10', ' Str 11')),
@@ -366,6 +378,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
                 </methodResponse>';
 
+        $isFault = true;
         $this->assertSame(' ', $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
     }
@@ -390,6 +403,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </fault>
             </methodResponse>';
 
+        $isFault = false;
         $this->assertSame(
             array(
                 'faultCode' => 123,
@@ -413,6 +427,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
+        $isFault = true;
         $this->assertSame(
             null,
             $this->parser->parse($xml, $isFault)

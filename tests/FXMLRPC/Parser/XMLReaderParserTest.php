@@ -51,6 +51,7 @@ class XMLReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
+        $isFault = true;
         $this->assertSame(1, $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
     }
@@ -68,6 +69,7 @@ class XMLReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
+        $isFault = true;
         $this->assertSame(1, $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
     }
@@ -85,6 +87,7 @@ class XMLReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
+        $isFault = true;
         $this->assertSame('9223372036854775808', $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
     }
@@ -102,6 +105,7 @@ class XMLReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
+        $isFault = true;
         $this->assertSame('9223372036854775808', $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
     }
@@ -119,6 +123,7 @@ class XMLReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
+        $isFault = true;
         $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
     }
@@ -136,6 +141,7 @@ class XMLReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
+        $isFault = true;
         $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml, $isFault));
         $this->assertFalse($isFault);
     }
