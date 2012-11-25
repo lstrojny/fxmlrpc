@@ -13,6 +13,8 @@ before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar require zendframework/zend-http:${ZF2_VERSION} zendframework/zendframework1:${ZF1_VERSION} guzzle/guzzle:${GUZZLE_VERSION} monolog/monolog:${MONOLOG_VERSION} kriswallsmith/buzz:${BUZZ_VERSION}
   - php composer.phar install --dev
+  - aptitude install -y curl-dev
+  - pecl install http
   - npm install git://github.com/baalexander/node-xmlrpc.git
 
 notifications:
