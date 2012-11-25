@@ -44,9 +44,8 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $serverCommand = 'node ' . escapeshellarg('server.js');
         self::$server = proc_open(
-            $serverCommand,
+            'node server.js',
             array(
                 0 => array('pipe', 'r'),
                 1 => array('pipe', 'w'),
