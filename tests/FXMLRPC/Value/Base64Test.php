@@ -28,15 +28,24 @@ class Base64Test extends \PHPUnit_Framework_TestCase
 {
     public function testWithDecodedString()
     {
-        $base64 = new Base64('string');
+        $base64 = Base64::deserialize('string');
         $this->assertSame('string', $base64->getDecoded());
         $this->assertSame('c3RyaW5n', $base64->getEncoded());
     }
 
     public function testWithEncodedString()
     {
-        $base64 = new Base64('c3RyaW5n', true);
+        $base64 = Base64::serialize('c3RyaW5n');
         $this->assertSame('string', $base64->getDecoded());
         $this->assertSame('c3RyaW5n', $base64->getEncoded());
+    }
+
+    public function testConstructorIsDeprecated()
+    {
+        $this->setExpectedException(
+            'PHPUnit_Framework_Error_Deprecated',
+            'Constructing FXMLRPC\Value\Base64 with "new" is deprecated. Use FXMLRPC\Value\Base64::serialize() or FXMLRPC\Value\Base64::deserialize() instead'
+        );
+        new Base64('string');
     }
 }

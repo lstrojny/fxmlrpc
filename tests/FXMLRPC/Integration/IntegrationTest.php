@@ -242,7 +242,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testBase64($client)
     {
-        $expected = new FXMLRPC\Value\Base64('HELLO WORLD');
+        $expected = FXMLRPC\Value\Base64::deserialize('HELLO WORLD');
         $result = $client->call('system.echo', array($expected));
         $this->assertSame($expected->getEncoded(), $result->getEncoded());
         $this->assertSame($expected->getDecoded(), $result->getDecoded());

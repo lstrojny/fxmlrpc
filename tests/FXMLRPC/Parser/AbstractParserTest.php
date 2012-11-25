@@ -58,7 +58,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 'dateTime.iso8601',
                 '19980717T14:08:55'
             ),
-            array(new Base64('Zm9vYmFy', true), 'base64', 'Zm9vYmFy', function($v){return $v->getDecoded();}),
+            array(Base64::serialize('Zm9vYmFy'), 'base64', 'Zm9vYmFy', function($v){return $v->getDecoded();}),
             array('Ümläuts', 'string', '&#220;ml&#228;uts'),
         );
     }

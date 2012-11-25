@@ -26,12 +26,34 @@ namespace FXMLRPC\Value;
 
 class Base64 implements Base64Interface
 {
+    /**
+     * @var bool
+     */
+    private static $warnDeprecated = true;
+
+    /**
+     * @var string
+     */
     private $encoded;
 
+    /**
+     * @var string
+     */
     private $decoded;
 
+    /**
+     * @param string $string
+     * @param bool $isEncoded
+     */
     public function __construct($string, $isEncoded = false)
     {
+        if (static::$warnDeprecated) {
+            trigger_error(
+                sprintf('Constructing %1$s with "new" is deprecated. Use %1$s::serialize() or %1$s::deserialize() instead', __CLASS__),
+                E_USER_DEPRECATED
+            );
+        }
+
         if ($isEncoded) {
             $this->encoded = $string;
         } else {
@@ -39,6 +61,41 @@ class Base64 implements Base64Interface
         }
     }
 
+    /**
+     * Return new base64 value by string
+     *
+     * @param string $string
+     * @return Base64
+     */
+    public static function deserialize($string)
+    {
+        static::$warnDeprecated = false;
+        $value = new static($string);
+        static::$warnDeprecated = true;
+
+        return $value;
+    }
+
+    /**
+     * Return new base64 value object by encoded value
+     *
+     * @param string $value
+     * @return Base64
+     */
+    public static function serialize($value)
+    {
+        static::$warnDeprecated = false;
+        $value = new static($value, true);
+        static::$warnDeprecated = true;
+
+        return $value;
+    }
+
+    /**
+     * Get bas64 value as base64 string
+     *
+     * @return string
+     */
     public function getEncoded()
     {
         if ($this->encoded === null) {
@@ -48,6 +105,11 @@ class Base64 implements Base64Interface
         return $this->encoded;
     }
 
+    /**
+     * Get base64 value as string
+     *
+     * @return string
+     */
     public function getDecoded()
     {
         if ($this->decoded === null) {

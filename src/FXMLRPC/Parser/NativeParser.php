@@ -62,7 +62,7 @@ class NativeParser implements ParserInterface
 
                         case 'base64':
                             if ($value->scalar !== '') {
-                                $value = new Base64($value->scalar);
+                                $value = Base64::deserialize($value->scalar);
                                 break;
                             }
                             $value = null;

@@ -293,7 +293,7 @@ class XMLReaderParser implements ParserInterface
                             break;
 
                         case 'base64':
-                            $value = new Base64($xml->value, true);
+                            $value = Base64::serialize($xml->value);
                             break;
 
                         default:
