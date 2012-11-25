@@ -10,7 +10,7 @@ env:
     - ZF2_VERSION="2.0.*" ZF1_VERSION=dev-trunk  GUZZLE_VERSION=dev-master MONOLOG_VERSION=dev-master  BUZZ_VERSION=dev-master
 
 before_script:
-  - sudo aptitude install -y curl-dev
+  - sudo aptitude install -y libcurl-dev
   - sudo pecl install http
   - wget http://getcomposer.org/composer.phar
   - php composer.phar require zendframework/zend-http:${ZF2_VERSION} zendframework/zendframework1:${ZF1_VERSION} guzzle/guzzle:${GUZZLE_VERSION} monolog/monolog:${MONOLOG_VERSION} kriswallsmith/buzz:${BUZZ_VERSION}
