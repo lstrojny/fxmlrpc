@@ -48,33 +48,28 @@ class NativeParser implements ParserInterface
         $toBeVisited = array(&$result);
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
 
-            switch (gettype($value)) {
-                case 'object':
-                    switch ($value->xmlrpc_type) {
+            $type = gettype($value);
+            if ($type === 'object') {
+                $xmlRpcType = $value->xmlrpc_type;
+                if ($xmlRpcType === 'datetime') {
+                    $value = DateTime::createFromFormat(
+                        'Ymd\TH:i:s',
+                        $value->scalar,
+                        isset($timezone) ? $timezone : $timezone = new DateTimeZone('UTC')
+                    );
 
-                        case 'datetime':
-                            $value = DateTime::createFromFormat(
-                                'Ymd\TH:i:s',
-                                $value->scalar,
-                                isset($timezone) ? $timezone : $timezone = new DateTimeZone('UTC')
-                            );
-                            break;
-
-                        case 'base64':
-                            if ($value->scalar !== '') {
-                                $value = Base64::deserialize($value->scalar);
-                                break;
-                            }
-                            $value = null;
-                            break;
+                } elseif ($xmlRpcType === 'base64') {
+                    if ($value->scalar !== '') {
+                        $value = Base64::deserialize($value->scalar);
+                    } else {
+                        $value = null;
                     }
-                    break;
+                }
 
-                case 'array':
-                    foreach ($value as &$element) {
-                        $toBeVisited[] = &$element;
-                    }
-                    break;
+            } elseif ($type === 'array') {
+                foreach ($value as &$element) {
+                    $toBeVisited[] = &$element;
+                }
             }
 
             array_shift($toBeVisited);
