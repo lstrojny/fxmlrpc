@@ -2,7 +2,7 @@
 include __DIR__ . '/../vendor/autoload.php';
 
 $start = 0;
-$limit = 100;
+$limit = 10;
 
 $args = array();
 for ($a = 0; $a < 1000; $a++) {

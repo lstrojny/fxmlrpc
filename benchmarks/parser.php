@@ -1,8 +1,8 @@
 <?php
-include __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $start = 0;
-$limit = 100;
+$limit = 10;
 $r = null;
 $xml = file_get_contents(__DIR__ . '/response.xml');
 
@@ -11,10 +11,10 @@ $xml = file_get_contents(__DIR__ . '/response.xml');
 $start = microtime(true);
 for ($a = 0; $a < $limit; ++$a) {
     $s = new SimpleXmlElement($xml);
-    $r = Zend\XmlRpc\Value::getXmlRpcValue($s->params->param->value->asXml(), Zend\XmlRpc\Value::XML_STRING);
+    $r = Zend\XmlRpc\AbstractValue::getXmlRpcValue($s->params->param->value->asXml(), Zend\XmlRpc\AbstractValue::XML_STRING);
 }
 $end = microtime(true);
-printf("Zend\XmlRpc\\Value (ZF2): %s sec\n", $end - $start);
+printf("Zend\XmlRpc\\AbstractValue (ZF2): %s sec\n", $end - $start);
 
 
 
