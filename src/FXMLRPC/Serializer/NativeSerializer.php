@@ -32,7 +32,7 @@ class NativeSerializer implements SerializerInterface
     public function __construct()
     {
         if (!extension_loaded('xmlrpc')) {
-            throw new RuntimeException('PHP extension ext/xmlrpc missing');
+            throw new RuntimeException('PHP extension ext/xmlrpc must be installed');
         }
     }
 
@@ -41,28 +41,22 @@ class NativeSerializer implements SerializerInterface
         $toBeVisited = array(&$params);
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
 
-            switch (gettype($value)) {
-                case 'array':
-                    foreach ($value as &$v) {
-                        $toBeVisited[] = &$v;
-                    }
-                    break;
+            $type = gettype($value);
+            if ($type === 'array') {
+                foreach ($value as &$child) {
+                    $toBeVisited[] = &$child;
+                }
 
-                case 'object':
-                    if ($value instanceof DateTime) {
-                        $value = $value->format('Ymd\TH:i:s');
-                        xmlrpc_set_type($value, 'datetime');
-                        break;
-                    }
-
-                    if ($value instanceof Base64Interface) {
-                        $value = $value->getDecoded();
-                        xmlrpc_set_type($value, 'base64');
-                        break;
-                    }
-
+            } elseif ($type === 'object') {
+                if ($value instanceof DateTime) {
+                    $value = $value->format('Ymd\TH:i:s');
+                    xmlrpc_set_type($value, 'datetime');
+                } elseif ($value instanceof Base64Interface) {
+                    $value = $value->getDecoded();
+                    xmlrpc_set_type($value, 'base64');
+                } else {
                     $value = get_object_vars($value);
-                    break;
+                }
             }
 
             array_shift($toBeVisited);

@@ -35,7 +35,7 @@ class NativeParser implements ParserInterface
     public function __construct()
     {
         if (!extension_loaded('xmlrpc')) {
-            throw new RuntimeException('PHP extension ext/xmlrpc missing');
+            throw new RuntimeException('PHP extension ext/xmlrpc must be installed');
         }
     }
 

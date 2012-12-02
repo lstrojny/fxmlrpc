@@ -91,107 +91,100 @@ class XMLWriterSerializer implements SerializerInterface, ExtensionSupportInterf
 
         while ($toBeVisited) {
             $node = array_pop($toBeVisited);
+            $type = gettype($node);
 
-            switch (gettype($node)) {
-                case 'array':
+            if ($type === 'string') {
+                $writer->startElement('value');
+                $writer->writeElement('string', $node);
+                $writer->endElement();
 
-                    /** Find out if it is a struct or an array */
-                    $isStruct = false;
-                    $length = count($node);
-                    for ($a = 0; $a < $length; ++$a) {
-                        if (!isset($node[$a])) {
-                            $isStruct = true;
-                            break;
-                        }
+            } elseif ($type === 'integer') {
+                $writer->startElement('value');
+                $writer->writeElement('int', $node);
+                $writer->endElement();
+
+            } elseif ($type === 'double') {
+                if (!isset($precision)) {
+                    $precision = ini_get('precision');
+                }
+
+                $writer->startElement('value');
+                $writer->writeElement('double', $node);
+                $writer->endElement();
+
+            } elseif ($type === 'boolean') {
+                $writer->startElement('value');
+                $writer->writeElement('boolean', $node ? '1' : '0');
+                $writer->endElement();
+
+            } elseif ($type === 'NULL') {
+                $writer->startElement('value');
+                $writer->writeElement($nilTagName);
+                $writer->endElement();
+
+            } elseif ($type === 'array') {
+                /** Find out if it is a struct or an array */
+                $isStruct = false;
+                $length = count($node);
+                for ($a = 0; $a < $length; ++$a) {
+                    if (!isset($node[$a])) {
+                        $isStruct = true;
+                        break;
                     }
+                }
 
-                    if (!$isStruct) {
+                if (!$isStruct) {
+                    $toBeVisited[] = $endNode;
+                    $toBeVisited[] = $endNode;
+                    $toBeVisited[] = $endNode;
+                    foreach (array_reverse($node) as $value) {
+                        $toBeVisited[] = $value;
+                    }
+                    $toBeVisited[] = function() use ($writer) {
+                        $writer->startElement('array');
+                        $writer->startElement('data');
+                    };
+                    $toBeVisited[] = $valueNode;
+
+                } else {
+                    struct:
+                    $toBeVisited[] = $endNode;
+                    $toBeVisited[] = $endNode;
+                    foreach (array_reverse($node) as $key => $value) {
                         $toBeVisited[] = $endNode;
-                        $toBeVisited[] = $endNode;
-                        $toBeVisited[] = $endNode;
-                        foreach (array_reverse($node) as $value) {
-                            $toBeVisited[] = $value;
-                        }
-                        $toBeVisited[] = function() use ($writer) {
-                            $writer->startElement('array');
-                            $writer->startElement('data');
+                        $toBeVisited[] = $value;
+                        $toBeVisited[] = function() use ($writer, $key) {
+                            $writer->writeElement('name', $key);
                         };
-                        $toBeVisited[] = $valueNode;
-
-                    } else {
-                        struct:
-                        $toBeVisited[] = $endNode;
-                        $toBeVisited[] = $endNode;
-                        foreach (array_reverse($node) as $key => $value) {
-                            $toBeVisited[] = $endNode;
-                            $toBeVisited[] = $value;
-                            $toBeVisited[] = function() use ($writer, $key) {
-                                $writer->writeElement('name', $key);
-                            };
-                            $toBeVisited[] = function() use ($writer) {
-                                $writer->startElement('member');
-                            };
-                        }
                         $toBeVisited[] = function() use ($writer) {
-                            $writer->startElement('struct');
+                            $writer->startElement('member');
                         };
-                        $toBeVisited[] = $valueNode;
                     }
-                    break;
+                    $toBeVisited[] = function() use ($writer) {
+                        $writer->startElement('struct');
+                    };
+                    $toBeVisited[] = $valueNode;
+                }
 
-                case 'object':
-                    switch (true) {
-                        case $node instanceof Closure:
-                            $node();
-                            break;
+            } elseif ($type === 'object') {
 
-                        case $node instanceof DateTime:
-                            $writer->startElement('value');
-                            $writer->writeElement('dateTime.iso8601', $node->format('Ymd\TH:i:s'));
-                            $writer->endElement();
-                            break;
+                if ($node instanceof Closure) {
+                    $node();
 
-                        case $node instanceof Base64Interface:
-                            $writer->startElement('value');
-                            $writer->writeElement('base64', $node->getEncoded() . "\n");
-                            $writer->endElement();
-                            break;
-
-                        default:
-                            $node = get_object_vars($node);
-                            goto struct;
-                    }
-                    break;
-
-                case 'string':
+                } elseif ($node instanceof DateTime) {
                     $writer->startElement('value');
-                    $writer->writeElement('string', $node);
+                    $writer->writeElement('dateTime.iso8601', $node->format('Ymd\TH:i:s'));
                     $writer->endElement();
-                    break;
 
-                case 'integer':
+                } elseif ($node instanceof Base64Interface) {
                     $writer->startElement('value');
-                    $writer->writeElement('int', $node);
+                    $writer->writeElement('base64', $node->getEncoded() . "\n");
                     $writer->endElement();
-                    break;
 
-                case 'double':
-                    $writer->startElement('value');
-                    $writer->writeElement('double', $node);
-                    $writer->endElement();
-                    break;
-
-                case 'boolean':
-                    $writer->startElement('value');
-                    $writer->writeElement('boolean', $node ? '1' : '0');
-                    $writer->endElement();
-                    break;
-
-                case 'NULL':
-                    $writer->startElement('value');
-                    $writer->writeElement($nilTagName);
-                    $writer->endElement();
-                    break;
+                } else {
+                    $node = get_object_vars($node);
+                    goto struct;
+                }
             }
         }
 
