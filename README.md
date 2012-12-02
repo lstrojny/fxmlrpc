@@ -9,6 +9,7 @@
 
 ## Latest improvements
 
+ - `[IMPROVEMENT]` Small performance improvements in `FXMLRPC\Parser\XMLReaderParser`
  - `[BC]` Deprecated constructor of `FXMLRPC\Value\Base64` and introduced `::serialize()` an `::deserialize()` instead.
  - `[FEATURE]` Adding `FXMLRPC\Client::prependParams()` and `FXMLRPC\Client::appendParams()` to set default params. This helps e.g. when you need to add authorization information for every call
  - `[FEATURE]` Timing Loggers now support threshold based logging to ease controlling your servers responds in a certain time
