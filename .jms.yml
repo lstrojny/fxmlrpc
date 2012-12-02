@@ -23,6 +23,7 @@ default_config:
         enabled: true
     reflection_fixes:
         enabled: false
+    use_statement_fixes:
         preserve_multiple:    false
         order_alphabetically:  true
     fabpot_cs_fixer:
