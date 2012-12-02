@@ -9,6 +9,7 @@
 
 ## Latest improvements
 
+ - `[IMPROVEMENT]` Small memory improvements in `FXMLRPC\Parser\NativeParser`
  - `[IMPROVEMENT]` Small performance improvements in `FXMLRPC\Parser\XMLReaderParser`
  - `[BC]` Deprecated constructor of `FXMLRPC\Value\Base64` and introduced `::serialize()` an `::deserialize()` instead.
  - `[FEATURE]` Adding `FXMLRPC\Client::prependParams()` and `FXMLRPC\Client::appendParams()` to set default params. This helps e.g. when you need to add authorization information for every call

@@ -286,7 +286,11 @@ class XMLReaderParser implements ParserInterface
                             break;
 
                         case 'dateTime.iso8601':
-                            $value = DateTime::createFromFormat('Ymd\TH:i:s', $xml->value, new DateTimeZone('UTC'));
+                            $value = DateTime::createFromFormat(
+                                'Ymd\TH:i:s',
+                                $xml->value,
+                                isset($timezone) ? $timezone : $timezone = new DateTimeZone('UTC')
+                            );
                             break;
 
                         case 'base64':
@@ -294,7 +298,7 @@ class XMLReaderParser implements ParserInterface
                             break;
 
                         default:
-                            $value = $xml->value;
+                            $value = &$xml->value;
                             break;
                     }
 

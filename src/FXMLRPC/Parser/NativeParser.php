@@ -56,7 +56,7 @@ class NativeParser implements ParserInterface
                             $value = DateTime::createFromFormat(
                                 'Ymd\TH:i:s',
                                 $value->scalar,
-                                new DateTimeZone('UTC')
+                                isset($timezone) ? $timezone : $timezone = new DateTimeZone('UTC')
                             );
                             break;
 
