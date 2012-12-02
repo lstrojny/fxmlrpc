@@ -1,0 +1,29 @@
+default_config:
+    checkstyle:
+        enabled: true
+    suspicious_code:
+        overriding_parameter: true
+        overriding_closure_use: true
+    verify_php_doc_comments:
+        enabled: true
+        suggest_more_specific_types: true
+        ask_for_return_if_not_inferrable: true
+        ask_for_param_type_annotation: true
+    loops_must_use_braces:
+        enabled: true
+    check_usage_context:
+        enabled: true
+    phpunit_checks:
+        enabled: false
+    psr0_compliance:
+        enabled: true
+    composer_config_check:
+        publish_checks: true
+    doc_comment_fixes:
+        enabled: true
+    reflection_fixes:
+        enabled: false
+        preserve_multiple:    false
+        order_alphabetically:  true
+    fabpot_cs_fixer:
+        enabled: true
