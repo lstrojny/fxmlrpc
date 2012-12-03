@@ -9,6 +9,7 @@
 
 ## Latest improvements
 
+ - `[BUG]` Fixing various array/struct edge cases
  - `[IMPROVEMENT]` Small memory and performance improvements for serializers and parsers
  - `[BC]` Deprecated constructor of `FXMLRPC\Value\Base64` and introduced `::serialize()` an `::deserialize()` instead.
  - `[FEATURE]` Adding `FXMLRPC\Client::prependParams()` and `FXMLRPC\Client::appendParams()` to set default params. This helps e.g. when you need to add authorization information for every call

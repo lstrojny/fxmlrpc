@@ -124,9 +124,11 @@ class XMLWriterSerializer implements SerializerInterface, ExtensionSupportInterf
 
             } elseif ($type === 'array') {
                 /** Find out if it is a struct or an array */
+                $min = 0;
+                foreach ($node as $min => &$child) break;
                 $isStruct = false;
-                $length = count($node);
-                for ($a = 0; $a < $length; ++$a) {
+                $length = count($node) + $min;
+                for ($a = $min; $a < $length; ++$a) {
                     if (!isset($node[$a])) {
                         $isStruct = true;
                         break;
@@ -150,7 +152,7 @@ class XMLWriterSerializer implements SerializerInterface, ExtensionSupportInterf
                     struct:
                     $toBeVisited[] = $endNode;
                     $toBeVisited[] = $endNode;
-                    foreach (array_reverse($node) as $key => $value) {
+                    foreach (array_reverse($node, true) as $key => $value) {
                         $toBeVisited[] = $endNode;
                         $toBeVisited[] = $value;
                         $toBeVisited[] = function() use ($writer, $key) {

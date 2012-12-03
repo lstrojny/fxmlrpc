@@ -157,6 +157,115 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertXmlStringEqualsXmlString($xml, $this->serializer->serialize('method', array(array('ONE', 'TWO'))));
     }
 
+    public function testSerializingArraysNotStartingWithZero()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <array>
+                                    <data>
+                                        <value><string>ONE</string></value>
+                                        <value><string>TWO</string></value>
+                                    </data>
+                                </array>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize('method', array(array(1 => 'ONE', 2 => 'TWO')))
+        );
+    }
+
+    public function testSerializingArraysNotStartingWithZeroWithGaps()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <struct>
+                                    <member>
+                                        <name>1</name>
+                                        <value><string>ONE</string></value>
+                                    </member>
+                                    <member>
+                                        <name>3</name>
+                                        <value><string>TWO</string></value>
+                                    </member>
+                                </struct>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize('method', array(array(1 => 'ONE', 3 => 'TWO')))
+        );
+    }
+
+    public function testSerializingUnorderedArray()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <struct>
+                                    <member>
+                                        <name>-1</name>
+                                        <value><string>MINUS ONE</string></value>
+                                    </member>
+                                    <member>
+                                        <name>-2</name>
+                                        <value><string>MINUS TWO</string></value>
+                                    </member>
+                                    <member>
+                                        <name>1</name>
+                                        <value><string>ONE</string></value>
+                                    </member>
+                                </struct>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize('method', array(array(-1 => 'MINUS ONE', -2 => 'MINUS TWO', 1 => 'ONE')))
+        );
+    }
+
+    public function testSerializingEmptyArray()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <array>
+                                    <data/>
+                                </array>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize('method', array(array()))
+        );
+    }
+
     public function testSerializingStructs()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
