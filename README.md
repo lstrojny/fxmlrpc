@@ -63,6 +63,15 @@ $client = new FXMLRPC\Client(
 $client->call('remoteMethod', array('arg1', true));
 ```
 
+#### Prepending and appending arguments
+```php
+<?php
+$client = new FXMLRPC\Client('http://endpoint.com');
+$client->prependParams(array('username', 'password'));
+$client->appendParams(array('appended'));
+...
+```
+
 #### Integration for various HTTP clients
 ```php
 <?php
