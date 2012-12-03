@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $start = 0;
-$limit = 10;
+$limit = 40;
 $r = null;
 $xml = file_get_contents(__DIR__ . '/response.xml');
 
@@ -14,7 +14,7 @@ for ($a = 0; $a < $limit; ++$a) {
     $r = Zend\XmlRpc\AbstractValue::getXmlRpcValue($s->params->param->value->asXml(), Zend\XmlRpc\AbstractValue::XML_STRING);
 }
 $end = microtime(true);
-printf("Zend\XmlRpc\\AbstractValue (ZF2): %s sec\n", $end - $start);
+printf("Zend\XmlRpc\\AbstractValue (ZF2): %s sec for %d passes\n", $end - $start, $limit);
 
 
 
@@ -24,7 +24,7 @@ for ($a = 0; $a < $limit; ++$a) {
     $r = Zend_XmlRpc_Value::getXmlRpcValue($s->params->param->value->asXml(), Zend_XmlRpc_Value::XML_STRING);
 }
 $end = microtime(true);
-printf("Zend_XmlRpc_Value (ZF1): %s sec\n", $end - $start);
+printf("Zend_XmlRpc_Value (ZF1): %s sec for %d passes\n", $end - $start, $limit);
 
 
 
@@ -34,7 +34,7 @@ for ($a = 0; $a < $limit; ++$a) {
     $r = $parser->parse($xml, $isFault);
 }
 $end = microtime(true);
-printf("FXMLRPC\Parser\XMLReaderParser: %s sec\n", $end - $start);
+printf("FXMLRPC\Parser\XMLReaderParser: %s sec for %d passes\n", $end - $start, $limit);
 
 
 
@@ -44,4 +44,4 @@ for ($a = 0; $a < $limit; ++$a) {
     $r = $parser->parse($xml, $isFault);
 }
 $end = microtime(true);
-printf("FXMLRPC\Parser\\NativeParser: %s sec\n", $end - $start);
+printf("FXMLRPC\Parser\\NativeParser: %s sec for %d passes\n", $end - $start, $limit);
