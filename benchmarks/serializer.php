@@ -12,7 +12,7 @@ for ($a = 0; $a < 1000; $a++) {
         'test_integer' => (int) rand(),
         'test_float' => (float) rand(),
         'test_datetime' => new DateTime(),
-        'test_base64' => FXMLRPC\Value\Base64::serialize(str_repeat('a', $a)),
+        'test_base64' => fXmlRpc\Value\Base64::serialize(str_repeat('a', $a)),
     );
     $args[] = $a;
     $args[] = str_repeat('ä', $a);
@@ -48,20 +48,20 @@ printf("Zend_XmlRpc_Request (ZF1): %s sec for %d passes\n", $end - $start, $limi
 
 $start = microtime(true);
 for ($a = 0; $a < $limit; ++$a) {
-    $serializer = new FXMLRPC\Serializer\XMLWriterSerializer();
+    $serializer = new fXmlRpc\Serializer\XmlWriterSerializer();
     $r = $serializer->serialize('test', $args);
 }
 $end = microtime(true);
-printf("FXMLRPC\Serializer\XMLWriterSerializer: %s sec for %d passes\n", $end - $start, $limit);
+printf("fXmlRpc\Serializer\XmlWriterSerializer: %s sec for %d passes\n", $end - $start, $limit);
 
 
 
 $start = microtime(true);
 for ($a = 0; $a < $limit; ++$a) {
-    $serializer = new FXMLRPC\Serializer\NativeSerializer();
+    $serializer = new fXmlRpc\Serializer\NativeSerializer();
     $r = $serializer->serialize('test', $args);
 }
 $end = microtime(true);
-printf("FXMLRPC\Serializer\\NativeSerializer: %s sec for %d passes\n", $end - $start, $limit);
+printf("fXmlRpc\Serializer\\NativeSerializer: %s sec for %d passes\n", $end - $start, $limit);
 
 file_put_contents('response.xml', $r);

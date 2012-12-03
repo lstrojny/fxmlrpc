@@ -29,19 +29,19 @@ printf("Zend_XmlRpc_Value (ZF1): %s sec for %d passes\n", $end - $start, $limit)
 
 
 $start = microtime(true);
-$parser = new FXMLRPC\Parser\XMLReaderParser();
+$parser = new fXmlRpc\Parser\XmlReaderParser();
 for ($a = 0; $a < $limit; ++$a) {
     $r = $parser->parse($xml, $isFault);
 }
 $end = microtime(true);
-printf("FXMLRPC\Parser\XMLReaderParser: %s sec for %d passes\n", $end - $start, $limit);
+printf("fXmlRpc\Parser\XmlReaderParser: %s sec for %d passes\n", $end - $start, $limit);
 
 
 
 $start = microtime(true);
-$parser = new FXMLRPC\Parser\NativeParser();
+$parser = new fXmlRpc\Parser\NativeParser();
 for ($a = 0; $a < $limit; ++$a) {
     $r = $parser->parse($xml, $isFault);
 }
 $end = microtime(true);
-printf("FXMLRPC\Parser\\NativeParser: %s sec for %d passes\n", $end - $start, $limit);
+printf("fXmlRpc\Parser\\NativeParser: %s sec for %d passes\n", $end - $start, $limit);
