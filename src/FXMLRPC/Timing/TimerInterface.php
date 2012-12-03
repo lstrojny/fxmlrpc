@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Timing;
+namespace fXmlRpc\Timing;
 
 interface TimerInterface
 {

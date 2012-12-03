@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Value;
+namespace fXmlRpc\Value;
 
 interface Base64Interface
 {

@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Transport;
+namespace fXmlRpc\Transport;
 
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\BadResponseException;
 use Guzzle\Http\Exception\ServerErrorResponseException;
 use Guzzle\Http\Curl\CurlException as CompatCurlException;
 use Guzzle\Http\Exception\CurlException;
-use FXMLRPC\Exception\HttpException;
-use FXMLRPC\Exception\TcpException;
+use fXmlRpc\Exception\HttpException;
+use fXmlRpc\Exception\TcpException;
 
 class GuzzleBridge implements TransportInterface
 {

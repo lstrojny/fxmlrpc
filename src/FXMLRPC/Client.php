@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC;
+namespace fXmlRpc;
 
-use FXMLRPC\Transport\TransportInterface;
-use FXMLRPC\Transport\StreamSocketTransport;
-use FXMLRPC\Parser\ParserInterface;
-use FXMLRPC\Parser\XMLReaderParser;
-use FXMLRPC\Serializer\SerializerInterface;
-use FXMLRPC\Serializer\XMLWriterSerializer;
-use FXMLRPC\Exception\ResponseException;
+use fXmlRpc\Transport\TransportInterface;
+use fXmlRpc\Transport\StreamSocketTransport;
+use fXmlRpc\Parser\ParserInterface;
+use fXmlRpc\Parser\XmlReaderParser;
+use fXmlRpc\Serializer\SerializerInterface;
+use fXmlRpc\Serializer\XmlWriterSerializer;
+use fXmlRpc\Exception\ResponseException;
 
 class Client implements ClientInterface
 {
@@ -79,8 +79,8 @@ class Client implements ClientInterface
     {
         $this->uri = $uri;
         $this->transport = $transport ?: new StreamSocketTransport();
-        $this->parser = $parser ?: new XMLReaderParser();
-        $this->serializer = $serializer ?: new XMLWriterSerializer();
+        $this->parser = $parser ?: new XmlReaderParser();
+        $this->serializer = $serializer ?: new XmlWriterSerializer();
     }
 
     /**

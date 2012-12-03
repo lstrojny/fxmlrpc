@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Transport;
+namespace fXmlRpc\Transport;
 
-use FXMLRPC\Exception\HttpException;
-use FXMLRPC\Exception\TcpException;
+use fXmlRpc\Exception\HttpException;
+use fXmlRpc\Exception\TcpException;
 
 class CurlTransport implements TransportInterface
 {

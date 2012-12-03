@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Transport;
+namespace fXmlRpc\Transport;
 
 use HttpRequest;
 use HttpInvalidParamException;
-use FXMLRPC\Exception\HttpException;
-use FXMLRPC\Exception\TcpException;
+use fXmlRpc\Exception\HttpException;
+use fXmlRpc\Exception\TcpException;
 use ReflectionExtension;
 
 class PeclHttpBridge implements TransportInterface

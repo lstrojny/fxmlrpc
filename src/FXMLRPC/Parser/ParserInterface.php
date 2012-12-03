@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Parser;
+namespace fXmlRpc\Parser;
 
 interface ParserInterface
 {

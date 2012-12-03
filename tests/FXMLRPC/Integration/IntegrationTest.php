@@ -24,7 +24,7 @@
 
 namespace FXMLPRC\Integration;
 
-use FXMLRPC;
+use fXmlRpc;
 use Exception;
 
 /**
@@ -85,18 +85,18 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     private function getParsers()
     {
         return array(
-            new FXMLRPC\Parser\NativeParser(),
-            new FXMLRPC\Parser\XMLReaderParser(),
+            new fXmlRpc\Parser\NativeParser(),
+            new fXmlRpc\Parser\XMLReaderParser(),
         );
     }
 
     private function getSerializers()
     {
-        $nativeSerializer = new FXMLRPC\Serializer\NativeSerializer();
+        $nativeSerializer = new fXmlRpc\Serializer\NativeSerializer();
 
-        $xmlWriterSerializer = new FXMLRPC\Serializer\XMLWriterSerializer();
+        $xmlWriterSerializer = new fXmlRpc\Serializer\XMLWriterSerializer();
 
-        $xmlWriterNilExtensionDisabled = new FXMLRPC\Serializer\XMLWriterSerializer();
+        $xmlWriterNilExtensionDisabled = new fXmlRpc\Serializer\XMLWriterSerializer();
         $xmlWriterNilExtensionDisabled->disableExtension('nil');
 
         return array(
@@ -111,48 +111,48 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $browserSocket = new \Buzz\Browser();
         $browserSocket->setClient(new \Buzz\Client\FileGetContents());
 
-        $zf1HttpClientSocket = new \Zend_Http_Client();
-        $zf1HttpClientSocket->setAdapter(new \Zend_Http_Client_Adapter_Socket());
+        $zendFrameworkOneHttpClientSocket = new \Zend_Http_Client();
+        $zendFrameworkOneHttpClientSocket->setAdapter(new \Zend_Http_Client_Adapter_Socket());
 
-        $zf1HttpClientProxy = new \Zend_Http_Client();
-        $zf1HttpClientProxy->setAdapter(new \Zend_Http_Client_Adapter_Proxy());
+        $zendFrameworkOneHttpClientProxy = new \Zend_Http_Client();
+        $zendFrameworkOneHttpClientProxy->setAdapter(new \Zend_Http_Client_Adapter_Proxy());
 
-        $zf2HttpClientSocket = new \Zend\Http\Client();
-        $zf2HttpClientSocket->setAdapter(new \Zend\Http\Client\Adapter\Socket());
+        $zendFrameworkTwoHttpClientSocket = new \Zend\Http\Client();
+        $zendFrameworkTwoHttpClientSocket->setAdapter(new \Zend\Http\Client\Adapter\Socket());
 
-        $zf2HttpClientProxy = new \Zend\Http\Client();
-        $zf2HttpClientProxy->setAdapter(new \Zend\Http\Client\Adapter\Proxy());
+        $zendFrameworkTwoHttpClientProxy = new \Zend\Http\Client();
+        $zendFrameworkTwoHttpClientProxy->setAdapter(new \Zend\Http\Client\Adapter\Proxy());
 
         $transports = array(
-            new FXMLRPC\Transport\StreamSocketTransport(),
-            new FXMLRPC\Transport\BuzzBrowserBridge($browserSocket),
-            new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientSocket),
-            new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientProxy),
-            new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientSocket),
-            new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientProxy),
+            new fXmlRpc\Transport\StreamSocketTransport(),
+            new fXmlRpc\Transport\BuzzBrowserBridge($browserSocket),
+            new fXmlRpc\Transport\ZendFrameworkOneHttpClientBridge($zendFrameworkOneHttpClientSocket),
+            new fXmlRpc\Transport\ZendFrameworkOneHttpClientBridge($zendFrameworkOneHttpClientProxy),
+            new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientSocket),
+            new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientProxy),
         );
 
         if (extension_loaded('curl')) {
             $browserCurl = new \Buzz\Browser();
             $browserCurl->setClient(new \Buzz\Client\Curl());
-            $transports[] = new FXMLRPC\Transport\BuzzBrowserBridge($browserCurl);
+            $transports[] = new fXmlRpc\Transport\BuzzBrowserBridge($browserCurl);
 
-            $zf1HttpClientCurl = new \Zend_Http_Client();
-            $zf1HttpClientCurl->setAdapter(new \Zend_Http_Client_Adapter_Curl());
-            $transports[] = new FXMLRPC\Transport\ZF1HttpClientBridge($zf1HttpClientCurl);
+            $zendFrameworkOneHttpClientCurl = new \Zend_Http_Client();
+            $zendFrameworkOneHttpClientCurl->setAdapter(new \Zend_Http_Client_Adapter_Curl());
+            $transports[] = new fXmlRpc\Transport\ZendFrameworkOneHttpClientBridge($zendFrameworkOneHttpClientCurl);
 
-            $zf2HttpClientCurl = new \Zend\Http\Client();
-            $zf2HttpClientCurl->setAdapter(new \Zend\Http\Client\Adapter\Curl());
-            $transports[] = new FXMLRPC\Transport\ZF2HttpClientBridge($zf2HttpClientCurl);
+            $zendFrameworkTwoHttpClientCurl = new \Zend\Http\Client();
+            $zendFrameworkTwoHttpClientCurl->setAdapter(new \Zend\Http\Client\Adapter\Curl());
+            $transports[] = new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientCurl);
 
             $guzzle = new \Guzzle\Http\Client();
-            $transports[] = new FXMLRPC\Transport\GuzzleBridge($guzzle);
+            $transports[] = new fXmlRpc\Transport\GuzzleBridge($guzzle);
 
-            $transports[] = new FXMLRPC\Transport\CurlTransport();
+            $transports[] = new fXmlRpc\Transport\CurlTransport();
         }
 
         if (extension_loaded('http')) {
-            $transports[] = new FXMLRPC\Transport\PeclHttpBridge(new \HttpRequest());
+            $transports[] = new fXmlRpc\Transport\PeclHttpBridge(new \HttpRequest());
         }
 
         return $transports;
@@ -160,18 +160,18 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     private function getTimerBridges()
     {
-        $zf1Logger = new \Zend_Log(new \Zend_Log_Writer_Null());
+        $zendFrameworkOneLogger = new \Zend_Log(new \Zend_Log_Writer_Null());
 
-        $zf2Logger = new \Zend\Log\Logger();
-        $zf2Logger->addWriter(new \Zend\Log\Writer\Null());
+        $zendFrameworkTwoLogger = new \Zend\Log\Logger();
+        $zendFrameworkTwoLogger->addWriter(new \Zend\Log\Writer\Null());
 
         $monolog = new \Monolog\Logger('test');
         $monolog->pushHandler(new \Monolog\Handler\NullHandler());
 
         return array(
-            new \FXMLRPC\Timing\ZF1TimerBridge($zf1Logger),
-            new \FXMLRPC\Timing\ZF2TimerBridge($zf2Logger),
-            new \FXMLRPC\Timing\MonologTimerBridge($monolog),
+            new \fXmlRpc\Timing\ZendFrameworkOneTimerBridge($zendFrameworkOneLogger),
+            new \fXmlRpc\Timing\ZendFrameworkTwoTimerBridge($zendFrameworkTwoLogger),
+            new \fXmlRpc\Timing\MonologTimerBridge($monolog),
             null
         );
     }
@@ -187,14 +187,14 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
                 $this->generateAllPossibleCombinations($temp);
             }
         } else {
-            $client = new FXMLRPC\Client(
+            $client = new fXmlRpc\Client(
                 'http://localhost:9090/',
                 $this->clientDependencies[0],
                 $this->clientDependencies[1],
                 $this->clientDependencies[2]
             );
             if ($this->clientDependencies[3]) {
-                $client = new \FXMLRPC\Timing\TimingDecorator($client, $this->clientDependencies[3]);
+                $client = new \fXmlRpc\Timing\TimingDecorator($client, $this->clientDependencies[3]);
             }
             $this->clients[] = array($client, $this->clientDependencies[0], $this->clientDependencies[1], $this->clientDependencies[2]);
         }
@@ -242,7 +242,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testBase64($client)
     {
-        $expected = FXMLRPC\Value\Base64::deserialize('HELLO WORLD');
+        $expected = fXmlRpc\Value\Base64::deserialize('HELLO WORLD');
         $result = $client->call('system.echo', array($expected));
         $this->assertSame($expected->getEncoded(), $result->getEncoded());
         $this->assertSame($expected->getDecoded(), $result->getDecoded());
@@ -323,7 +323,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         try {
             $client->call('system.fault');
             $this->fail('Expected exception');
-        } catch (FXMLRPC\Exception\ResponseException $e) {
+        } catch (fXmlRpc\Exception\ResponseException $e) {
             $this->assertSame('ERROR', $e->getMessage());
             $this->assertSame('ERROR', $e->getFaultString());
             $this->assertSame(0, $e->getCode());
@@ -341,9 +341,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         try {
             $client->call('system.failure');
             $this->fail('Exception expected');
-        } catch (\FXMLRPC\Exception\HttpException $e) {
-            $this->assertInstanceOf('FXMLRPC\Exception\TransportException', $e);
-            $this->assertInstanceOf('FXMLRPC\Exception\ExceptionInterface', $e);
+        } catch (\fXmlRpc\Exception\HttpException $e) {
+            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
+            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
             $this->assertInstanceOf('RuntimeException', $e);
             $this->assertStringStartsWith('An HTTP error occured', $e->getMessage());
             $this->assertSame(500, $e->getCode());
@@ -360,9 +360,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         try {
             $client->call('system.failure');
             $this->fail('Exception expected');
-        } catch (\FXMLRPC\Exception\TcpException $e) {
-            $this->assertInstanceOf('FXMLRPC\Exception\TransportException', $e);
-            $this->assertInstanceOf('FXMLRPC\Exception\ExceptionInterface', $e);
+        } catch (\fXmlRpc\Exception\TcpException $e) {
+            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
+            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
             $this->assertInstanceOf('RuntimeException', $e);
             $this->assertStringStartsWith('A transport error occured', $e->getMessage());
             $this->assertSame(0, $e->getCode());

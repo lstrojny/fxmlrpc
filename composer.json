@@ -28,6 +28,6 @@
         "ext-http": "Use ext/http as HTTP client"
     },
     "autoload": {
-        "psr-0": {"FXMLRPC": "src/"}
+        "psr-0": {"fXmlRpc": "src/"}
     }
 }

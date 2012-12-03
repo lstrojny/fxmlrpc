@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Timing;
+namespace fXmlRpc\Timing;
 
-use FXMLRPC\Timing\TimingDecorator;
+use fXmlRpc\Timing\TimingDecorator;
 
 use Monolog\Logger;
 
@@ -53,7 +53,7 @@ class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
             ->method('addRecord')
             ->with(
                 Logger::DEBUG,
-                'FXMLRPC call took 1.1000000000s',
+                'fXmlRpc call took 1.1000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
 
@@ -68,7 +68,7 @@ class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
             ->method('addRecord')
             ->with(
                 Logger::ALERT,
-                'FXMLRPC call took 1.1000000000s',
+                'fXmlRpc call took 1.1000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
 
@@ -98,7 +98,7 @@ class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
             ->method('addRecord')
             ->with(
                 Logger::DEBUG,
-                'FXMLRPC call took 0.1000000000s',
+                'fXmlRpc call took 0.1000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
         $this->monolog
@@ -106,7 +106,7 @@ class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
             ->method('addRecord')
             ->with(
                 Logger::DEBUG,
-                'FXMLRPC call took 1.1000000000s',
+                'fXmlRpc call took 1.1000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
         $this->monolog
@@ -114,7 +114,7 @@ class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
             ->method('addRecord')
             ->with(
                 Logger::WARNING,
-                'FXMLRPC call took 2.5000000000s',
+                'fXmlRpc call took 2.5000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
         $this->monolog
@@ -122,7 +122,7 @@ class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
             ->method('addRecord')
             ->with(
                 Logger::ALERT,
-                'FXMLRPC call took 3.5000000000s',
+                'fXmlRpc call took 3.5000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
         $this->monolog
@@ -130,7 +130,7 @@ class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
             ->method('addRecord')
             ->with(
                 Logger::ALERT,
-                'FXMLRPC call took 5.5000000000s',
+                'fXmlRpc call took 5.5000000000s',
                 array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
             );
 

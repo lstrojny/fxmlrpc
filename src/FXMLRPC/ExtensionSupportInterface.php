@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC;
+namespace fXmlRpc;
 
 interface ExtensionSupportInterface
 {

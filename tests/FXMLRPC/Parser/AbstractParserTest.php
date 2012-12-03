@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Parser;
+namespace fXmlRpc\Parser;
 
 use DateTime;
 use DateTimeZone;
-use FXMLRPC\Value\Base64;
+use fXmlRpc\Value\Base64;
 
 abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 {

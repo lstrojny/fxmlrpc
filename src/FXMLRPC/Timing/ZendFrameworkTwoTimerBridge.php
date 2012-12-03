@@ -22,40 +22,33 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Transport;
+namespace fXmlRpc\Timing;
 
-use Zend\Http\Client;
-use Zend\Http\Client\Adapter\Exception\RuntimeException;
-use FXMLRPC\Exception\HttpException;
-use FXMLRPC\Exception\TcpException;
+use Zend\Log\LoggerInterface;
 
-class ZF2HttpClientBridge implements TransportInterface
+class ZendFrameworkTwoTimerBridge extends AbstractTimerBridge
 {
-    private $client;
-
-    public function __construct(Client $client)
+    /**
+     * @param LoggerInterface $logger
+     * @param string $method
+     * @param string $messageTemplate
+     */
+    public function __construct(LoggerInterface $logger, $method = null, $messageTemplate = null)
     {
-        $this->client = $client;
+        $this->logger = $logger;
+        $this->setLevel($method, 'debug');
+        $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
-    public function send($url, $payload)
+    /**
+     * {@inheritdocs}
+     */
+    public function recordTiming($callTime, $method, array $arguments)
     {
-        try {
-            $response = $this->client->setMethod('POST')
-                                    ->setUri($url)
-                                    ->setRawBody($payload)
-                                    ->send();
-        } catch (RuntimeException $e) {
-            throw new TcpException('A transport error occured', null, $e);
-        }
-
-        if ($response->getStatusCode() !== 200) {
-            throw new HttpException(
-                'An HTTP error occured: ' . $response->getReasonPhrase(),
-                $response->getStatusCode()
-            );
-        }
-
-        return $response->getBody();
+        $level = $this->getLevel($callTime);
+        $this->logger->{$level}(
+            sprintf($this->messageTemplate, $callTime),
+            array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
+        );
     }
 }

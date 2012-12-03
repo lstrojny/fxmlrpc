@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Serializer;
+namespace fXmlRpc\Serializer;
 
 class NativeSerializerTest extends AbstractSerializerTest
 {

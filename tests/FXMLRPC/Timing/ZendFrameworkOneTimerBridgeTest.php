@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Timing;
+namespace fXmlRpc\Timing;
 
-use FXMLRPC\Timing\ZF2TimerBridge;
+use fXmlRpc\Timing\ZendFrameworkOneTimerBridge;
+use Zend_Log;
 
-class ZF2TimerBridgeTest extends \PHPUnit_Framework_TestCase
+class ZendFrameworkOneTimerBridgeTest extends \PHPUnit_Framework_TestCase
 {
     private $log;
 
     public function setUp()
     {
-        $this->log = $this->getMockBuilder('Zend\Log\LoggerInterface')
+        $this->log = $this->getMockBuilder('Zend_Log')
             ->disableOriginalClone()
             ->disableOriginalConstructor()
             ->getMock();
@@ -40,11 +41,11 @@ class ZF2TimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultLogging()
     {
-        $bridge = new ZF2TimerBridge($this->log);
+        $bridge = new ZendFrameworkOneTimerBridge($this->log);
         $this->log
             ->expects($this->once())
-            ->method('debug')
-            ->with('FXMLRPC call took 0.1000000000s', array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
+            ->method('log')
+            ->with('fXmlRpc call took 0.1000000000s', Zend_Log::DEBUG, array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
 
 
         $bridge->recordTiming(0.1, 'method', array('arg1'));
@@ -52,69 +53,69 @@ class ZF2TimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testWithCustomLogLevel()
     {
-        $bridge = new ZF2TimerBridge($this->log, 'alert');
+        $bridge = new ZendFrameworkOneTimerBridge($this->log, Zend_Log::ALERT);
         $this->log
             ->expects($this->once())
-            ->method('alert')
-            ->with('FXMLRPC call took 0.1000000000s', array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
+            ->method('log')
+            ->with('fXmlRpc call took 0.1000000000s', Zend_Log::ALERT, array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
 
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
 
     public function testWithCustomMessageTemplate()
     {
-        $bridge = new ZF2TimerBridge($this->log, null, 'Custom template %2.1Fs');
+        $bridge = new ZendFrameworkOneTimerBridge($this->log, null, 'Custom template %2.1Fs');
         $this->log
             ->expects($this->once())
-            ->method('debug')
-            ->with('Custom template 0.1s', array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
+            ->method('log')
+            ->with('Custom template 0.1s', Zend_Log::DEBUG, array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
 
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new ZF2TimerBridge($this->log, array(1 => 'debug', 2 => 'warn', 3.5 => 'alert'));
+        $bridge = new ZendFrameworkOneTimerBridge($this->log, array(1 => Zend_Log::DEBUG, 2 => Zend_Log::WARN, 3.5 => Zend_Log::ALERT));
         $this->log
             ->expects($this->at(0))
-            ->method('debug')
+            ->method('log')
             ->with(
-                'FXMLRPC call took 0.1000000000s',
-                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2')
-            )
-        );
+                'fXmlRpc call took 0.1000000000s',
+                Zend_Log::DEBUG,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
         $this->log
             ->expects($this->at(1))
-            ->method('debug')
+            ->method('log')
             ->with(
-                'FXMLRPC call took 1.1000000000s',
-                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2')
-            )
-        );
+                'fXmlRpc call took 1.1000000000s',
+                Zend_Log::DEBUG,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
         $this->log
             ->expects($this->at(2))
-            ->method('warn')
+            ->method('log')
             ->with(
-                'FXMLRPC call took 2.5000000000s',
-                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2')
-            )
-        );
+                'fXmlRpc call took 2.5000000000s',
+                Zend_Log::WARN,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
         $this->log
             ->expects($this->at(3))
-            ->method('alert')
+            ->method('log')
             ->with(
-                'FXMLRPC call took 3.5000000000s',
-                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2')
-            )
-        );
+                'fXmlRpc call took 3.5000000000s',
+                Zend_Log::ALERT,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
         $this->log
             ->expects($this->at(4))
-            ->method('alert')
+            ->method('log')
             ->with(
-                'FXMLRPC call took 5.5000000000s',
-                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2')
-            )
-        );
+                'fXmlRpc call took 5.5000000000s',
+                Zend_Log::ALERT,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1', 'arg2'))
+            );
 
         $bridge->recordTiming(0.1, 'method', array('arg1', 'arg2'));
         $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));

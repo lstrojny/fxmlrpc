@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Exception;
+namespace fXmlRpc\Exception;
 
 class HttpException extends TransportException
 {

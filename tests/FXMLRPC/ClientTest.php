@@ -22,22 +22,22 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC;
+namespace fXmlRpc;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \FXMLRPC\Serializer\SerializerInterface
+     * @var \fXmlRpc\Serializer\SerializerInterface
      */
     private $serializer;
 
     /**
-     * @var \FXMLRPC\Parser\ParserInterface
+     * @var \fXmlRpc\Parser\ParserInterface
      */
     private $parser;
 
     /**
-     * @var \FXMLRPC\Transport\TransportInterface
+     * @var \fXmlRpc\Transport\TransportInterface
      */
     private $transport;
 
@@ -48,11 +48,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->serializer = $this->getMockBuilder('FXMLRPC\Serializer\SerializerInterface')
+        $this->serializer = $this->getMockBuilder('fXmlRpc\Serializer\SerializerInterface')
                                  ->getMock();
-        $this->parser = $this->getMockBuilder('FXMLRPC\Parser\ParserInterface')
+        $this->parser = $this->getMockBuilder('fXmlRpc\Parser\ParserInterface')
                              ->getMock();
-        $this->transport = $this->getMockBuilder('FXMLRPC\Transport\TransportInterface')
+        $this->transport = $this->getMockBuilder('fXmlRpc\Transport\TransportInterface')
                              ->getMock();
 
         $this->client = new Client('http://foo.com', $this->transport, $this->parser, $this->serializer);

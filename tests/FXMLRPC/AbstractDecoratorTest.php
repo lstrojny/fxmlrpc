@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC;
+namespace fXmlRpc;
 
 class NullDecorator extends AbstractDecorator
 {
@@ -31,7 +31,7 @@ class NullDecorator extends AbstractDecorator
 class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \FXMLRPC\ClientInterface
+     * @var \fXmlRpc\ClientInterface
      */
     private $wrapped;
 
@@ -43,7 +43,7 @@ class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->wrapped = $this
-            ->getMockBuilder('FXMLRPC\ClientInterface')
+            ->getMockBuilder('fXmlRpc\ClientInterface')
             ->getMock();
         $this->decorator = new NullDecorator($this->wrapped);
     }

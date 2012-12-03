@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC;
+namespace fXmlRpc;
 
 abstract class AbstractDecorator implements ClientInterface
 {

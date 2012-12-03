@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Transport;
+namespace fXmlRpc\Transport;
 
 use Buzz\Browser;
 use RuntimeException;
-use FXMLRPC\Exception\TcpException;
-use FXMLRPC\Exception\HttpException;
+use fXmlRpc\Exception\TcpException;
+use fXmlRpc\Exception\HttpException;
 
 class BuzzBrowserBridge implements TransportInterface
 {

@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Timing;
+namespace fXmlRpc\Timing;
 
-use FXMLRPC\ClientInterface;
-use FXMLRPC\AbstractDecorator;
-use FXMLRPC\Timing\TimerInterface;
+use fXmlRpc\ClientInterface;
+use fXmlRpc\AbstractDecorator;
+use fXmlRpc\Timing\TimerInterface;
 
 class TimingDecorator extends AbstractDecorator
 {

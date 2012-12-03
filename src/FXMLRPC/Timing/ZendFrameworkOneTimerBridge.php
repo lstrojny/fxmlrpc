@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Timing;
+namespace fXmlRpc\Timing;
 
-use Zend\Log\LoggerInterface;
+use Zend_Log;
 
-class ZF2TimerBridge extends AbstractTimerBridge
+class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
 {
     /**
-     * @param \Zend\Log\LoggerInterface $logger
-     * @param string $method
+     * @param Zend_Log $logger
+     * @param integer $level
      * @param string $messageTemplate
      */
-    public function __construct(LoggerInterface $logger, $method = null, $messageTemplate = null)
+    public function __construct(Zend_Log $logger, $level = null, $messageTemplate = null)
     {
         $this->logger = $logger;
-        $this->setLevel($method, 'debug');
+        $this->setLevel($level, Zend_Log::DEBUG);
         $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
@@ -45,9 +45,9 @@ class ZF2TimerBridge extends AbstractTimerBridge
      */
     public function recordTiming($callTime, $method, array $arguments)
     {
-        $level = $this->getLevel($callTime);
-        $this->logger->{$level}(
+        $this->logger->log(
             sprintf($this->messageTemplate, $callTime),
+            $this->getLevel($callTime),
             array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
         );
     }

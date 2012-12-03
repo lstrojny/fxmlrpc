@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Timing;
+namespace fXmlRpc\Timing;
 
 abstract class AbstractTimerBridge implements TimerInterface
 {
@@ -39,7 +39,7 @@ abstract class AbstractTimerBridge implements TimerInterface
     /**
      * @var string
      */
-    protected $messageTemplate = 'FXMLRPC call took %01.10Fs';
+    protected $messageTemplate = 'fXmlRpc call took %01.10Fs';
 
     /**
      * Set log level

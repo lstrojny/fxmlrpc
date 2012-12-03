@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Serializer;
+namespace fXmlRpc\Serializer;
 
 use DateTime;
 use DateTimeZone;
-use FXMLRPC\Value\Base64;
+use fXmlRpc\Value\Base64;
 
 abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
 {

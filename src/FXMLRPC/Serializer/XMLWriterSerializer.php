@@ -22,16 +22,16 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Serializer;
+namespace fXmlRpc\Serializer;
 
 use XMLWriter;
 use Closure;
 use DateTime;
 use stdClass;
-use FXMLRPC\Value\Base64Interface;
-use FXMLRPC\ExtensionSupportInterface;
+use fXmlRpc\Value\Base64Interface;
+use fXmlRpc\ExtensionSupportInterface;
 
-class XMLWriterSerializer implements SerializerInterface, ExtensionSupportInterface
+class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterface
 {
     private $writer;
 

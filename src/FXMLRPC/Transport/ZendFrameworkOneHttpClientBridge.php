@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Transport;
+namespace fXmlRpc\Transport;
 
 use Zend_Http_Client;
 use Zend_Http_Client_Adapter_Exception;
 use Zend_Http_Client_Exception;
-use FXMLRPC\Exception\HttpException;
-use FXMLRPC\Exception\TcpException;
+use fXmlRpc\Exception\HttpException;
+use fXmlRpc\Exception\TcpException;
 
-class ZF1HttpClientBridge implements TransportInterface
+class ZendFrameworkOneHttpClientBridge implements TransportInterface
 {
     private $client;
 

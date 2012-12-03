@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Parser;
+namespace fXmlRpc\Parser;
 
 use DateTime;
 use DateTimeZone;
 
-class XMLReaderParserTest extends AbstractParserTest
+class XmlReaderParserTest extends AbstractParserTest
 {
     public function setUp()
     {

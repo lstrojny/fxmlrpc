@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Parser;
+namespace fXmlRpc\Parser;
 
-use FXMLRPC\Value\Base64;
+use fXmlRpc\Value\Base64;
 use XMLReader;
 use RuntimeException;
 use DateTime;
 use DateTimeZone;
 
-class XMLReaderParser implements ParserInterface
+class XmlReaderParser implements ParserInterface
 {
     public function __construct()
     {

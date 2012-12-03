@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Serializer;
+namespace fXmlRpc\Serializer;
 
 use DateTime;
-use FXMLRPC\Value\Base64Interface;
+use fXmlRpc\Value\Base64Interface;
 
 class NativeSerializer implements SerializerInterface
 {

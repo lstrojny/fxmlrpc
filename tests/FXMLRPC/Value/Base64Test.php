@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Value;
+namespace fXmlRpc\Value;
 
 class Base64Test extends \PHPUnit_Framework_TestCase
 {
@@ -44,7 +44,7 @@ class Base64Test extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(
             'PHPUnit_Framework_Error_Deprecated',
-            'Constructing FXMLRPC\Value\Base64 with "new" is deprecated. Use FXMLRPC\Value\Base64::serialize() or FXMLRPC\Value\Base64::deserialize() instead'
+            'Constructing fXmlRpc\Value\Base64 with "new" is deprecated. Use fXmlRpc\Value\Base64::serialize() or fXmlRpc\Value\Base64::deserialize() instead'
         );
         new Base64('string');
     }

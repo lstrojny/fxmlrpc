@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Parser;
+namespace fXmlRpc\Parser;
 
 use DateTime;
 use DateTimeZone;
 use stdClass;
 use RuntimeException;
-use FXMLRPC\Value\Base64;
+use fXmlRpc\Value\Base64;
 
 class NativeParser implements ParserInterface
 {

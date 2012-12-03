@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-namespace FXMLRPC\Serializer;
+namespace fXmlRpc\Serializer;
 
-use FXMLRPC\ExtensionSupportInterface;
+use fXmlRpc\ExtensionSupportInterface;
 
-class XMLWriterSerializerTest extends AbstractSerializerTest
+class XmlWriterSerializerTest extends AbstractSerializerTest
 {
     public function setUp()
     {
@@ -35,7 +35,7 @@ class XMLWriterSerializerTest extends AbstractSerializerTest
 
     public function testDisableNilExtension()
     {
-        $this->assertInstanceOf('FXMLRPC\ExtensionSupportInterface', $this->serializer);
+        $this->assertInstanceOf('fXmlRpc\ExtensionSupportInterface', $this->serializer);
         $nilXml = '<?xml version="1.0" encoding="UTF-8"?>
                 <methodCall>
                     <methodName>method</methodName>
