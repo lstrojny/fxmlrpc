@@ -35,7 +35,7 @@ class XmlReaderParserTest extends AbstractParserTest
             $this->markTestSkipped('ext/xmlreader not available');
         }
 
-        $this->parser = new XMLReaderParser();
+        $this->parser = new XmlReaderParser();
     }
 
     public function testApacheI1ExtensionValue()

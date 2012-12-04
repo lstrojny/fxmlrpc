@@ -30,7 +30,7 @@ class XmlWriterSerializerTest extends AbstractSerializerTest
 {
     public function setUp()
     {
-        $this->serializer = new XMLWriterSerializer();
+        $this->serializer = new XmlWriterSerializer();
     }
 
     public function testDisableNilExtension()

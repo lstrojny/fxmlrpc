@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXMLPRC\Integration;
+namespace FXmlPRC\Integration;
 
 use fXmlRpc;
 use Exception;
@@ -86,7 +86,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             new fXmlRpc\Parser\NativeParser(),
-            new fXmlRpc\Parser\XMLReaderParser(),
+            new fXmlRpc\Parser\XmlReaderParser(),
         );
     }
 
@@ -94,9 +94,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $nativeSerializer = new fXmlRpc\Serializer\NativeSerializer();
 
-        $xmlWriterSerializer = new fXmlRpc\Serializer\XMLWriterSerializer();
+        $xmlWriterSerializer = new fXmlRpc\Serializer\XmlWriterSerializer();
 
-        $xmlWriterNilExtensionDisabled = new fXmlRpc\Serializer\XMLWriterSerializer();
+        $xmlWriterNilExtensionDisabled = new fXmlRpc\Serializer\XmlWriterSerializer();
         $xmlWriterNilExtensionDisabled->disableExtension('nil');
 
         return array(
