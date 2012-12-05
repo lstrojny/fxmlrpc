@@ -9,6 +9,7 @@
 
 ## Latest improvements
 
+ - `[IMPROVEMENT]` Improved exception handling
  - `[BC]` Changing naming scheme to studly caps
  - `[BUG]` Fixing various array/struct edge cases
  - `[IMPROVEMENT]` Small memory and performance improvements for serializers and parsers
