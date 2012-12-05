@@ -54,11 +54,6 @@ class ExceptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGettingMessage($exception)
     {
-        if ($exception instanceof ResponseException) {
-            $this->assertTrue(true, 'Does not apply for ResponseException');
-            return;
-        }
-
         $this->assertSame('message', $exception->getMessage());
     }
 
@@ -67,11 +62,6 @@ class ExceptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testGettingCode($exception)
     {
-        if ($exception instanceof ResponseException) {
-            $this->assertTrue(true, 'Does not apply for ResponseException');
-            return;
-        }
-
         $this->assertSame(100, $exception->getCode());
     }
 }

@@ -46,16 +46,13 @@ class ZendFrameworkOneHttpClientBridge implements TransportInterface
                                     ->setRawData($payload)
                                     ->request('POST');
         } catch (Zend_Http_Client_Adapter_Exception $e) {
-            throw new TcpException('A transport error occured', null, $e);
+            throw TcpException::transportError($e);
         } catch (Zend_Http_Client_Exception $e) {
-            throw new TcpException('A transport error occured', null, $e);
+            throw TcpException::transportError($e);
         }
 
         if ($response->getStatus() !== 200) {
-            throw new HttpException(
-                'An HTTP error occured: ' . $response->getMessage(),
-                $response->getStatus()
-            );
+            throw HttpException::httpError($response->getMessage(), $response->getStatus());
         }
 
         return $response->getBody();

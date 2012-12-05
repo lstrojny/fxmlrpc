@@ -24,7 +24,19 @@
 
 namespace fXmlRpc\Transport;
 
+use fXmlRpc\Exception\HttpException;
+use fXmlRpc\Exception\TransportException;
+
 interface TransportInterface
 {
+    /**
+     * Send HTTP post request
+     *
+     * @param string $uri
+     * @param string $payload
+     * @throws HttpException If an HTTP exception occurred
+     * @throws TransportException If a transport error occurred
+     * @return string
+     */
     public function send($uri, $payload);
 }

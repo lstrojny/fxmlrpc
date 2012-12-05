@@ -46,11 +46,11 @@ class StreamSocketTransport implements TransportInterface
             $error = error_get_last();
 
             if (strpos($error['message'], 'HTTP request failed')) {
-                preg_match('|HTTP/1.[0-1]\s+(\d+)|', $error['message'], $matches);
-                throw new HttpException('An HTTP error occured: ' . $error['message'], $matches[1]);
+                preg_match('|HTTP/1.[0-1]\s+(?<code>\d+)|', $error['message'], $matches);
+                throw HttpException::httpError($error['message'], $matches['code']);
             }
 
-            throw new TcpException('A transport error occured: ' . $error['message']);
+            throw TcpException::transportError($error['message']);
         }
 
         return $response;

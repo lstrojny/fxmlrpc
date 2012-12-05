@@ -46,14 +46,11 @@ class ZendFrameworkTwoHttpClientBridge implements TransportInterface
                                     ->setRawBody($payload)
                                     ->send();
         } catch (RuntimeException $e) {
-            throw new TcpException('A transport error occured', null, $e);
+            throw TcpException::transportError($e);
         }
 
         if ($response->getStatusCode() !== 200) {
-            throw new HttpException(
-                'An HTTP error occured: ' . $response->getReasonPhrase(),
-                $response->getStatusCode()
-            );
+            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
         }
 
         return $response->getBody();

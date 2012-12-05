@@ -28,10 +28,12 @@ class ResponseException extends RuntimeException
 {
     private $faultCode;
 
-    public function __construct($faultString, $faultCode)
+    public static function fault($response)
     {
-        parent::__construct($faultString);
-        $this->faultCode = $faultCode;
+        $exception = new static(isset($response['faultString']) ? $response['faultString'] : 'Unknown');
+        $exception->faultCode = isset($response['faultCode']) ? $response['faultCode'] : 0;
+
+        return $exception;
     }
 
     public function getFaultString()

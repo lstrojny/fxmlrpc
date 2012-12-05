@@ -157,10 +157,7 @@ class Client implements ClientInterface
         );
 
         if ($isFault) {
-            throw new ResponseException(
-                isset($response['faultString']) ? $response['faultString'] : 'Unknown',
-                isset($response['faultCode']) ? $response['faultCode'] : 0
-            );
+            throw ResponseException::fault($response);
         }
 
         return $response;

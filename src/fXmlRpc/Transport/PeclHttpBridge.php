@@ -53,15 +53,12 @@ class PeclHttpBridge implements TransportInterface
             $response = $this->request->send();
 
             if ($response->getResponseCode() !== 200) {
-                throw new HttpException(
-                    'An HTTP error occured: ' . $response->getResponseStatus(),
-                    $response->getResponseCode()
-                );
+                throw HttpException::httpError($response->getResponseStatus(), $response->getResponseCode());
             }
 
             return $response->getBody();
         } catch (HttpInvalidParamException $e) {
-            throw new TcpException('A transport error occured', null, $e);
+            throw TcpException::transportError($e);
         }
     }
 }

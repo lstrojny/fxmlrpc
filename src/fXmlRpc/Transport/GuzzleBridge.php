@@ -47,21 +47,13 @@ class GuzzleBridge implements TransportInterface
             $response = $this->client->post($uri, null, $payload)
                                      ->send();
         } catch (CurlException $e) {
-            throw new TcpException('A transport error occured', null, $e);
+            throw TcpException::transportError($e);
         } catch (CompatCurlException $e) {
-            throw new TcpException('A transport error occured', null, $e);
+            throw TcpException::transportError($e);
         } catch (BadResponseException $e) {
-            throw new HttpException(
-                'An HTTP error occured: ' . $e->getMessage(),
-                $e->getResponse()->getStatusCode(),
-                $e
-            );
+            throw HttpException::httpError($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         } catch (ServerErrorResponseException $e) {
-            throw new HttpException(
-                'An HTTP error occured: ' . $e->getMessage(),
-                $e->getResponse()->getStatusCode(),
-                $e
-            );
+            throw HttpException::httpError($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         }
 
         return $response->getBody(true);
