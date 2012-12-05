@@ -30,6 +30,8 @@ use DateTime;
 use stdClass;
 use fXmlRpc\Value\Base64Interface;
 use fXmlRpc\ExtensionSupportInterface;
+use fXmlRpc\Exception\SerializationException;
+use fXmlRpc\Exception\MissingExtensionException;
 
 class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterface
 {
@@ -40,7 +42,7 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
     public function __construct()
     {
         if (!extension_loaded('xmlwriter')) {
-            throw new RuntimeException('PHP extension ext/xmlwriter missing');
+            throw MissingExtensionException::extensionMissing('xmlwriter');
         }
 
         $this->writer = new XMLWriter();
@@ -187,6 +189,8 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
                     $node = get_object_vars($node);
                     goto struct;
                 }
+            } elseif ($type === 'resource') {
+                throw SerializationException::invalidType($node);
             }
         }
 

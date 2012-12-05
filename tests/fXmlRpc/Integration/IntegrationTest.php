@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace FXmlPRC\Integration;
+namespace fXmlPRC\Integration;
 
 use fXmlRpc;
 use Exception;

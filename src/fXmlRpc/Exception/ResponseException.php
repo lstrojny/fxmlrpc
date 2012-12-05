@@ -24,9 +24,7 @@
 
 namespace fXmlRpc\Exception;
 
-use RuntimeException;
-
-class ResponseException extends RuntimeException implements ExceptionInterface
+class ResponseException extends RuntimeException
 {
     private $faultCode;
 

@@ -298,6 +298,40 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
             $this->serializer->serialize('method', array(array('FIRST' => 'ONE', 'SECOND' => 'TWO', 'THIRD' => 'THREE')))
         );
     }
+
+    public function testSerializingObjects()
+    {
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <struct>
+                                    <member>
+                                        <name>FIRST</name>
+                                        <value><string>ONE</string></value>
+                                    </member>
+                                    <member>
+                                        <name>SECOND</name>
+                                        <value><string>TWO</string></value>
+                                    </member>
+                                    <member>
+                                        <name>THIRD</name>
+                                        <value><string>THREE</string></value>
+                                    </member>
+                                </struct>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize('method', array((object) array('FIRST' => 'ONE', 'SECOND' => 'TWO', 'THIRD' => 'THREE')))
+        );
+    }
+
     public function testSerializingArraysInStructs()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
@@ -391,6 +425,17 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
             $xml,
             $this->serializer->serialize('method', array(new Test()))
         );
+    }
+
+    public function testSerializingResource()
+    {
+        $resource = stream_context_create();
+
+        $this->setExpectedException(
+            'fXmlRpc\Exception\SerializationException',
+            'Could not serialize resource of type "stream-context"'
+        );
+        $this->serializer->serialize('method', array($resource));
     }
 }
 

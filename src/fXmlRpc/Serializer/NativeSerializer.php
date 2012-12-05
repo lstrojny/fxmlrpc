@@ -26,13 +26,15 @@ namespace fXmlRpc\Serializer;
 
 use DateTime;
 use fXmlRpc\Value\Base64Interface;
+use fXmlRpc\Exception\SerializationException;
+use fXmlRpc\Exception\MissingExtensionException;
 
 class NativeSerializer implements SerializerInterface
 {
     public function __construct()
     {
         if (!extension_loaded('xmlrpc')) {
-            throw new RuntimeException('PHP extension ext/xmlrpc must be installed');
+            throw MissingExtensionException::extensionMissing('xmlrpc');
         }
     }
 
@@ -57,6 +59,8 @@ class NativeSerializer implements SerializerInterface
                 } else {
                     $value = get_object_vars($value);
                 }
+            } elseif ($type === 'resource') {
+                throw SerializationException::invalidType($value);
             }
 
             array_shift($toBeVisited);

@@ -26,7 +26,8 @@ namespace fXmlRpc\Parser;
 
 use fXmlRpc\Value\Base64;
 use XMLReader;
-use RuntimeException;
+use fXmlRpc\Exception\MissingExtensionException;
+use fXmlRpc\Exception\RuntimeException;
 use DateTime;
 use DateTimeZone;
 
@@ -35,7 +36,7 @@ class XmlReaderParser implements ParserInterface
     public function __construct()
     {
         if (!extension_loaded('xmlreader')) {
-            throw new RuntimeException('PHP extension ext/xmlreader missing');
+            throw MissingExtensionException::extensionMissing('xmlreader');
         }
     }
 

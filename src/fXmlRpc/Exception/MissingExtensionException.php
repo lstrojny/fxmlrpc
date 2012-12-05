@@ -24,6 +24,12 @@
 
 namespace fXmlRpc\Exception;
 
-class TransportException extends RuntimeException
+class MissingExtensionException extends RuntimeException
 {
+    public static function extensionMissing($extension)
+    {
+        return new static(
+            sprintf('PHP extension "ext/%s" is required but not installed', $extension)
+        );
+    }
 }

@@ -24,6 +24,10 @@
 
 namespace fXmlRpc\Exception;
 
-class TransportException extends RuntimeException
+use InvalidArgumentException as BaseInvalidArgumentException;
+
+class InvalidArgumentException
+    extends BaseInvalidArgumentException
+    implements ExceptionInterface
 {
 }

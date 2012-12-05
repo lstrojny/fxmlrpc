@@ -24,6 +24,12 @@
 
 namespace fXmlRpc\Exception;
 
-class TransportException extends RuntimeException
+class SerializationException extends InvalidArgumentException
 {
+    public static function invalidType($value)
+    {
+        return new static(
+            sprintf('Could not serialize %s of type "%s"', gettype($value), get_resource_type($value))
+        );
+    }
 }
