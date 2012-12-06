@@ -9,6 +9,7 @@
 
 ## Latest improvements
 
+ - `[BUG]` Fixing implicit string type handling (where string is no child of value)
  - `[IMPROVEMENT]` Improved exception handling
  - `[BC]` Changing naming scheme to studly caps
  - `[BUG]` Fixing various array/struct edge cases

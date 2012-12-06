@@ -139,7 +139,9 @@ class XmlReaderParser implements ParserInterface
                                 'dateTime.iso8601' => true,
                                 'base64'           => true,
                                 'nil'              => true,
+                                '#text'            => true,
                             );
+                            $type = 'value';
                             break;
 
                         case 'base64':

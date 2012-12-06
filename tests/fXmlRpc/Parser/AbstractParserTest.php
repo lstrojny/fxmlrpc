@@ -383,6 +383,22 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($isFault);
     }
 
+    public function testImplicitString()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodResponse>
+                <params>
+                    <param>
+                    <value>STRING</value>
+                    </param>
+                </params>
+                </methodResponse>';
+
+        $isFault = true;
+        $this->assertSame('STRING', $this->parser->parse($xml, $isFault));
+        $this->assertFalse($isFault);
+    }
+
     public function testParsingFaultCode()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
