@@ -128,7 +128,7 @@ class XmlReaderParserTest extends AbstractParserTest
         $this->assertFalse($isFault);
     }
 
-    public function testApacheFloatlExtensionValue()
+    public function testApacheFloatExtensionValue()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
             <methodResponse xmlns:ext="http://ws.apache.org/xmlrpc/namespaces/extensions">
@@ -143,6 +143,34 @@ class XmlReaderParserTest extends AbstractParserTest
 
         $isFault = true;
         $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml, $isFault));
+        $this->assertFalse($isFault);
+    }
+
+    public function testApacheDomExtension()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse xmlns:ex="http://ws.apache.org/xmlrpc/namespaces/extensions">
+                <params><param><value><ex:dom><foo><bar>baz</bar></foo></ex:dom></value></param></params>
+        </methodResponse>';
+
+        $isFault = true;
+        $result = $this->parser->parse($xml, $isFault);
+        $this->assertInstanceOf('DOMDocument', $result);
+        $this->assertXmlStringEqualsXmlString('<foo><bar>baz</bar></foo>', $result->saveXML());
+        $this->assertFalse($isFault);
+    }
+
+    public function testApacheDateTimeExtension()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+        <methodResponse xmlns:ex="http://ws.apache.org/xmlrpc/namespaces/extensions">
+            <params><param><value><ex:dateTime>2012-12-09T14:26:40.448+01:00</ex:dateTime></value></param></params>
+        </methodResponse>';
+
+        $isFault = true;
+        $result = $this->parser->parse($xml, $isFault);
+        $this->assertInstanceOf('DateTime', $result);
+        $this->assertSame('2012-12-09T14:26:40.448000+01:00', $result->format('Y-m-d\TH:i:s.uP'));
         $this->assertFalse($isFault);
     }
 }

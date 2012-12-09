@@ -30,6 +30,7 @@ use fXmlRpc\Exception\MissingExtensionException;
 use fXmlRpc\Exception\RuntimeException;
 use DateTime;
 use DateTimeZone;
+use DOMDocument;
 
 class XmlReaderParser implements ParserInterface
 {
@@ -63,7 +64,7 @@ class XmlReaderParser implements ParserInterface
             }
 
             $tagName = $xml->localName;
-            if (!isset($nextElements[$tagName])) {
+            if ($nextElements !== null && !isset($nextElements[$tagName])) {
                 throw new RuntimeException(
                     sprintf(
                         'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
@@ -137,8 +138,10 @@ class XmlReaderParser implements ParserInterface
                                 'float'            => true,
                                 'bigdecimal'       => true,
                                 'dateTime.iso8601' => true,
+                                'dateTime'         => true,
                                 'base64'           => true,
                                 'nil'              => true,
+                                'dom'              => true,
                                 '#text'            => true,
                             );
                             $type = 'value';
@@ -149,6 +152,7 @@ class XmlReaderParser implements ParserInterface
                         case 'biginteger':
                         case 'i8':
                         case 'dateTime.iso8601':
+                        case 'dateTime':
                             $nextElements = array('#text' => true, $tagName => true, 'value' => true);
                             $type = $tagName;
                             $aggregates[$depth + 1] = '';
@@ -171,7 +175,7 @@ class XmlReaderParser implements ParserInterface
 
                         case 'boolean':
                             $nextElements = array('#text' => true, $tagName => true, 'value' => true);
-                            $type = $tagName;
+                            $type = 'boolean';
                             $aggregates[$depth + 1] = false;
                             break;
 
@@ -183,7 +187,17 @@ class XmlReaderParser implements ParserInterface
                             $aggregates[$depth + 1] = 0.0;
                             break;
 
+                        case 'dom':
+                            $type = 'dom';
+                            // Disable type checking
+                            $nextElements = null;
+                            $aggregates[$depth + 1] = $xml->readInnerXml();
+                            break;
+
                         default:
+                            if ($type === 'dom') {
+                                break;
+                            }
                             throw new RuntimeException(
                                 sprintf(
                                     'Invalid tag <%s> found',
@@ -228,6 +242,7 @@ class XmlReaderParser implements ParserInterface
                         case 'float':
                         case 'bigdecimal':
                         case 'dateTime.iso8601':
+                        case 'dateTime':
                         case 'base64':
                             $nextElements = array('value' => true);
                             break;
@@ -259,6 +274,9 @@ class XmlReaderParser implements ParserInterface
                             break;
 
                         default:
+                            if ($nextElements === null) {
+                                break;
+                            }
                             throw new RuntimeException(
                                 sprintf(
                                     'Invalid tag </%s> found',
@@ -296,8 +314,22 @@ class XmlReaderParser implements ParserInterface
                             );
                             break;
 
+                        case 'dateTime':
+                            $value = DateTime::createFromFormat(
+                                'Y-m-d\TH:i:s.uP',
+                                $xml->value,
+                                isset($timezone) ? $timezone : $timezone = new DateTimeZone('UTC')
+                            );
+                            break;
+
                         case 'base64':
                             $value = Base64::deserialize($xml->value);
+                            break;
+
+                        case 'dom':
+                            $doc = new DOMDocument('1.0', 'UTF-8');
+                            $doc->loadXML($aggregates[$depth + 1]);
+                            $value = $doc;
                             break;
 
                         default:
@@ -306,6 +338,9 @@ class XmlReaderParser implements ParserInterface
                     }
 
                     $aggregates[$depth + 1] = $value;
+                    if ($nextElements === null) {
+                        break;
+                    }
                     $nextElements = array($type => true);
                     break;
             }

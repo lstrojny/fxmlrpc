@@ -31,5 +31,9 @@ require_once __DIR__ . '/AbstractIntegrationTest.php';
  */
 class NodeIntegrationTest extends AbstractIntegrationTest
 {
+    protected $endpoint = 'http://localhost:9090/';
+
+    protected $errorEndpoint = 'http://localhost:9091/';
+
     protected static $command = 'node server.js';
 }
