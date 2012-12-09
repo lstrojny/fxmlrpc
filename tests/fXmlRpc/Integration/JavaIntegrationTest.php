@@ -37,7 +37,5 @@ class JavaIntegrationTest extends AbstractIntegrationTest
 
     protected $disabledExtensions = array('nil');
 
-    protected $numberOfClients = 30;
-
-    protected static $command = 'java -jar server.jar 8080 8081';
+    protected static $command = 'java -jar server.jar 8080 8081 2>&1';
 }

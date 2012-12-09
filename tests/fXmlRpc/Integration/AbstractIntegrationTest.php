@@ -32,27 +32,19 @@ use Exception;
  */
 abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
 {
-    protected $endpoint = 'http://localhost:9090/';
-
-    protected $errorEndpoint = 'http://localhost:9091/';
-
-    protected $numberOfClients = null;
-
-    protected $restartEvery = null;
-
-    protected static $count;
-
     protected $disabledExtensions = array();
 
-    private $clients = array();
-
-    private $clientDependencies = array();
-
-    private $pos = 0;
+    protected static $command;
 
     protected static $server;
 
     protected static $pipes;
+
+    private $pos = 0;
+
+    private $clients = array();
+
+    private $clientDependencies = array();
 
     protected static function startServer()
     {
@@ -109,11 +101,6 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
                 $this->getTimerBridges()
             )
         );
-
-        if ($this->numberOfClients !== null) {
-            shuffle($this->clients);
-            $this->clients = array_slice($this->clients, 0, $this->numberOfClients);
-        }
 
         return $this->clients;
     }

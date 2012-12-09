@@ -35,7 +35,5 @@ class PythonIntegrationTest extends AbstractIntegrationTest
 
     protected $errorEndpoint = 'http://localhost:8001';
 
-    protected $numberOfClients = 30;
-
     protected static $command = 'python server.py 2>&1';
 }
