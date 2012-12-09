@@ -36,7 +36,7 @@ class PythonIntegrationTest extends AbstractIntegrationTest
     public static function setUpBeforeClass()
     {
         self::$server = proc_open(
-            'python server.py',
+            'python server.py > /dev/null',
             array(
                 0 => array('pipe', 'r'),
                 1 => array('pipe', 'w'),
