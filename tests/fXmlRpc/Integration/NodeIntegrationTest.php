@@ -31,29 +31,5 @@ require_once __DIR__ . '/AbstractIntegrationTest.php';
  */
 class NodeIntegrationTest extends AbstractIntegrationTest
 {
-    public static function setUpBeforeClass()
-    {
-        self::$server = proc_open(
-            'node server.js',
-            array(
-                0 => array('pipe', 'r'),
-                1 => array('pipe', 'w'),
-                2 => array('pipe', 'r'),
-            ),
-            self::$pipes,
-            __DIR__ . '/Fixtures'
-        );
-        sleep(2);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        proc_terminate(self::$server);
-
-        foreach (self::$pipes as $pipe) {
-            fclose($pipe);
-        }
-
-        proc_close(self::$server);
-    }
+    protected static $command = 'node server.js';
 }

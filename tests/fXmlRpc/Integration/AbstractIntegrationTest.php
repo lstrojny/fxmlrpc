@@ -42,7 +42,7 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
 
     protected static $count;
 
-    protected $extensions = array('nil');
+    protected $disabledExtensions = array();
 
     private $clients = array();
 
@@ -55,19 +55,46 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
     protected static $pipes;
 
     protected static function startServer()
-    {}
+    {
+        self::$server = proc_open(
+            static::$command,
+            array(
+                0 => array('pipe', 'r'),
+                1 => array('pipe', 'w'),
+                2 => array('pipe', 'r'),
+            ),
+            self::$pipes,
+            __DIR__ . '/Fixtures'
+        );
+    }
 
     protected static function stopServer()
-    {}
+    {
+        proc_terminate(self::$server);
+
+        foreach (self::$pipes as $pipe) {
+            fclose($pipe);
+        }
+
+        proc_close(self::$server);
+    }
 
     public static function setUpBeforeClass()
     {
         static::startServer();
+
+        if (!is_resource(self::$server)) {
+            throw new \Exception('Could not start server');
+        }
+
         sleep(2);
     }
 
     public static function tearDownAfterClass()
     {
+        var_dump(fread(self::$pipes[0], 1024));
+        var_dump(fread(self::$pipes[1], 1024));
+        var_dump(fread(self::$pipes[2], 1024));
         static::stopServer();
     }
 
@@ -104,7 +131,7 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
         $nativeSerializer = new fXmlRpc\Serializer\NativeSerializer();
         $serializer[] = $nativeSerializer;
 
-        if (in_array('nil', $this->extensions)) {
+        if ($this->extensionEnabled('nil')) {
             $xmlWriterSerializer = new fXmlRpc\Serializer\XmlWriterSerializer();
             $xmlWriterSerializer->enableExtension('nil');
             $serializer[] = $xmlWriterSerializer;
@@ -378,5 +405,10 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
             $this->assertStringStartsWith('A transport error occurred', $e->getMessage());
             $this->assertSame(0, $e->getCode());
         }
+    }
+
+    protected function extensionEnabled($extension)
+    {
+        return !in_array($extension, $this->disabledExtensions, true);
     }
 }

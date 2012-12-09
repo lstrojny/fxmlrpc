@@ -33,29 +33,5 @@ class PythonIntegrationTest extends AbstractIntegrationTest
 {
     protected $endpoint = 'http://localhost:8000';
 
-    public static function setUpBeforeClass()
-    {
-        self::$server = proc_open(
-            'python server.py > /dev/null',
-            array(
-                0 => array('pipe', 'r'),
-                1 => array('pipe', 'w'),
-                2 => array('pipe', 'r'),
-            ),
-            self::$pipes,
-            __DIR__ . '/Fixtures'
-        );
-        sleep(3);
-    }
-
-    public static function tearDownAfterClass()
-    {
-        proc_terminate(self::$server);
-
-        foreach (self::$pipes as $pipe) {
-            fclose($pipe);
-        }
-
-        proc_close(self::$server);
-    }
+    protected static $command = 'python server.py';
 }

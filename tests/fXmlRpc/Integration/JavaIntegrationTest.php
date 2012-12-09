@@ -35,34 +35,11 @@ class JavaIntegrationTest extends AbstractIntegrationTest
 
     protected $errorEndpoint = 'http://localhost:8081/';
 
-    protected $extensions = array();
+    protected $disabledExtensions = array('nil');
 
     protected $numberOfClients = 30;
 
     protected $restartEvery = 100;
 
-    protected static function startServer()
-    {
-        self::$server = proc_open(
-            'java -jar server.jar 8080 8081',
-            array(
-                0 => array('pipe', 'r'),
-                1 => array('pipe', 'w'),
-                2 => array('pipe', 'r'),
-            ),
-            self::$pipes,
-            __DIR__ . '/Fixtures/'
-        );
-    }
-
-    protected static function stopServer()
-    {
-        proc_terminate(self::$server);
-
-        foreach (self::$pipes as $pipe) {
-            fclose($pipe);
-        }
-
-        proc_close(self::$server);
-    }
+    protected static $command = 'java -jar server.jar 8080 8081';
 }
