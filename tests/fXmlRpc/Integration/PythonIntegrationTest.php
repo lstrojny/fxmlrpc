@@ -22,37 +22,40 @@
  * SOFTWARE.
  */
 
-namespace fXmlRpc\Transport;
+namespace fXmlPRC\Integration;
 
-use fXmlRpc\Exception\HttpException;
-use fXmlRpc\Exception\TcpException;
+require_once __DIR__ . '/AbstractIntegrationTest.php';
 
-class StreamSocketTransport implements TransportInterface
+/**
+ * @large
+ */
+class PythonIntegrationTest extends AbstractIntegrationTest
 {
-    public function send($uri, $payload)
+    protected $endpoint = 'http://localhost:8000';
+
+    public static function setUpBeforeClass()
     {
-        $context = stream_context_create(
+        self::$server = proc_open(
+            'python server.py',
             array(
-                'http' => array(
-                    'method'  => 'POST',
-                    'header'  => 'Content-Type: text/xml',
-                    'content' => $payload,
-                )
-            )
+                0 => array('pipe', 'r'),
+                1 => array('pipe', 'w'),
+                2 => array('pipe', 'r'),
+            ),
+            self::$pipes,
+            __DIR__ . '/Fixtures'
         );
+        sleep(3);
+    }
 
-        $response = @file_get_contents($uri, false, $context);
-        if ($response === false) {
-            $error = error_get_last();
+    public static function tearDownAfterClass()
+    {
+        proc_terminate(self::$server);
 
-            if (strpos($error['message'], 'HTTP request failed')) {
-                $matched = preg_match('|HTTP/1.[0-1]\s+(?<code>\d+)|', $error['message'], $matches);
-                throw HttpException::httpError($error['message'], $matched ? $matches['code'] : null);
-            }
-
-            throw TcpException::transportError($error['message']);
+        foreach (self::$pipes as $pipe) {
+            fclose($pipe);
         }
 
-        return $response;
+        proc_close(self::$server);
     }
 }
