@@ -84,7 +84,11 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
         static::startServer();
 
         if (!is_resource(self::$server)) {
-            throw new \Exception('Could not start server');
+            throw new \Exception(
+                'Could not start server' . PHP_EOL
+                . fread(static::$pipes[1], 65536) . PHP_EOL
+                . fread(static::$pipes[2], 65536)
+            );
         }
 
         sleep(2);
