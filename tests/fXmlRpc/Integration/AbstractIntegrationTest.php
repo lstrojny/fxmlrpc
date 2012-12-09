@@ -30,42 +30,45 @@ use Exception;
 /**
  * @large
  */
-class IntegrationTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
 {
+    protected $endpoint = 'http://localhost:9090/';
+
+    protected $errorEndpoint = 'http://localhost:9091/';
+
+    protected $numberOfClients = null;
+
+    protected $restartEvery = null;
+
+    protected static $count;
+
+    protected $extensions = array('nil');
+
     private $clients = array();
 
     private $clientDependencies = array();
 
     private $pos = 0;
 
-    private static $server;
+    protected static $server;
 
-    private static $pipes;
+    protected static $pipes;
+
+    protected static function startServer()
+    {}
+
+    protected static function stopServer()
+    {}
 
     public static function setUpBeforeClass()
     {
-        self::$server = proc_open(
-            'node server.js',
-            array(
-                0 => array('pipe', 'r'),
-                1 => array('pipe', 'w'),
-                2 => array('pipe', 'r'),
-            ),
-            self::$pipes,
-            __DIR__ . '/Fixtures'
-        );
+        static::startServer();
         sleep(2);
     }
 
     public static function tearDownAfterClass()
     {
-        proc_terminate(self::$server);
-
-        foreach (self::$pipes as $pipe) {
-            fclose($pipe);
-        }
-
-        proc_close(self::$server);
+        static::stopServer();
     }
 
     public function getClients()
@@ -78,6 +81,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
                 $this->getTimerBridges()
             )
         );
+
+        if ($this->numberOfClients !== null) {
+            $this->clients = array_slice($this->clients, 0, $this->numberOfClients);
+        }
 
         return $this->clients;
     }
@@ -92,18 +99,22 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     private function getSerializers()
     {
-        $nativeSerializer = new fXmlRpc\Serializer\NativeSerializer();
+        $serializer = array();
 
-        $xmlWriterSerializer = new fXmlRpc\Serializer\XmlWriterSerializer();
+        $nativeSerializer = new fXmlRpc\Serializer\NativeSerializer();
+        $serializer[] = $nativeSerializer;
+
+        if (in_array('nil', $this->extensions)) {
+            $xmlWriterSerializer = new fXmlRpc\Serializer\XmlWriterSerializer();
+            $xmlWriterSerializer->enableExtension('nil');
+            $serializer[] = $xmlWriterSerializer;
+        }
 
         $xmlWriterNilExtensionDisabled = new fXmlRpc\Serializer\XmlWriterSerializer();
         $xmlWriterNilExtensionDisabled->disableExtension('nil');
+        $serializer[] = $xmlWriterNilExtensionDisabled;
 
-        return array(
-            $nativeSerializer,
-            $xmlWriterSerializer,
-            $xmlWriterNilExtensionDisabled,
-        );
+        return $serializer;
     }
 
     private function getTransports()
@@ -188,7 +199,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             }
         } else {
             $client = new fXmlRpc\Client(
-                'http://localhost:9090/',
+                $this->endpoint,
                 $this->clientDependencies[0],
                 $this->clientDependencies[1],
                 $this->clientDependencies[2]
@@ -225,7 +236,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     public function testStruct($client)
     {
         $result = array('FOO' => 'BAR', 'BAZ' => 'BLA');
-        $this->assertSame($result, $client->call('system.echo', array($result)));
+        $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
 
     /**
@@ -336,7 +347,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testServerReturnsInvalidResult($client)
     {
-        $client->setUri('http://localhost:9091/');
+        $client->setUri($this->errorEndpoint);
 
         try {
             $client->call('system.failure');

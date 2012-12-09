@@ -1,0 +1,68 @@
+<?php
+/**
+ * Copyright (C) 2012
+ * Lars Strojny, InterNations GmbH <lars.strojny@internations.org>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+namespace fXmlPRC\Integration;
+
+require_once __DIR__ . '/AbstractIntegrationTest.php';
+
+/**
+ * @large
+ */
+class JavaIntegrationTest extends AbstractIntegrationTest
+{
+    protected $endpoint = 'http://localhost:8080';
+
+    protected $errorEndpoint = 'http://localhost:8081/';
+
+    protected $extensions = array();
+
+    protected $numberOfClients = 30;
+
+    protected $restartEvery = 100;
+
+    protected static function startServer()
+    {
+        self::$server = proc_open(
+            'java -jar server.jar 8080 8081',
+            array(
+                0 => array('pipe', 'r'),
+                1 => array('pipe', 'w'),
+                2 => array('pipe', 'r'),
+            ),
+            self::$pipes,
+            __DIR__ . '/Fixtures/'
+        );
+    }
+
+    protected static function stopServer()
+    {
+        proc_terminate(self::$server);
+
+        foreach (self::$pipes as $pipe) {
+            fclose($pipe);
+        }
+
+        proc_close(self::$server);
+    }
+}
