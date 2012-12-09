@@ -39,7 +39,5 @@ class JavaIntegrationTest extends AbstractIntegrationTest
 
     protected $numberOfClients = 30;
 
-    protected $restartEvery = 100;
-
     protected static $command = 'java -jar server.jar 8080 8081';
 }

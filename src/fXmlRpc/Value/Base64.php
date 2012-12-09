@@ -85,7 +85,7 @@ class Base64 implements Base64Interface
     public static function serialize($value)
     {
         static::$warnDeprecated = false;
-        $value = new static($value, true);
+        $value = new static(trim($value), true);
         static::$warnDeprecated = true;
 
         return $value;

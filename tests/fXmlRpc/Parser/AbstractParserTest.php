@@ -472,4 +472,26 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($isFault);
     }
+
+    public function testParsingBase64WithNewlinesAsPythonXmlRpcEncodes()
+    {
+        $xml = "<?xml version='1.0'?>
+        <methodResponse>
+            <params>
+                <param>
+                    <value>
+                        <base64>
+                        SEVMTE8gV09STEQ=
+                        </base64>
+                    </value>
+                </param>
+            </params>
+        </methodResponse>";
+
+        $value = $this->parser->parse($xml, $isFault);
+        $this->assertSame('HELLO WORLD', $value->getDecoded());
+        $this->assertSame('SEVMTE8gV09STEQ=', $value->getEncoded());
+
+        $this->assertFalse($isFault);
+    }
 }

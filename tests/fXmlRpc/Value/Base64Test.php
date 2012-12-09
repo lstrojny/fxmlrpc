@@ -48,4 +48,11 @@ class Base64Test extends \PHPUnit_Framework_TestCase
         );
         new Base64('string');
     }
+
+    public function testEncodedStringIsTrimmed()
+    {
+        $base64 = Base64::serialize("\nc3RyaW5n   ");
+        $this->assertSame('string', $base64->getDecoded());
+        $this->assertSame('c3RyaW5n', $base64->getEncoded());
+    }
 }
