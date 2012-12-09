@@ -28,6 +28,8 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
 {
     private $client;
 
+    private $proxy;
+
     public function setUp()
     {
         $this->client = $this->getMockBuilder('fXmlRpc\ClientInterface')
@@ -52,23 +54,23 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
             ->expects($this->at(0))
             ->method('call')
             ->with('namespace.method', array('arg1', 'arg2'))
-            ->will($this->returnValue('NAMESPACE'));
+            ->will($this->returnValue('namespace method return'));
 
         $this->client
             ->expects($this->at(1))
             ->method('call')
             ->with('namespace.another_namespace.method', array('arg1', 'arg2'))
-            ->will($this->returnValue('ANOTHER1'));
+            ->will($this->returnValue('another namespace method return first'));
 
         $this->client
             ->expects($this->at(2))
             ->method('call')
             ->with('namespace.another_namespace.method', array('arg1', 'arg2'))
-            ->will($this->returnValue('ANOTHER2'));
+            ->will($this->returnValue('another namespace method return second'));
 
-        $this->assertSame('NAMESPACE', $this->proxy->namespace->method('arg1', 'arg2'));
-        $this->assertSame('ANOTHER1', $this->proxy->namespace->another_namespace->method('arg1', 'arg2'));
-        $this->assertSame('ANOTHER2', $this->proxy->{"namespace.another_namespace.method"}('arg1', 'arg2'));
+        $this->assertSame('namespace method return', $this->proxy->namespace->method('arg1', 'arg2'));
+        $this->assertSame('another namespace method return first', $this->proxy->namespace->another_namespace->method('arg1', 'arg2'));
+        $this->assertSame('another namespace method return second', $this->proxy->{"namespace.another_namespace.method"}('arg1', 'arg2'));
     }
 
     public function testCallingNamespaceMethodWithCustomSeparator()
@@ -78,20 +80,19 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
             ->expects($this->at(0))
             ->method('call')
             ->with('namespace_method', array(1, 2))
-            ->will($this->returnValue('namespace_method_return'));
+            ->will($this->returnValue('namespace method return'));
         $this->client
             ->expects($this->at(1))
             ->method('call')
             ->with('namespace_another_namespace_method', array(1, 2))
-            ->will($this->returnValue('another_namespace_method_return'));
+            ->will($this->returnValue('another namespace method return'));
 
-        $this->assertSame('namespace_method_return', $proxy->namespace->method(1, 2));
-        $this->assertSame('another_namespace_method_return', $proxy->namespace->another_namespace->method(1, 2));
+        $this->assertSame('namespace method return', $proxy->namespace->method(1, 2));
+        $this->assertSame('another namespace method return', $proxy->namespace->another_namespace->method(1, 2));
     }
 
     public function testLazyLoading()
     {
-        $nsProxy = $this->proxy->foo;
-        $this->assertSame($nsProxy, $this->proxy->foo);
+        $this->assertSame($this->proxy->foo, $this->proxy->foo);
     }
 }
