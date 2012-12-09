@@ -24,7 +24,7 @@
 
 namespace fXmlRpc;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ProxyTest extends \PHPUnit_Framework_TestCase
 {
     private $client;
 
