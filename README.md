@@ -80,6 +80,14 @@ $client->appendParams(array('appended'));
 ...
 ```
 
+#### Using a convenient Proxy object
+```php
+<?php
+$proxy = new fXmlRpc\Proxy(new fXmlRpc\Client('http://endpoint.com'));
+// Call system.echo
+$proxy->system->echo('Hello World!');
+```
+
 #### Integration for various HTTP clients
 ```php
 <?php
