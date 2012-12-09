@@ -12,7 +12,6 @@ env:
 before_script:
   - sudo aptitude install -y libcurl-dev
   - echo yes | sudo pecl install ${HTTP_VERSION}
-  - php --re http
   - wget http://getcomposer.org/composer.phar
   - php composer.phar require zendframework/zend-http:${ZF2_VERSION} zendframework/zendframework1:${ZF1_VERSION} guzzle/guzzle:${GUZZLE_VERSION} monolog/monolog:${MONOLOG_VERSION} kriswallsmith/buzz:${BUZZ_VERSION}
   - php composer.phar install --dev
