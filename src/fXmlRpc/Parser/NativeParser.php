@@ -60,7 +60,7 @@ class NativeParser implements ParserInterface
 
                 } elseif ($xmlRpcType === 'base64') {
                     if ($value->scalar !== '') {
-                        $value = Base64::deserialize($value->scalar);
+                        $value = Base64::serialize($value->scalar);
                     } else {
                         $value = null;
                     }

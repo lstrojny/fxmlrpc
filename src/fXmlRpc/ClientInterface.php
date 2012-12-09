@@ -37,6 +37,30 @@ interface ClientInterface
     public function getUri();
 
     /**
+     * Set default params to be prepended for each call (e.g. authorization information)
+     *
+     * @param array $params
+     */
+    public function prependParams(array $params);
+
+    /**
+     * @return array
+     */
+    public function getPrependParams();
+
+    /**
+     * Set default params to be appended for each call (e.g. authorization information)
+     *
+     * @param array $params
+     */
+    public function appendParams(array $params);
+
+    /**
+     * @return array
+     */
+    public function getAppendParams();
+
+    /**
      * @param $method
      * @param array $params
      */

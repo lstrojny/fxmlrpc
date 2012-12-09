@@ -24,13 +24,8 @@
 
 namespace fXmlRpc\Value;
 
-class Base64 implements Base64Interface
+final class Base64 implements Base64Interface
 {
-    /**
-     * @var bool
-     */
-    private static $warnDeprecated = true;
-
     /**
      * @var string
      */
@@ -42,51 +37,37 @@ class Base64 implements Base64Interface
     private $decoded;
 
     /**
-     * @param string $string
-     * @param bool $isEncoded
+     * @param string $encoded
+     * @param string $decoded
      */
-    public function __construct($string, $isEncoded = false)
+    private function __construct($encoded, $decoded)
     {
-        if (static::$warnDeprecated) {
-            trigger_error(
-                sprintf('Constructing %1$s with "new" is deprecated. Use %1$s::serialize() or %1$s::deserialize() instead', __CLASS__),
-                E_USER_DEPRECATED
-            );
-        }
-
-        if ($isEncoded) {
-            $this->encoded = $string;
-        } else {
-            $this->decoded = $string;
-        }
-    }
-
-    /**
-     * Return new base64 value by string
-     *
-     * @param string $string
-     * @return Base64
-     */
-    public static function deserialize($string)
-    {
-        static::$warnDeprecated = false;
-        $value = new static($string);
-        static::$warnDeprecated = true;
-
-        return $value;
+        $this->encoded = $encoded;
+        $this->decoded = $decoded;
     }
 
     /**
      * Return new base64 value object by encoded value
      *
+     * @param string $string
+     * @return Base64
+     */
+    public static function serialize($string)
+    {
+        $value = new static(null, $string);
+
+        return $value;
+    }
+
+    /**
+     * Return new base64 value by string
+     *
      * @param string $value
      * @return Base64
      */
-    public static function serialize($value)
+    public static function deserialize($value)
     {
-        static::$warnDeprecated = false;
-        $value = new static(trim($value), true);
-        static::$warnDeprecated = true;
+        $value = new static(trim($value), null);
 
         return $value;
     }

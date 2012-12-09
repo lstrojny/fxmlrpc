@@ -9,6 +9,10 @@
 
 ## Latest improvements
 
+ - `[BC]` `fXmlRpc\AbstractDecorator` and `fXmlRpc\ClientInterface` now includes methods to prepend and append parameters
+ - `[BC]` `fXmlRpc\Client` is marked as final. Properties marked as private. Extend via decorator.
+ - `[BC]` Marked deprecated constructor of `fXmlRpc\Value\Base64` as private. Additionally, the value object is final now
+ - `[TESTING]` Integration test suite against Java XML/RPC and Python XML/RPC
  - `[BUG]` Fixing implicit string type handling (where string is no child of value)
  - `[IMPROVEMENT]` Improved exception handling
  - `[BC]` Changing naming scheme to studly caps

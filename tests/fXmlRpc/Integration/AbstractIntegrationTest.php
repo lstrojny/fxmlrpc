@@ -282,7 +282,7 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testBase64($client)
     {
-        $expected = fXmlRpc\Value\Base64::deserialize('HELLO WORLD');
+        $expected = fXmlRpc\Value\Base64::serialize('HELLO WORLD');
         $result = $client->call('system.echo', array($expected));
         $this->assertSame($expected->getEncoded(), $result->getEncoded());
         $this->assertSame($expected->getDecoded(), $result->getDecoded());

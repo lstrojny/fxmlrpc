@@ -32,37 +32,37 @@ use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Serializer\XmlWriterSerializer;
 use fXmlRpc\Exception\ResponseException;
 
-class Client implements ClientInterface
+final class Client implements ClientInterface
 {
     /**
      * @var string
      */
-    protected $uri;
+    private $uri;
 
     /**
      * @var Transport\TransportInterface
      */
-    protected $transport;
+    private $transport;
 
     /**
      * @var Parser\ParserInterface
      */
-    protected $parser;
+    private $parser;
 
     /**
      * @var Serializer\SerializerInterface
      */
-    protected $serializer;
+    private $serializer;
 
     /**
      * @var array
      */
-    protected $prependParams = array();
+    private $prependParams = array();
 
     /**
      * @var array
      */
-    protected $appendParams = array();
+    private $appendParams = array();
 
     /**
      * @param string $uri

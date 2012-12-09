@@ -50,7 +50,7 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
                 DateTime::createFromFormat('Y-m-d H:i:s', '1998-07-17 14:08:55', new DateTimeZone('UTC')),
                 '19980717T14:08:55'
             ),
-            array('base64', Base64::deserialize('string'), "c3RyaW5n\n"),
+            array('base64', Base64::serialize('string'), "c3RyaW5n\n"),
             array('string', 'Ümläuts', '&#220;ml&#228;uts'),
         );
     }
