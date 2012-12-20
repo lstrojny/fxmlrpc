@@ -2,6 +2,7 @@ language: php
 php:
   - 5.3
   - 5.4
+  - 5.5
 
 env:
     - ZF2_VERSION=2.0.1   ZF1_VERSION="1.10.*"   GUZZLE_VERSION="2.7.*"    MONOLOG_VERSION="1.0.*"     BUZZ_VERSION=0.5         HTTP_VERSION=pecl_http-1.6.6
