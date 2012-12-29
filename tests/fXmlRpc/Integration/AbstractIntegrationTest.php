@@ -92,6 +92,7 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         static::stopServer();
+        sleep(1);
     }
 
     public function setUp()

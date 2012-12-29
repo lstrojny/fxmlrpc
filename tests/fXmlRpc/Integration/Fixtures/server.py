@@ -54,4 +54,4 @@ for thread in threads:
 
 while True:
     for thread in threads:
-        thread.join(1)
+        thread.join(0.5)

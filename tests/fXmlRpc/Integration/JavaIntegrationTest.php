@@ -38,4 +38,6 @@ class JavaIntegrationTest extends AbstractIntegrationTest
     protected $disabledExtensions = array('nil');
 
     protected static $command = 'java -jar server.jar 8080 8081 2>&1';
+
+    protected static $restartServerInterval = 200;
 }
