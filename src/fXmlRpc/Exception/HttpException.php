@@ -24,6 +24,8 @@
 
 namespace fXmlRpc\Exception;
 
+use Exception;
+
 class HttpException extends TransportException
 {
     public static function httpError($message, $statusCode, Exception $previous = null)
