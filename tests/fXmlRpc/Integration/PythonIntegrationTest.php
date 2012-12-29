@@ -36,4 +36,6 @@ class PythonIntegrationTest extends AbstractIntegrationTest
     protected $errorEndpoint = 'http://localhost:8001';
 
     protected static $command = 'python server.py';
+
+    protected static $restartServerInterval = 400;
 }

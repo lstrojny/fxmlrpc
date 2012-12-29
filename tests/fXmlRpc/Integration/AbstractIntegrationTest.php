@@ -40,6 +40,10 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
 
     protected static $pipes;
 
+    protected static $restartServerInterval = 0;
+
+    private static $runCount = 0;
+
     private $pos = 0;
 
     private $clients = array();
@@ -90,6 +94,21 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
         static::stopServer();
     }
 
+    public function setUp()
+    {
+        if (static::$restartServerInterval === 0) {
+            return;
+        }
+
+        if (++self::$runCount !== static::$restartServerInterval) {
+            return;
+        }
+
+        self::$runCount = 0;
+        static::tearDownAfterClass();
+        static::setUpBeforeClass();
+    }
+
     public function getClients()
     {
         $this->generateAllPossibleCombinations(
@@ -107,7 +126,7 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
     private function getParsers()
     {
         return array(
-            //new fXmlRpc\Parser\NativeParser(),
+            new fXmlRpc\Parser\NativeParser(),
             new fXmlRpc\Parser\XmlReaderParser(),
         );
     }
@@ -116,8 +135,8 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $serializer = array();
 
-        //$nativeSerializer = new fXmlRpc\Serializer\NativeSerializer();
-        //$serializer[] = $nativeSerializer;
+        $nativeSerializer = new fXmlRpc\Serializer\NativeSerializer();
+        $serializer[] = $nativeSerializer;
 
         if ($this->extensionEnabled('nil')) {
             $xmlWriterSerializer = new fXmlRpc\Serializer\XmlWriterSerializer();
