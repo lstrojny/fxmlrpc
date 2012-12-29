@@ -53,7 +53,7 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
             array(
                 0 => array('pipe', 'r'),
                 1 => array('pipe', 'w'),
-                2 => array('pipe', 'r'),
+                2 => array('pipe', 'w'),
             ),
             self::$pipes,
             __DIR__ . '/Fixtures'
@@ -62,12 +62,11 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
 
     protected static function stopServer()
     {
-        proc_terminate(self::$server);
-
         foreach (self::$pipes as $pipe) {
             fclose($pipe);
         }
 
+        proc_terminate(self::$server);
         proc_close(self::$server);
     }
 
