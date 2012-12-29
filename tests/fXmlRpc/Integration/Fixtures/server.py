@@ -4,6 +4,9 @@ from xmlrpclib import Fault
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 from SocketServer import TCPServer
 from threading import Thread
+import signal
+import sys
+from collections import namedtuple
 
 server = SimpleXMLRPCServer(("localhost", 8000), allow_none = True)
 server.register_introspection_functions()
@@ -28,12 +31,27 @@ class ErrorHTTPHandler(SimpleHTTPRequestHandler):
 
 error_server = TCPServer(("", 8001), ErrorHTTPHandler)
 
+def signal_handler(s, f):
+    error_server.shutdown()
+    server.shutdown()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
+
 threads = []
-threads.append(Thread(target=server.serve_forever))
-threads.append(Thread(target=error_server.serve_forever))
+
+thread = Thread(target=lambda: server.serve_forever(poll_interval=0.5))
+thread.daemon = True
+threads.append(thread)
+
+thread = Thread(target=lambda: error_server.serve_forever(poll_interval=0.5))
+thread.daemon = True
+threads.append(thread)
 
 for thread in threads:
     thread.start()
 
-for thread in threads:
-    thread.join()
+while True:
+    for thread in threads:
+        thread.join(1)
