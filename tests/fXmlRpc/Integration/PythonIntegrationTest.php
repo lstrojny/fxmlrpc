@@ -38,4 +38,6 @@ class PythonIntegrationTest extends AbstractIntegrationTest
     protected static $command = 'python server.py';
 
     protected static $restartServerInterval = 200;
+
+    protected $clientsLimit = 50;
 }

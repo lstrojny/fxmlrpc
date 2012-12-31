@@ -42,6 +42,8 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
 
     protected static $restartServerInterval = 0;
 
+    protected $clientsLimit = 0;
+
     private static $runCount = 0;
 
     private $pos = 0;
@@ -120,6 +122,11 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
                 $this->getTimerBridges()
             )
         );
+
+        if ($this->clientsLimit !== 0) {
+            shuffle($this->clients);
+            $this->clients = array_slice($this->clients, 0, $this->clientsLimit);
+        }
 
         return $this->clients;
     }
