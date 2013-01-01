@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 - 2013
+ * Copyright (C) 2012-2013
  * Lars Strojny, InterNations GmbH <lars.strojny@internations.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -164,13 +164,13 @@ class XmlReaderParserTest extends AbstractParserTest
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
         <methodResponse xmlns:ex="http://ws.apache.org/xmlrpc/namespaces/extensions">
-            <params><param><value><ex:dateTime>2012 - 2013-12-09T14:26:40.448+01:00</ex:dateTime></value></param></params>
+            <params><param><value><ex:dateTime>2012-2013-12-09T14:26:40.448+01:00</ex:dateTime></value></param></params>
         </methodResponse>';
 
         $isFault = true;
         $result = $this->parser->parse($xml, $isFault);
         $this->assertInstanceOf('DateTime', $result);
-        $this->assertSame('2012 - 2013-12-09T14:26:40.448000+01:00', $result->format('Y-m-d\TH:i:s.uP'));
+        $this->assertSame('2012-2013-12-09T14:26:40.448000+01:00', $result->format('Y-m-d\TH:i:s.uP'));
         $this->assertFalse($isFault);
     }
 }

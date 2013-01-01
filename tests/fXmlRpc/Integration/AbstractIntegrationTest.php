@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012 - 2013
+ * Copyright (C) 2012-2013
  * Lars Strojny, InterNations GmbH <lars.strojny@internations.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -357,7 +357,7 @@ abstract class AbstractIntegrationTest extends \PHPUnit_Framework_TestCase
             'el3' => range(1, 100),
             'el4' => array(
                 new \DateTime('2011-02-03 20:11:15', new \DateTimeZone('UTC')),
-                new \DateTime('2012 - 2013-02-03 20:11:15', new \DateTimeZone('UTC')),
+                new \DateTime('2012-2013-02-03 20:11:15', new \DateTimeZone('UTC')),
             ),
             'el5' => 'str',
             'el6' => 1234,
