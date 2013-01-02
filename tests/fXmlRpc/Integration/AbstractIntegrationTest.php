@@ -206,7 +206,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
             'el3' => range(1, 100),
             'el4' => array(
                 new \DateTime('2011-02-03 20:11:15', new \DateTimeZone('UTC')),
-                new \DateTime('2012-2013-02-03 20:11:15', new \DateTimeZone('UTC')),
+                new \DateTime('2011-02-03 20:11:15', new \DateTimeZone('UTC')),
             ),
             'el5' => 'str',
             'el6' => 1234,
