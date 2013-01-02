@@ -106,6 +106,8 @@ $result = $client->multicall()
             echo "An error occured: " . var_export($result, true);
         }
     )
+    ->onSuccess(function ($result) {echo "Success";}) // Success handler for each call
+    ->onError(function ($result) {echo "Error";}) // Error handler for each call
     ->execute();
 ```
 
