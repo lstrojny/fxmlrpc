@@ -18,6 +18,8 @@ before_script:
   - php composer.phar install --dev
   - npm install git://github.com/baalexander/node-xmlrpc.git
 
+script: phpunit --coverage-text
+
 notifications:
   email:
     - lstrojny@php.net

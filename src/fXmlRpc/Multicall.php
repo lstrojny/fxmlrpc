@@ -26,7 +26,7 @@ namespace fXmlRpc;
 
 use fXmlRpc\Exception\InvalidArgumentException;
 
-class Multicall
+final class Multicall
 {
     /**
      * @var ClientInterface
@@ -73,6 +73,7 @@ class Multicall
      * @param array $params
      * @param callable $onSuccess
      * @param callable $onError
+     * @throws InvalidArgumentException
      * @return self
      */
     public function addCall($methodName, array $params = array(), $onSuccess = null, $onError = null)
@@ -97,7 +98,9 @@ class Multicall
     }
 
     /**
-     * @param $onSuccess
+     * @param callable $onSuccess
+     * @throws InvalidArgumentException
+     * @return self
      */
     public function onSuccess($onSuccess)
     {
@@ -110,6 +113,11 @@ class Multicall
         return $this;
     }
 
+    /**
+     * @param callable $onError
+     * @throws InvalidArgumentException
+     * @return self
+     */
     public function onError($onError)
     {
         if (!is_callable($onError)) {
@@ -122,6 +130,8 @@ class Multicall
     }
 
     /**
+     * Execute multicall request
+     *
      * @return array
      */
     public function execute()
@@ -129,25 +139,33 @@ class Multicall
         $results = $this->client->call('system.multicall', array($this->calls));
 
         foreach ($results as $index => $result) {
-
-            $isError = is_array($result) && isset($result['faultCode']);
-
-            if ($this->handlers[$index]['onSuccess'] !== null) {
-                if (!$isError || $this->handlers[$index]['onError'] === null) {
-                    call_user_func($this->handlers[$index]['onSuccess'], $result);
-                } else {
-                    call_user_func($this->handlers[$index]['onError'], $result);
-                }
-            }
-
-            if ($isError && $this->onError !== null) {
-                call_user_func($this->onError, $result);
-            } elseif ($this->onSuccess !== null) {
-                call_user_func($this->onSuccess, $result);
-            }
+            $this->invokeHandler($this->handlers[$index], $result);
         }
 
         return $results;
+    }
+
+    /**
+     * @param array $handler
+     * @param mixed $result
+     */
+    private function invokeHandler(array $handler, $result)
+    {
+        $isError = is_array($result) && isset($result['faultCode']);
+
+        if ($handler['onSuccess'] !== null) {
+            if (!$isError || $handler['onError'] === null) {
+                call_user_func($handler['onSuccess'], $result);
+            } else {
+                call_user_func($handler['onError'], $result);
+            }
+        }
+
+        if ($isError && $this->onError !== null) {
+            call_user_func($this->onError, $result);
+        } elseif ($this->onSuccess !== null) {
+            call_user_func($this->onSuccess, $result);
+        }
     }
 
     /**
