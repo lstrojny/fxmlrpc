@@ -91,6 +91,24 @@ $proxy = new fXmlRpc\Proxy(new fXmlRpc\Client('http://endpoint.com'));
 $proxy->system->echo('Hello World!');
 ```
 
+### Helpful abstraction for multicall requests
+```php
+<?php
+$result = $client->multicall()
+    ->addCall('system.add', array(1, 2))
+    ->addCall(
+        'system.add',
+        array(2, 3),
+        function ($result) {
+            echo "Result was: " . $result;
+        },
+        function($result) {
+            echo "An error occured: " . var_export($result, true);
+        }
+    )
+    ->execute();
+```
+
 #### Integration for various HTTP clients
 ```php
 <?php
