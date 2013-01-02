@@ -65,4 +65,9 @@ interface ClientInterface
      * @param array $params
      */
     public function call($methodName, array $params = array());
+
+    /**
+     * @return Multicall
+     */
+    public function multicall();
 }

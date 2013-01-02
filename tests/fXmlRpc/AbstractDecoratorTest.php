@@ -105,4 +105,14 @@ class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array('p'), $this->decorator->getPrependParams());
         $this->assertSame(array('a'), $this->decorator->getAppendParams());
     }
+
+    public function testMulticallMethodWrapped()
+    {
+        $this->wrapped
+            ->expects($this->once())
+            ->method('multicall')
+            ->will($this->returnValue('m'));
+
+        $this->assertSame('m', $this->decorator->multicall());
+    }
 }

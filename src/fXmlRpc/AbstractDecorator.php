@@ -67,4 +67,9 @@ abstract class AbstractDecorator implements ClientInterface
     {
         return $this->wrapped->call($methodName, $arguments);
     }
+
+    public function multicall()
+    {
+        return $this->wrapped->multicall();
+    }
 }

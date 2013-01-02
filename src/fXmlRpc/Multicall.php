@@ -49,6 +49,16 @@ class Multicall
     private $handlers = array();
 
     /**
+     * @var callable
+     */
+    private $onSuccess;
+
+    /**
+     * @var callable
+     */
+    private $onError;
+
+    /**
      * @param ClientInterface $client
      */
     public function __construct(ClientInterface $client)
@@ -57,24 +67,56 @@ class Multicall
     }
 
     /**
+     * Add a call to the sequence
+     *
      * @param string $methodName
      * @param array $params
-     * @param callable $handler
+     * @param callable $onSuccess
+     * @param callable $onError
      * @return self
      */
-    public function addCall($methodName, array $params = array(), $handler = null)
+    public function addCall($methodName, array $params = array(), $onSuccess = null, $onError = null)
     {
         if (!is_string($methodName)) {
             throw InvalidArgumentException::expectedParameter(1, 'string', $methodName);
         }
 
-        if ($handler !== null && !is_callable($handler)) {
-            throw InvalidArgumentException::expectedParameter(3, 'callable', $handler);
+        if ($onSuccess !== null && !is_callable($onSuccess)) {
+            throw InvalidArgumentException::expectedParameter(3, 'callable', $onSuccess);
+        }
+
+        if ($onError !== null && !is_callable($onError)) {
+            throw InvalidArgumentException::expectedParameter(4, 'callable', $onError);
         }
 
         $this->calls[$this->index] = array('methodName' => $methodName, 'params' => $params);
-        $this->handlers[$this->index] = $handler;
+        $this->handlers[$this->index] = array('onSuccess' => $onSuccess, 'onError' => $onError);
         ++$this->index;
+
+        return $this;
+    }
+
+    /**
+     * @param $onSuccess
+     */
+    public function onSuccess($onSuccess)
+    {
+        if (!is_callable($onSuccess)) {
+            throw InvalidArgumentException::expectedParameter(1, 'callable', $onSuccess);
+        }
+
+        $this->onSuccess = $onSuccess;
+
+        return $this;
+    }
+
+    public function onError($onError)
+    {
+        if (!is_callable($onError)) {
+            throw InvalidArgumentException::expectedParameter(1, 'callable', $onError);
+        }
+
+        $this->onError = $onError;
 
         return $this;
     }
@@ -87,11 +129,22 @@ class Multicall
         $results = $this->client->call('system.multicall', array($this->calls));
 
         foreach ($results as $index => $result) {
-            if (!isset($this->handlers[$index])) {
-                continue;
+
+            $isError = is_array($result) && isset($result['faultCode']);
+
+            if ($this->handlers[$index]['onSuccess'] !== null) {
+                if (!$isError || $this->handlers[$index]['onError'] === null) {
+                    call_user_func($this->handlers[$index]['onSuccess'], $result);
+                } else {
+                    call_user_func($this->handlers[$index]['onError'], $result);
+                }
             }
 
-            call_user_func($this->handlers[$index], $result);
+            if ($isError && $this->onError !== null) {
+                call_user_func($this->onError, $result);
+            } elseif ($this->onSuccess !== null) {
+                call_user_func($this->onSuccess, $result);
+            }
         }
 
         return $results;

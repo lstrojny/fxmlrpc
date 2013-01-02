@@ -24,8 +24,6 @@
 
 namespace fXmlPRC\Integration;
 
-require_once __DIR__ . '/AbstractIntegrationTest.php';
-
 /**
  * @large
  */
