@@ -171,4 +171,14 @@ final class Client implements ClientInterface
 
         return $response;
     }
+
+    /**
+     * Start multicall sequence
+     *
+     * @return Multicall
+     */
+    public function multicall()
+    {
+        return new Multicall($this);
+    }
 }

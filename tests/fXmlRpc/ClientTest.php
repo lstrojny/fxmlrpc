@@ -157,4 +157,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         );
         $this->client->setUri(new \stdClass());
     }
+
+    public function testMulticallFactory()
+    {
+        $multicall = $this->client->multicall();
+        $this->assertInstanceOf('fXmlRpc\Multicall', $multicall);
+        $this->assertNotSame($multicall, $this->client->multicall());
+        $this->assertSame($this->client, $multicall->getClient());
+    }
 }

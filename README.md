@@ -10,6 +10,7 @@
 
 ## Latest improvements
 
+ - `[FEATURE]` Special API for multicall
  - `[FEATURE]` Supports all Java XML/RPC extensions
  - `[BC]` `fXmlRpc\AbstractDecorator` and `fXmlRpc\ClientInterface` now includes methods to prepend and append parameters
  - `[BC]` `fXmlRpc\Client` is marked as final. Properties marked as private. Extend via decorator.
