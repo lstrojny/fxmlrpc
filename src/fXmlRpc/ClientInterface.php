@@ -61,8 +61,8 @@ interface ClientInterface
     public function getAppendParams();
 
     /**
-     * @param $method
+     * @param $methodName
      * @param array $params
      */
-    public function call($method, array $params = array());
+    public function call($methodName, array $params = array());
 }

@@ -139,4 +139,22 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('NATIVE VALUE', $this->client->call('methodName', array('p0', 'p1')));
     }
+
+    public function testInvalidMethodName()
+    {
+        $this->setExpectedException(
+            'fXmlRpc\Exception\InvalidArgumentException',
+            'Expected parameter 0 to be of type "string", "object" of type "stdClass" given'
+        );
+        $this->client->call(new \stdClass());
+    }
+
+    public function testInvalidUri()
+    {
+        $this->setExpectedException(
+            'fXmlRpc\Exception\InvalidArgumentException',
+            'Expected parameter 0 to be of type "string", "object" of type "stdClass" given'
+        );
+        $this->client->setUri(new \stdClass());
+    }
 }

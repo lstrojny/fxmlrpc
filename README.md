@@ -6,9 +6,11 @@
  - Licensed under the terms of the liberal MIT license
  - Supports modern standards: easy installation via composer, fully PSR-0, PSR-1 and PSR-2 compatible
  - Relentlessly unit- and integration tested
+ - Implements all known XML/RPC extensions
 
 ## Latest improvements
 
+ - `[FEATURE]` Supports all Java XML/RPC extensions
  - `[BC]` `fXmlRpc\AbstractDecorator` and `fXmlRpc\ClientInterface` now includes methods to prepend and append parameters
  - `[BC]` `fXmlRpc\Client` is marked as final. Properties marked as private. Extend via decorator.
  - `[BC]` Marked deprecated constructor of `fXmlRpc\Value\Base64` as private. Additionally, the value object is final now

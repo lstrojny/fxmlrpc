@@ -30,4 +30,15 @@ class InvalidArgumentException
     extends BaseInvalidArgumentException
     implements ExceptionInterface
 {
+    public static function expectedParameter($position, $expected, $actualValue)
+    {
+        return new static(
+            sprintf(
+                'Expected parameter %d to be of type "%s", "%s" given',
+                $position,
+                $expected,
+                is_object($actualValue) ? sprintf('%s" of type "%s', gettype($actualValue), get_class($actualValue)) : gettype($actualValue)
+            )
+        );
+    }
 }

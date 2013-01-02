@@ -31,6 +31,7 @@ use fXmlRpc\Parser\XmlReaderParser;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Serializer\XmlWriterSerializer;
 use fXmlRpc\Exception\ResponseException;
+use fXmlRpc\Exception\InvalidArgumentException;
 
 final class Client implements ClientInterface
 {
@@ -90,6 +91,10 @@ final class Client implements ClientInterface
      */
     public function setUri($uri)
     {
+        if (!is_string($uri)) {
+            throw InvalidArgumentException::expectedParameter(0, 'string', $uri);
+        }
+
         $this->uri = $uri;
     }
 
@@ -142,17 +147,21 @@ final class Client implements ClientInterface
     /**
      * Execute remote call
      *
-     * @param string $method
+     * @param string $methodName
      * @param array $params
      * @return mixed
      * @throws Exception\ResponseException
      */
-    public function call($method, array $params = array())
+    public function call($methodName, array $params = array())
     {
+        if (!is_string($methodName)) {
+            throw InvalidArgumentException::expectedParameter(0, 'string', $methodName);
+        }
+
         $params = array_merge($this->prependParams, $params, $this->appendParams);
 
         $response = $this->parser->parse(
-            $this->transport->send($this->uri, $this->serializer->serialize($method, $params)),
+            $this->transport->send($this->uri, $this->serializer->serialize($methodName, $params)),
             $isFault
         );
 
