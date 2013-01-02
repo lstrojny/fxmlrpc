@@ -32,13 +32,22 @@ use ReflectionExtension;
 
 class PeclHttpBridge implements TransportInterface
 {
+    /**
+     * @var HttpRequest
+     */
     private $request;
 
+    /**
+     * @param HttpRequest $request
+     */
     public function __construct(HttpRequest $request)
     {
         $this->request = $request;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function send($uri, $payload)
     {
         try {

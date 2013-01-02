@@ -42,6 +42,9 @@ class BuzzBrowserBridge implements TransportInterface
         $this->browser = $browser;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function send($uri, $payload)
     {
         try {

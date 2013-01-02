@@ -29,7 +29,6 @@ use fXmlRpc\Exception\TcpException;
 
 class CurlTransport implements TransportInterface
 {
-
     /**
      * @var resource
      */
@@ -39,13 +38,18 @@ class CurlTransport implements TransportInterface
     {
         $this->handle = curl_init();
 
-        curl_setopt($this->handle, CURLOPT_HTTPHEADER,        array('Content-Type: text/xml'));
-        curl_setopt($this->handle, CURLOPT_RETURNTRANSFER,    true);
-        curl_setopt($this->handle, CURLOPT_HEADER,            true);
-        curl_setopt($this->handle, CURLOPT_MAXREDIRS,         5);
-        curl_setopt($this->handle, CURLOPT_TIMEOUT_MS,        5000);
-        curl_setopt($this->handle, CURLOPT_CONNECTTIMEOUT_MS, 5000);
-        curl_setopt($this->handle, CURLOPT_POST,              true);
+        curl_setopt_array(
+            $this->handle,
+            array(
+                CURLOPT_HTTPHEADER        => array('Content-Type: text/xml'),
+                CURLOPT_RETURNTRANSFER    => true,
+                CURLOPT_HEADER            => true,
+                CURLOPT_MAXREDIRS         => 5,
+                CURLOPT_TIMEOUT_MS        => 5000,
+                CURLOPT_CONNECTTIMEOUT_MS => 5000,
+                CURLOPT_POST              => true,
+            )
+        );
     }
 
     public function __destruct()
@@ -56,12 +60,7 @@ class CurlTransport implements TransportInterface
     }
 
     /**
-     * Send an http post request
-     *
-     * @param   string  $uri        - url to send/post data to
-     * @param   string  $payload    - data
-     * @return  string              - http response body
-     * @throws  TcpException
+     * {@inheritdoc}
      */
     public function send($uri, $payload)
     {

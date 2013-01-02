@@ -34,7 +34,7 @@ class MonologTimerBridge extends AbstractTimerBridge
      * Allows passing custom log level and message template (with sprintf() control characters) for log message
      * customization
      *
-     * @param \Monolog\Logger $logger
+     * @param Logger $logger
      * @param null|array $level
      * @param null $messageTemplate
      */
@@ -46,9 +46,7 @@ class MonologTimerBridge extends AbstractTimerBridge
     }
 
     /**
-     * @param float $callTime
-     * @param string $method
-     * @param array $arguments
+     * {@inheritdoc}
      */
     public function recordTiming($callTime, $method, array $arguments)
     {

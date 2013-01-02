@@ -35,12 +35,21 @@ class TimingDecorator extends AbstractDecorator
      */
     private $timer;
 
+    /**
+     * Create new client decorator to record timing information
+     *
+     * @param ClientInterface $wrapped
+     * @param TimerInterface $timer
+     */
     public function __construct(ClientInterface $wrapped, TimerInterface $timer)
     {
         parent::__construct($wrapped);
         $this->timer = $timer;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function call($methodName, array $arguments = array())
     {
         $startTime = microtime(true);

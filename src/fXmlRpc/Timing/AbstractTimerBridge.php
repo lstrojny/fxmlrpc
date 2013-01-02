@@ -24,6 +24,12 @@
 
 namespace fXmlRpc\Timing;
 
+/**
+ * Base class for timing bridges
+ *
+ * Base class for bridging between timing information and various logger
+ * implementations.
+ */
 abstract class AbstractTimerBridge implements TimerInterface
 {
     /**

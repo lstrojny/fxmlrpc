@@ -90,8 +90,8 @@ final class Multicall
             throw InvalidArgumentException::expectedParameter(4, 'callable', $onError);
         }
 
-        $this->calls[$this->index] = array('methodName' => $methodName, 'params' => $params);
-        $this->handlers[$this->index] = array('onSuccess' => $onSuccess, 'onError' => $onError);
+        $this->calls[$this->index] = compact('methodName', 'params');
+        $this->handlers[$this->index] = compact('onSuccess', 'onError');
         ++$this->index;
 
         return $this;
@@ -139,7 +139,7 @@ final class Multicall
         $results = $this->client->call('system.multicall', array($this->calls));
 
         foreach ($results as $index => $result) {
-            $this->invokeHandlers($this->handlers[$index], $result);
+            $this->processResult($this->handlers[$index], $result);
         }
 
         return $results;
@@ -149,9 +149,10 @@ final class Multicall
      * @param array $handler
      * @param mixed $result
      */
-    private function invokeHandlers(array $handler, $result)
+    private function processResult(array $handler, $result)
     {
         $isError = is_array($result) && isset($result['faultCode']);
+
         $this->invokeHandler($handler['onSuccess'], $handler['onError'], $isError, $result);
         $this->invokeHandler($this->onSuccess, $this->onError, $isError, $result);
     }

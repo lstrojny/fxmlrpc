@@ -24,7 +24,17 @@
 
 namespace fXmlRpc\Serializer;
 
+/**
+ * Serializer creates XML from native PHP types
+ */
 interface SerializerInterface
 {
+    /**
+     * Serialize XML/RPC method name and params into XML representation
+     *
+     * @param string $method
+     * @param array $params
+     * @return string
+     */
     public function serialize($method, array $params = array());
 }

@@ -29,6 +29,9 @@ use fXmlRpc\Exception\TcpException;
 
 class StreamSocketTransport implements TransportInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function send($uri, $payload)
     {
         $context = stream_context_create(

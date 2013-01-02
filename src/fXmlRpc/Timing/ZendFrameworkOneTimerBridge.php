@@ -29,6 +29,11 @@ use Zend_Log;
 class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
 {
     /**
+     * Create new Zend_Log bridge
+     *
+     * Allows passing custom log level and message template (with sprintf() control characters) for log message
+     * customization
+     *   *
      * @param Zend_Log $logger
      * @param integer $level
      * @param string $messageTemplate
@@ -41,7 +46,7 @@ class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     public function recordTiming($callTime, $method, array $arguments)
     {

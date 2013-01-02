@@ -24,7 +24,17 @@
 
 namespace fXmlRpc\Parser;
 
+/**
+ * Parser to parse XML responses into its PHP representation
+ */
 interface ParserInterface
 {
+    /**
+     * Parse XML string into PHP representation
+     *
+     * @param string $xmlString
+     * @param bool $isFault
+     * @return string
+     */
     public function parse($xmlString, &$isFault);
 }

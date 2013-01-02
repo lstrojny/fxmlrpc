@@ -34,13 +34,22 @@ use fXmlRpc\Exception\TcpException;
 
 class GuzzleBridge implements TransportInterface
 {
+    /**
+     * @var Client
+     */
     private $client;
 
+    /**
+     * @param Client $client
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function send($uri, $payload)
     {
         try {

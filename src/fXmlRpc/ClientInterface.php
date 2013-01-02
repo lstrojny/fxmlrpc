@@ -27,11 +27,15 @@ namespace fXmlRpc;
 interface ClientInterface
 {
     /**
+     * Set endpoint URI
+     *
      * @param string $uri
      */
     public function setUri($uri);
 
     /**
+     * Return endpoint URI
+     *
      * @return string
      */
     public function getUri();
@@ -61,12 +65,16 @@ interface ClientInterface
     public function getAppendParams();
 
     /**
-     * @param $methodName
+     * Execute remote call
+     *
+     * @param string $methodName
      * @param array $params
      */
     public function call($methodName, array $params = array());
 
     /**
+     * Start sequence of multiccallss
+     *
      * @return Multicall
      */
     public function multicall();

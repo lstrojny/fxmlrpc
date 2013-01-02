@@ -27,6 +27,8 @@ namespace fXmlRpc\Timing;
 interface TimerInterface
 {
     /**
+     * Records a timing information
+     *
      * @param float $callTime
      * @param string $method
      * @param array $arguments

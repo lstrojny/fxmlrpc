@@ -27,10 +27,16 @@ namespace fXmlRpc\Transport;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TransportException;
 
+/**
+ * Transport interface
+ *
+ * This interface is implemented by transports to provide means to send
+ * requests over the wire.
+ */
 interface TransportInterface
 {
     /**
-     * Send HTTP post request
+     * Send XML/RPC request
      *
      * @param string $uri
      * @param string $payload

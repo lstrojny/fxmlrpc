@@ -39,6 +39,9 @@ class NativeParser implements ParserInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function parse($xmlString, &$isFault)
     {
         $result = xmlrpc_decode($xmlString, 'UTF-8');

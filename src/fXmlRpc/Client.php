@@ -66,6 +66,11 @@ final class Client implements ClientInterface
     private $appendParams = array();
 
     /**
+     * Create new client instance
+     *
+     * If no specific transport, parser or serializer is passed, default implementations
+     * are used.
+     *
      * @param string $uri
      * @param Transport\TransportInterface $transport
      * @param Parser\ParserInterface $parser
@@ -85,9 +90,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * Set endpoint URI
-     *
-     * @param string $uri
+     * {@inheritdoc}
      */
     public function setUri($uri)
     {
@@ -99,9 +102,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * Return endpoint URI
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getUri()
     {
@@ -109,9 +110,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * Set default params to be prepended for each call (e.g. authorization information)
-     *
-     * @param array $params
+     * {@inheritdoc}
      */
     public function prependParams(array $params)
     {
@@ -119,7 +118,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getPrependParams()
     {
@@ -127,9 +126,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * Set default params to be appended for each call (e.g. authorization information)
-     *
-     * @param array $params
+     * {@inheritdoc}
      */
     public function appendParams(array $params)
     {
@@ -137,7 +134,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getAppendParams()
     {
@@ -145,11 +142,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * Execute remote call
-     *
-     * @param string $methodName
-     * @param array $params
-     * @return mixed
+     * {@inheritdoc}
      * @throws Exception\ResponseException
      */
     public function call($methodName, array $params = array())
@@ -173,9 +166,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * Start multicall sequence
-     *
-     * @return Multicall
+     * {@inheritdoc}
      */
     public function multicall()
     {

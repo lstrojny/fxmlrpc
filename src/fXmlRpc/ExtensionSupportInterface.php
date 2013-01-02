@@ -29,18 +29,24 @@ interface ExtensionSupportInterface
     const EXTENSION_NIL = 'nil';
 
     /**
+     * Enables extension
+     *
      * @param string $extension
      * @return void
      */
     public function enableExtension($extension);
 
     /**
+     * Disables extension
+     *
      * @param string $extension
      * @return void
      */
     public function disableExtension($extension);
 
     /**
+     * Returns true if an extension is enabled
+     *
      * @param string $extension
      * @return boolean
      */

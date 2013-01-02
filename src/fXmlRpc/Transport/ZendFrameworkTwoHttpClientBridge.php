@@ -31,20 +31,30 @@ use fXmlRpc\Exception\TcpException;
 
 class ZendFrameworkTwoHttpClientBridge implements TransportInterface
 {
+    /**
+     * @var Client
+     */
     private $client;
 
+    /**
+     * @param Client $client
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function send($url, $payload)
     {
         try {
-            $response = $this->client->setMethod('POST')
-                                    ->setUri($url)
-                                    ->setRawBody($payload)
-                                    ->send();
+            $response = $this->client
+                ->setMethod('POST')
+                ->setUri($url)
+                ->setRawBody($payload)
+                ->send();
         } catch (RuntimeException $e) {
             throw TcpException::transportError($e);
         }
