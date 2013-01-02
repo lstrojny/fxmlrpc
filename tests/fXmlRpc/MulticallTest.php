@@ -122,7 +122,7 @@ class MulticallTest extends \PHPUnit_Framework_TestCase
         };
         $results = $this->multicall
             ->addCall('method1', array('arg11', 'arg12'), $successHandler, $errorHandler)
-            ->addCall('method2', array('arg21', 'arg22'), $successHandler, $errorHandler)
+            ->addCall('method2', array('arg21', 'arg22'), null, $errorHandler)
             ->execute();
 
         $this->assertSame(array(array('faultCode' => 100), array('faultCode' => 200)), $results);

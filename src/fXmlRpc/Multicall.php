@@ -139,7 +139,7 @@ final class Multicall
         $results = $this->client->call('system.multicall', array($this->calls));
 
         foreach ($results as $index => $result) {
-            $this->invokeHandler($this->handlers[$index], $result);
+            $this->invokeHandlers($this->handlers[$index], $result);
         }
 
         return $results;
@@ -149,22 +149,25 @@ final class Multicall
      * @param array $handler
      * @param mixed $result
      */
-    private function invokeHandler(array $handler, $result)
+    private function invokeHandlers(array $handler, $result)
     {
         $isError = is_array($result) && isset($result['faultCode']);
+        $this->invokeHandler($handler['onSuccess'], $handler['onError'], $isError, $result);
+        $this->invokeHandler($this->onSuccess, $this->onError, $isError, $result);
+    }
 
-        if ($handler['onSuccess'] !== null) {
-            if (!$isError || $handler['onError'] === null) {
-                call_user_func($handler['onSuccess'], $result);
-            } else {
-                call_user_func($handler['onError'], $result);
-            }
-        }
-
-        if ($isError && $this->onError !== null) {
-            call_user_func($this->onError, $result);
-        } elseif ($this->onSuccess !== null) {
-            call_user_func($this->onSuccess, $result);
+    /**
+     * @param callable|void $onSuccess
+     * @param callable|void $onError
+     * @param bool $isError
+     * @param mixed $result
+     */
+    private function invokeHandler($onSuccess, $onError, $isError, $result)
+    {
+        if ($isError && $onError !== null) {
+            call_user_func($onError, $result);
+        } elseif ($onSuccess !== null) {
+            call_user_func($onSuccess, $result);
         }
     }
 
