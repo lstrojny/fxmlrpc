@@ -71,9 +71,9 @@ final class Client implements ClientInterface
      * If no specific transport, parser or serializer is passed, default implementations
      * are used.
      *
-     * @param string $uri
-     * @param Transport\TransportInterface $transport
-     * @param Parser\ParserInterface $parser
+     * @param string                         $uri
+     * @param Transport\TransportInterface   $transport
+     * @param Parser\ParserInterface         $parser
      * @param Serializer\SerializerInterface $serializer
      */
     public function __construct(

@@ -38,9 +38,9 @@ interface TransportInterface
     /**
      * Send XML/RPC request
      *
-     * @param string $uri
-     * @param string $payload
-     * @throws HttpException If an HTTP exception occurred
+     * @param  string             $uri
+     * @param  string             $payload
+     * @throws HttpException      If an HTTP exception occurred
      * @throws TransportException If a transport error occurred
      * @return string
      */

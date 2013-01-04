@@ -4,7 +4,6 @@ namespace fXmlRpc\Exception;
 use ReflectionClass;
 use fXmlRpc\Exception\RuntimeException;
 use fXmlRpc\Exception\InvalidArgumentException;
-use fXmlRpc\Exception\ResponseException;
 
 class ExceptionTest extends \PHPUnit_Framework_TestCase
 {

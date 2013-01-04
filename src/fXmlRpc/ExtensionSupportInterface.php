@@ -31,7 +31,7 @@ interface ExtensionSupportInterface
     /**
      * Enables extension
      *
-     * @param string $extension
+     * @param  string $extension
      * @return void
      */
     public function enableExtension($extension);
@@ -39,7 +39,7 @@ interface ExtensionSupportInterface
     /**
      * Disables extension
      *
-     * @param string $extension
+     * @param  string $extension
      * @return void
      */
     public function disableExtension($extension);
@@ -47,7 +47,7 @@ interface ExtensionSupportInterface
     /**
      * Returns true if an extension is enabled
      *
-     * @param string $extension
+     * @param  string  $extension
      * @return boolean
      */
     public function isExtensionEnabled($extension);

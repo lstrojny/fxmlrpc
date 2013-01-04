@@ -34,9 +34,9 @@ class MonologTimerBridge extends AbstractTimerBridge
      * Allows passing custom log level and message template (with sprintf() control characters) for log message
      * customization
      *
-     * @param Logger $logger
+     * @param Logger     $logger
      * @param null|array $level
-     * @param null $messageTemplate
+     * @param null       $messageTemplate
      */
     public function __construct(Logger $logger, $level = null, $messageTemplate = null)
     {

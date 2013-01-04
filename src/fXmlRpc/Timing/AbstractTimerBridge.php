@@ -65,7 +65,7 @@ abstract class AbstractTimerBridge implements TimerInterface
     /**
      * Get log level by callTime
      *
-     * @param float $callTime
+     * @param  float $callTime
      * @return int
      */
     protected function getLevel($callTime)

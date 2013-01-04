@@ -162,7 +162,6 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Str 1', end($result));
     }
 
-
     public function testParsingNestedListResponse()
     {
         $string = '<?xml version="1.0" encoding="UTF-8"?>

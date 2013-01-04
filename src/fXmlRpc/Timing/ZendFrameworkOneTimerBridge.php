@@ -35,8 +35,8 @@ class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
      * customization
      *   *
      * @param Zend_Log $logger
-     * @param integer $level
-     * @param string $messageTemplate
+     * @param integer  $level
+     * @param string   $messageTemplate
      */
     public function __construct(Zend_Log $logger, $level = null, $messageTemplate = null)
     {

@@ -39,7 +39,7 @@ class TimingDecorator extends AbstractDecorator
      * Create new client decorator to record timing information
      *
      * @param ClientInterface $wrapped
-     * @param TimerInterface $timer
+     * @param TimerInterface  $timer
      */
     public function __construct(ClientInterface $wrapped, TimerInterface $timer)
     {

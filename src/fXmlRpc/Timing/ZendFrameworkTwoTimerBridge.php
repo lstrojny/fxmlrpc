@@ -35,8 +35,8 @@ class ZendFrameworkTwoTimerBridge extends AbstractTimerBridge
      * customization
      *
      * @param LoggerInterface $logger
-     * @param string $method
-     * @param string $messageTemplate
+     * @param string          $method
+     * @param string          $messageTemplate
      */
     public function __construct(LoggerInterface $logger, $method = null, $messageTemplate = null)
     {

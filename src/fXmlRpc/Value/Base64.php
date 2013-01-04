@@ -49,7 +49,7 @@ final class Base64 implements Base64Interface
     /**
      * Return new base64 value object by encoded value
      *
-     * @param string $string
+     * @param  string $string
      * @return Base64
      */
     public static function serialize($string)
@@ -62,7 +62,7 @@ final class Base64 implements Base64Interface
     /**
      * Return new base64 value by string
      *
-     * @param string $value
+     * @param  string $value
      * @return Base64
      */
     public static function deserialize($value)

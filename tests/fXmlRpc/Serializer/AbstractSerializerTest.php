@@ -398,7 +398,7 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertXmlStringEqualsXmlString(
             $xml,
-            $this->serializer->serialize('method', array((object)array('FOO' => 'BAR')))
+            $this->serializer->serialize('method', array((object) array('FOO' => 'BAR')))
         );
     }
 

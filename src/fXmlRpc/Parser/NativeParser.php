@@ -26,7 +26,6 @@ namespace fXmlRpc\Parser;
 
 use DateTime;
 use DateTimeZone;
-use stdClass;
 use fXmlRpc\Exception\MissingExtensionException;
 use fXmlRpc\Value\Base64;
 

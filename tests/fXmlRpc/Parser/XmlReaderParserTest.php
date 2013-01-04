@@ -25,7 +25,6 @@
 namespace fXmlRpc\Parser;
 
 use DateTime;
-use DateTimeZone;
 
 class XmlReaderParserTest extends AbstractParserTest
 {

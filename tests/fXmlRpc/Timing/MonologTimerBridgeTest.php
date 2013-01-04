@@ -24,8 +24,6 @@
 
 namespace fXmlRpc\Timing;
 
-use fXmlRpc\Timing\TimingDecorator;
-
 use Monolog\Logger;
 
 class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase

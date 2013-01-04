@@ -48,8 +48,8 @@ class Proxy
 
     /**
      * @param ClientInterface $client
-     * @param string $namespaceSeparator
-     * @param string $namespace
+     * @param string          $namespaceSeparator
+     * @param string          $namespace
      */
     public function __construct(ClientInterface $client, $namespaceSeparator = '.', $namespace = null)
     {
@@ -61,8 +61,8 @@ class Proxy
     /**
      * Invokes remote command
      *
-     * @param string $method
-     * @param array $parameters
+     * @param  string $method
+     * @param  array  $parameters
      * @return mixed
      */
     public function __call($method, array $parameters)
@@ -73,7 +73,7 @@ class Proxy
     /**
      * Returns namespace specific Proxy instance
      *
-     * @param string $namespace
+     * @param  string $namespace
      * @return Proxy
      */
     public function __get($namespace)
@@ -89,7 +89,7 @@ class Proxy
     /**
      * Prepend namespace if set
      *
-     * @param string $string
+     * @param  string $string
      * @return string
      */
     private function prependNamespace($string)

@@ -47,7 +47,6 @@ class ZendFrameworkOneTimerBridgeTest extends \PHPUnit_Framework_TestCase
             ->method('log')
             ->with('fXmlRpc call took 0.1000000000s', Zend_Log::DEBUG, array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
 
-
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
 

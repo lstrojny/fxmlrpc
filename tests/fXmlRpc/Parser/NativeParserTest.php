@@ -24,9 +24,6 @@
 
 namespace fXmlRpc\Parser;
 
-use DateTime;
-use DateTimeZone;
-
 class NativeParserTest extends AbstractParserTest
 {
     public function setUp()

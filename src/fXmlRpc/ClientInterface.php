@@ -68,7 +68,7 @@ interface ClientInterface
      * Execute remote call
      *
      * @param string $methodName
-     * @param array $params
+     * @param array  $params
      */
     public function call($methodName, array $params = array());
 

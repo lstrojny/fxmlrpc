@@ -27,7 +27,6 @@ namespace fXmlRpc\Serializer;
 use XMLWriter;
 use Closure;
 use DateTime;
-use stdClass;
 use fXmlRpc\Value\Base64Interface;
 use fXmlRpc\ExtensionSupportInterface;
 use fXmlRpc\Exception\SerializationException;
@@ -90,7 +89,6 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
         $writer->startElement('methodCall');
         $writer->writeElement('methodName', $methodName);
         $writer->startElement('params');
-
 
         $endNode = function() use ($writer) {
             $writer->endElement();

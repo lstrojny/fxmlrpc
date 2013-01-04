@@ -69,10 +69,10 @@ final class Multicall
     /**
      * Add a call to the sequence
      *
-     * @param string $methodName
-     * @param array $params
-     * @param callable $onSuccess
-     * @param callable $onError
+     * @param  string                   $methodName
+     * @param  array                    $params
+     * @param  callable                 $onSuccess
+     * @param  callable                 $onError
      * @throws InvalidArgumentException
      * @return self
      */
@@ -98,7 +98,7 @@ final class Multicall
     }
 
     /**
-     * @param callable $onSuccess
+     * @param  callable                 $onSuccess
      * @throws InvalidArgumentException
      * @return self
      */
@@ -114,7 +114,7 @@ final class Multicall
     }
 
     /**
-     * @param callable $onError
+     * @param  callable                 $onError
      * @throws InvalidArgumentException
      * @return self
      */
@@ -160,8 +160,8 @@ final class Multicall
     /**
      * @param callable|void $onSuccess
      * @param callable|void $onError
-     * @param bool $isError
-     * @param mixed $result
+     * @param bool          $isError
+     * @param mixed         $result
      */
     private function invokeHandler($onSuccess, $onError, $isError, $result)
     {
