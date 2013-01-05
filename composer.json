@@ -17,7 +17,8 @@
         "kriswallsmith/buzz": "*",
         "guzzle/guzzle": "*",
         "monolog/monolog": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "psr/log": "*"
     },
     "suggest": {
         "zendframework/zend-http": "To use ZF2 Zend\\Http\\Client as HTTP client",
