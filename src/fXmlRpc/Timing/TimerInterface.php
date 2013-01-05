@@ -32,6 +32,7 @@ interface TimerInterface
      * @param float  $callTime
      * @param string $method
      * @param array  $arguments
+     * @return null
      */
     public function recordTiming($callTime, $method, array $arguments);
 }

@@ -30,6 +30,7 @@ interface ClientInterface
      * Set endpoint URI
      *
      * @param string $uri
+     * @return null
      */
     public function setUri($uri);
 
@@ -44,6 +45,7 @@ interface ClientInterface
      * Set default params to be prepended for each call (e.g. authorization information)
      *
      * @param array $params
+     * @return null
      */
     public function prependParams(array $params);
 
@@ -56,6 +58,7 @@ interface ClientInterface
      * Set default params to be appended for each call (e.g. authorization information)
      *
      * @param array $params
+     * @return null
      */
     public function appendParams(array $params);
 
@@ -69,6 +72,7 @@ interface ClientInterface
      *
      * @param string $methodName
      * @param array  $params
+     * @return mixed
      */
     public function call($methodName, array $params = array());
 

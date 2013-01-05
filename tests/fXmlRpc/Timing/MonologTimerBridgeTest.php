@@ -26,14 +26,9 @@ namespace fXmlRpc\Timing;
 
 use Monolog\Logger;
 
-class MonologBridgeTimerTest extends \PHPUnit_Framework_TestCase
+class MonologTimerBridgeTest extends \PHPUnit_Framework_TestCase
 {
     private $monolog;
-
-    /**
-     * @var MonologTimerBridge
-     */
-    private $bridge;
 
     public function setUp()
     {
