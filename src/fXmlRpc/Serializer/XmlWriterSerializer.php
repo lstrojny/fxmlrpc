@@ -96,13 +96,15 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
         $valueNode = function() use ($writer) {
             $writer->startElement('value');
         };
+        $paramNode = function() use ($writer) {
+            $writer->startElement('param');
+        };
 
-        $toBeVisited = array_reverse($params);
-        if ($toBeVisited) {
-            $toBeVisited[] = function() use ($writer) {
-                $writer->startElement('param');
-            };
-            array_unshift($toBeVisited, $endNode);
+        $toBeVisited = array();
+        foreach (array_reverse($params) as $param) {
+            $toBeVisited[] = $endNode;
+            $toBeVisited[] = $param;
+            $toBeVisited[] = $paramNode;
         }
 
         $nilTagName = $this->isExtensionEnabled(ExtensionSupportInterface::EXTENSION_NIL) ? 'nil' : 'string';
