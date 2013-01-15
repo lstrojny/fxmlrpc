@@ -135,6 +135,28 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertXmlStringEqualsXmlString($xml, $this->serializer->serialize('method', array(' TESTSTR ')));
     }
 
+    public function testSerializingMethodCallWithMultipeStringParameters()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                <methodCall>
+                    <methodName>method</methodName>
+                    <params>
+                        <param>
+                            <value>
+                                <string> TESTSTR1 </string>
+                            </value>
+                        </param>
+                        <param>
+                            <value>
+                                <string> TESTSTR2 </string>
+                            </value>
+                        </param>
+                    </params>
+                </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString($xml, $this->serializer->serialize('method', array(' TESTSTR1 ', ' TESTSTR2 ')));
+    }
+
     public function testSerializingArrays()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
