@@ -90,22 +90,32 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
         $writer->writeElement('methodName', $methodName);
         $writer->startElement('params');
 
+        foreach ($params as $param)
+        {
+            $writer->startElement('param');
+            $this->serializeParam($writer, $param);
+            $writer->endElement();
+        }
+
+        $writer->endElement();
+        $writer->endElement();
+
+        return $writer->flush(true);
+    }
+
+    public function serializeParam($writer, $param)
+    {
         $endNode = function() use ($writer) {
             $writer->endElement();
         };
+
         $valueNode = function() use ($writer) {
             $writer->startElement('value');
         };
 
-        $toBeVisited = array_reverse($params);
-        if ($toBeVisited) {
-            $toBeVisited[] = function() use ($writer) {
-                $writer->startElement('param');
-            };
-            array_unshift($toBeVisited, $endNode);
-        }
-
         $nilTagName = $this->isExtensionEnabled(ExtensionSupportInterface::EXTENSION_NIL) ? 'nil' : 'string';
+
+        $toBeVisited = array($param);
 
         while ($toBeVisited) {
             $node = array_pop($toBeVisited);
@@ -209,10 +219,5 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
                 throw SerializationException::invalidType($node);
             }
         }
-
-        $writer->endElement();
-        $writer->endElement();
-
-        return $writer->flush(true);
     }
 }
