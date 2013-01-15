@@ -10,6 +10,7 @@
 
 ## Latest improvements
 
+ - `[BUG]` Fixing huge issue in `XmlWriterSerializer` (see #4 for details)
  - `[FEATURE]` Special API for multicall
  - `[FEATURE]` Supports all Java XML/RPC extensions
  - `[BC]` `fXmlRpc\AbstractDecorator` and `fXmlRpc\ClientInterface` now includes methods to prepend and append parameters
