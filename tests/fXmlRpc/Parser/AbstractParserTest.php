@@ -493,4 +493,27 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($isFault);
     }
+
+    public function testParsingInvalidMultipleParams()
+    {
+        $xml = "<?xml version='1.0'?>
+        <methodResponse>
+            <params>
+                <param>
+                    <value>p1</value>
+                </param>
+                <param>
+                    <value>p2</value>
+                </param>
+                <param>
+                    <value>p3</value>
+                </param>
+            </params>
+        </methodResponse>";
+
+        $value = $this->parser->parse($xml, $isFault);
+        $this->assertSame('p3', $value);
+
+        $this->assertFalse($isFault);
+    }
 }

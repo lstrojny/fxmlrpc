@@ -213,9 +213,16 @@ class XmlReaderParser implements ParserInterface
 
                 case XMLReader::END_ELEMENT:
                     switch ($tagName) {
-                        case 'param':
+                        case 'params':
                         case 'fault':
                             break 3;
+
+                        case 'param':
+                            $nextElements = array(
+                                'param'  => true,
+                                'params' => true,
+                            );
+                            break;
 
                         case 'value':
                             $nextElements = array(
@@ -352,6 +359,6 @@ class XmlReaderParser implements ParserInterface
 
         libxml_use_internal_errors($useErrors);
 
-        return isset($aggregates[0][0]) ? $aggregates[0][0] : null;
+        return $aggregates ? array_pop($aggregates[0]) : null;
     }
 }
