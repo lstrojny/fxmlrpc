@@ -30,7 +30,7 @@ use Psr\Log\LogLevel;
 class Psr3TimerBridge extends AbstractTimerBridge
 {
     /**
-     * Create new Zend_Log bridge
+     * Create new bridge or a PSR-3 compatible logger
      *
      * Allows passing custom log level and message template (with sprintf() control characters) for log message
      * customization
