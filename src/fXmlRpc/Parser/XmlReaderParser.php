@@ -63,6 +63,15 @@ class XmlReaderParser implements ParserInterface
         $nextElements = array('methodResponse' => true);
         while ($xml->read()) {
             $nodeType = $xml->nodeType;
+
+            if ($nodeType === XMLReader::COMMENT || $nodeType === XMLReader::DOC_TYPE) {
+                continue;
+            }
+
+            if ($nodeType === XMLReader::ENTITY_REF) {
+                return '';
+            }
+
             if ($nodeType === XMLReader::SIGNIFICANT_WHITESPACE && !isset($nextElements['#text'])) {
                 continue;
             }

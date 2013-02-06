@@ -516,4 +516,112 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($isFault);
     }
+
+    public function testEntities_PreDefined_Name()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param><value><string>&quot;&amp;&apos;&lt;&gt;</string></value></param>
+                </params>
+            </methodResponse>';
+
+        $value = $this->parser->parse($xml, $isFault);
+        $this->assertSame('"&\'<>', $value);
+        $this->assertFalse($isFault);
+    }
+
+    public function testEntities_PreDefined_Value()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param><value><string>&#34;&#38;&#39;&#60;&#62;</string></value></param>
+                </params>
+            </methodResponse>';
+
+        $value = $this->parser->parse($xml, $isFault);
+        $this->assertSame('"&\'<>', $value);
+        $this->assertFalse($isFault);
+    }
+
+    public function testEntities_UnicodeEntitiesNumeric()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <string>&#916;&#1049;&#1511;&#1605;&#3671;&#12354;&#21494;&#33865;&#47568;</string>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $value = $this->parser->parse($xml, $isFault);
+        $this->assertSame('ΔЙקم๗あ叶葉말', $value);
+        $this->assertFalse($isFault);
+    }
+
+    public function testEntities_UnicodeEntitiesHex()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <string>&#x394;&#x419;&#x5E7;&#x645;&#xE57;&#x3042;&#x53F6;&#x8449;&#xB9D0;</string>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $value = $this->parser->parse($xml, $isFault);
+        $this->assertSame('ΔЙקم๗あ叶葉말', $value);
+        $this->assertFalse($isFault);
+    }
+
+    public function testXmlComments()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <!-- Comment -->
+            <methodResponse>
+                <!-- Comment -->
+                <params>
+                <!-- Comment -->
+                    <param>
+                    <!-- Comment -->
+                        <value>
+                        <!-- Comment -->
+                            <string>value</string>
+                        <!-- Comment -->
+                        </value>
+                    <!-- Comment -->
+                    </param>
+                <!-- Comment -->
+                </params>
+            <!-- Comment -->
+            </methodResponse>
+            <!-- Comment -->
+        ';
+
+        $value = $this->parser->parse($xml, $isFault);
+        $this->assertSame('value', $value);
+        $this->assertFalse($isFault);
+    }
+
+    public function testXxeAttack_1()
+    {
+        $xml = '<?xml version="1.0" encoding="ISO-8859-7"?>
+            <!DOCTYPE foo [<!ENTITY xxefca0a SYSTEM "file:///etc/passwd">]>
+            <methodResponse>
+                <params>
+                    <param><value>&xxefca0a;</value></param>
+                </params>
+            </methodResponse>';
+
+        $value = $this->parser->parse($xml, $isFault);
+        $this->assertFalse($isFault);
+        $this->assertSame('', $value);
+    }
 }
