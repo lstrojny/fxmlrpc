@@ -26,6 +26,8 @@ namespace fXmlPRC\Integration;
 
 /**
  * @large
+ * @group integration
+ * @group java
  */
 class JavaIntegrationTest extends AbstractIntegrationTest
 {

@@ -27,12 +27,8 @@ namespace fXmlPRC\Integration;
 use fXmlRpc;
 use Exception;
 
-/**
- * @large
- */
 abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
 {
-
     protected static $command;
 
     protected static $server;

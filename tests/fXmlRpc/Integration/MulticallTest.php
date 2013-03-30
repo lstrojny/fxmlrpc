@@ -27,7 +27,9 @@ namespace fXmlPRC\Integration;
 use fXmlRpc\ClientInterface;
 
 /**
- * @group large
+ * @large
+ * @group integration
+ * @group external
  */
 class MulticallTest extends AbstractCombinatoricsClientTest
 {

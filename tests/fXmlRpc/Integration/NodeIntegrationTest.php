@@ -26,6 +26,8 @@ namespace fXmlPRC\Integration;
 
 /**
  * @large
+ * @group integration
+ * @group node
  */
 class NodeIntegrationTest extends AbstractIntegrationTest
 {
