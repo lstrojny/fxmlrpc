@@ -13,6 +13,7 @@
     "require-dev": {
         "php": ">=5.3.0",
         "zendframework/zend-http": "2.0.*",
+        "zendframework/zend-log": "2.0.*",
         "zendframework/zendframework1": "1.*",
         "kriswallsmith/buzz": "*",
         "guzzle/guzzle": "*",
@@ -22,6 +23,7 @@
     },
     "suggest": {
         "zendframework/zend-http": "To use ZF2 Zend\\Http\\Client as HTTP client",
+        "zendframework/zend-log": "To use ZF2 Zend\\Log\\Logger as a logger",
         "zendframework/zendframework1": "To use ZF1 Zend_Http_Client as HTTP client",
         "kriswallsmith/buzz": "To integrate Buzz as HTTP client",
         "guzzle/guzzle": "To integrate Guzzle as HTTP client",
