@@ -4,12 +4,12 @@ php:
   - 5.4
 
 before_script:
-  - echo yes | pecl install ${HTTP_VERSION}
+  - echo yes | pecl install pecl_http
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install --dev
   - npm install git://github.com/baalexander/node-xmlrpc.git
 
-script: phpunit --exclude-group java --exclude-group python
+script: phpunit
 
 notifications:
   email:
