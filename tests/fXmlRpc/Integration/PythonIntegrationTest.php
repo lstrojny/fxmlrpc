@@ -31,9 +31,9 @@ namespace fXmlPRC\Integration;
  */
 class PythonIntegrationTest extends AbstractIntegrationTest
 {
-    protected $endpoint = 'http://localhost:8000';
+    protected $endpoint = 'http://localhost:28000';
 
-    protected $errorEndpoint = 'http://localhost:8001';
+    protected $errorEndpoint = 'http://localhost:28001';
 
     protected static $command = 'python server.py';
 

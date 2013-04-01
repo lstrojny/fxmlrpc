@@ -8,7 +8,7 @@ import signal
 import sys
 from collections import namedtuple
 
-server = SimpleXMLRPCServer(("localhost", 8000), allow_none = True)
+server = SimpleXMLRPCServer(("localhost", 28000), allow_none = True)
 server.register_introspection_functions()
 
 def echo(v):
@@ -29,7 +29,7 @@ class ErrorHTTPHandler(SimpleHTTPRequestHandler):
     def do_POST(self):
         self.send_response(500, 'Service unavailable')
 
-error_server = TCPServer(("", 8001), ErrorHTTPHandler)
+error_server = TCPServer(("", 28001), ErrorHTTPHandler)
 
 def signal_handler(s, f):
     error_server.shutdown()
