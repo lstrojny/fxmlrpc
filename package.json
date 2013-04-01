@@ -1,0 +1,6 @@
+{
+    "name": "lstrojny-fxmlrpc",
+    "devDependencies": {
+        "node-xmlrpc": "git://github.com/baalexander/node-xmlrpc.git"
+    }
+}
