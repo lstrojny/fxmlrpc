@@ -12,8 +12,9 @@
         <get src="http://getcomposer.org/composer.phar" dest="build/composer.phar"/>
         <exec executable="php" failonerror="true">
             <arg value="build/composer.phar"/> 
-            <arg value="install"/> 
-            <arg value="--dev"/> 
+            <arg value="install"/>
+            <arg value="--dev"/>
+            <arg value="--prefer-dist"/>
         </exec>
         <exec executable="npm" failonerror="true">
             <arg value="install"/>
