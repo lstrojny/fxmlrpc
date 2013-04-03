@@ -26,6 +26,7 @@ namespace fXmlRpc\Transport;
 
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\BadResponseException;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 use Guzzle\Http\Exception\ServerErrorResponseException;
 use Guzzle\Http\Curl\CurlException as CompatCurlException;
 use Guzzle\Http\Exception\CurlException;
@@ -62,6 +63,8 @@ class GuzzleBridge implements TransportInterface
         } catch (BadResponseException $e) {
             throw HttpException::httpError($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         } catch (ServerErrorResponseException $e) {
+            throw HttpException::httpError($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
+        } catch (ClientErrorResponseException $e) {
             throw HttpException::httpError($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         }
 
