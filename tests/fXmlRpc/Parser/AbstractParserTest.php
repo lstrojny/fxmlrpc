@@ -624,4 +624,26 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($isFault);
         $this->assertSame('', $value);
     }
+
+    public function testNestedArray()
+    {
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <array>
+                                <data/>
+                            </array>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $isFault = true;
+        $result = $this->parser->parse($string, $isFault);
+        $this->assertFalse($isFault);
+        $this->assertSame(array(), $result);
+
+    }
 }

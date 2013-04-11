@@ -117,7 +117,7 @@ class XmlReaderParser implements ParserInterface
                             break;
 
                         case 'data':
-                            $nextElements = array('value' => true, 'data' => true);
+                            $nextElements = array('value' => true, 'data' => true, 'array' => true);
                             break;
 
                         case 'struct':
