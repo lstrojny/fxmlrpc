@@ -9,7 +9,7 @@ before_script:
   - php composer.phar install --dev
   - npm install
 
-script: phpunit --debug
+script: phpunit --exclude-group integration
 
 notifications:
   email:
