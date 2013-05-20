@@ -149,7 +149,7 @@ final class Multicall
      * @param array $handler
      * @param mixed $result
      */
-    private function processResult(array $handler, $result)
+    protected function processResult(array $handler, $result)
     {
         $isError = is_array($result) && isset($result['faultCode']);
 
@@ -163,7 +163,7 @@ final class Multicall
      * @param bool          $isError
      * @param mixed         $result
      */
-    private function invokeHandler($onSuccess, $onError, $isError, $result)
+    protected function invokeHandler($onSuccess, $onError, $isError, $result)
     {
         if ($isError && $onError !== null) {
             call_user_func($onError, $result);

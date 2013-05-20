@@ -92,7 +92,7 @@ class Proxy
      * @param  string $string
      * @return string
      */
-    private function prependNamespace($string)
+    protected function prependNamespace($string)
     {
         if ($this->namespace === null) {
             return $string;
