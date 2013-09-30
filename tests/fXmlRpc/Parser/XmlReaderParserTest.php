@@ -172,4 +172,43 @@ class XmlReaderParserTest extends AbstractParserTest
         $this->assertSame('2013-12-09T14:26:40.448000+01:00', $result->format('Y-m-d\TH:i:s.uP'));
         $this->assertFalse($isFault);
     }
+
+    public function testEmptyArray_2()
+    {
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <array>
+                            </array>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $isFault = true;
+        $result = $this->parser->parse($string, $isFault);
+        $this->assertFalse($isFault);
+        $this->assertSame(array(), $result);
+    }
+
+    public function testEmptyArray_3()
+    {
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <array/>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $isFault = true;
+        $result = $this->parser->parse($string, $isFault);
+        $this->assertFalse($isFault);
+        $this->assertSame(array(), $result);
+    }
 }

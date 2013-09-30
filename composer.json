@@ -19,7 +19,8 @@
         "guzzle/guzzle": "*",
         "monolog/monolog": "*",
         "ext-curl": "*",
-        "psr/log": "*"
+        "psr/log": "*",
+        "phpunit/phpunit": "3.*"
     },
     "suggest": {
         "zendframework/zend-http": "To use ZF2 Zend\\Http\\Client as HTTP client",

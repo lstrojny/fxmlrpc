@@ -625,7 +625,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('', $value);
     }
 
-    public function testNestedArray()
+    public function testEmptyArray_1()
     {
         $string = '<?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>
@@ -644,6 +644,42 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $result = $this->parser->parse($string, $isFault);
         $this->assertFalse($isFault);
         $this->assertSame(array(), $result);
+    }
 
+    public function testEmptyStruct_1()
+    {
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <struct>
+                            </struct>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $isFault = true;
+        $this->assertSame(array(), $this->parser->parse($string, $isFault));
+        $this->assertFalse($isFault);
+    }
+
+    public function testEmptyStruct_2()
+    {
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <struct/>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $isFault = true;
+        $this->assertSame(array(), $this->parser->parse($string, $isFault));
+        $this->assertFalse($isFault);
     }
 }
