@@ -78,15 +78,7 @@ class XmlReaderParser implements ParserInterface
 
             $tagName = $xml->localName;
             if ($nextElements !== null && !isset($nextElements[$tagName])) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
-                        join('", "', array_keys($nextElements)),
-                        $tagName,
-                        $xml->depth,
-                        $xml->readOuterXml()
-                    )
-                );
+                throw RuntimeException::unexpectedTag($nextElements, $tagName, $xml->depth, $xml->readOuterXml());
             }
 
 processing:
@@ -212,12 +204,7 @@ processing:
                             if ($type === 'dom') {
                                 break;
                             }
-                            throw new RuntimeException(
-                                sprintf(
-                                    'Invalid tag <%s> found',
-                                    $tagName
-                                )
-                            );
+                            throw RuntimeException::invalidTag($tagName);
                     }
                     break;
 
@@ -295,12 +282,7 @@ processing:
                             if ($nextElements === null) {
                                 break;
                             }
-                            throw new RuntimeException(
-                                sprintf(
-                                    'Invalid tag </%s> found',
-                                    $tagName
-                                )
-                            );
+                            throw RuntimeException::invalidTag($tagName);
                     }
                     break;
 

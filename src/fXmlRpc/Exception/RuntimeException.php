@@ -26,8 +26,23 @@ namespace fXmlRpc\Exception;
 
 use RuntimeException as BaseRuntimeException;
 
-class RuntimeException
-    extends BaseRuntimeException
-    implements ExceptionInterface
+class RuntimeException extends BaseRuntimeException implements ExceptionInterface
 {
+    public static function unexpectedTag($tagName, array $expectedElements, $depth, $xml)
+    {
+        return new static(
+            sprintf(
+                'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
+                join('", "', array_keys($expectedElements)),
+                $tagName,
+                $depth,
+                $xml
+            )
+        );
+    }
+
+    public static function invalidTag($tagName)
+    {
+        return new static(sprintf('Invalid t2ag <%s> found', $tagName));
+    }
 }
