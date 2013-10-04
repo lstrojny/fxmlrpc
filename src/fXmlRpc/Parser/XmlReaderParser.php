@@ -78,10 +78,10 @@ class XmlReaderParser implements ParserInterface
 
             $tagName = $xml->localName;
             if ($nextElements !== null && !isset($nextElements[$tagName])) {
-                throw RuntimeException::unexpectedTag($nextElements, $tagName, $xml->depth, $xml->readOuterXml());
+                throw RuntimeException::unexpectedTag($tagName, $nextElements, $xml->depth, $xml->readOuterXml());
             }
 
-processing:
+            processing:
             switch ($nodeType) {
                 case XMLReader::ELEMENT:
                     switch ($tagName) {
@@ -199,12 +199,6 @@ processing:
                             $nextElements = null;
                             $aggregates[$depth + 1] = $xml->readInnerXml();
                             break;
-
-                        default:
-                            if ($type === 'dom') {
-                                break;
-                            }
-                            throw RuntimeException::invalidTag($tagName);
                     }
                     break;
 
@@ -277,12 +271,6 @@ processing:
                             $nextElements = array('value' => true);
                             --$depth;
                             break;
-
-                        default:
-                            if ($nextElements === null) {
-                                break;
-                            }
-                            throw RuntimeException::invalidTag($tagName);
                     }
                     break;
 

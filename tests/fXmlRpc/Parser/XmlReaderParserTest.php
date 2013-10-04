@@ -211,4 +211,20 @@ class XmlReaderParserTest extends AbstractParserTest
         $this->assertFalse($isFault);
         $this->assertSame(array(), $result);
     }
+
+    public function testInvalidXml()
+    {
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <invalidTag></invalidTag>
+            </methodResponse>';
+
+        $isFault = true;
+
+        $this->setExpectedException(
+            'fXmlRpc\Exception\RuntimeException',
+            'Invalid XML. Expected one of "params", "fault", got "invalidTag" on depth 1 (context: "<invalidTag/>")'
+        );
+        $this->parser->parse($string, $isFault);
+    }
 }

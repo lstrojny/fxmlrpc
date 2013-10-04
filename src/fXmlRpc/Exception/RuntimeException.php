@@ -40,9 +40,4 @@ class RuntimeException extends BaseRuntimeException implements ExceptionInterfac
             )
         );
     }
-
-    public static function invalidTag($tagName)
-    {
-        return new static(sprintf('Invalid t2ag <%s> found', $tagName));
-    }
 }
