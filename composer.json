@@ -12,9 +12,9 @@
     ],
     "require-dev": {
         "php": ">=5.3.0",
-        "zendframework/zend-http": "2.0.*",
-        "zendframework/zend-log": "2.0.*",
-        "zendframework/zendframework1": "1.*",
+        "zendframework/zend-http": "~2",
+        "zendframework/zend-log": "~2",
+        "zendframework/zendframework1": "~1",
         "kriswallsmith/buzz": "*",
         "guzzle/guzzle": "*",
         "monolog/monolog": "*",
