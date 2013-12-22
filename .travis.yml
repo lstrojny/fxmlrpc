@@ -6,7 +6,7 @@ php:
   - hhvm
 
 before_script:
-  - echo yes | pecl install pecl_http
+  - which pecl && echo yes | pecl install pecl_http || true
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install --dev
   - npm install
