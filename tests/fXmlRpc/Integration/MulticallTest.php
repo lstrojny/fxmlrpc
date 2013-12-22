@@ -36,7 +36,7 @@ class MulticallTest extends AbstractCombinatoricsClientTest
     /**
      * @var string
      */
-    protected $endpoint = 'http://betty.userland.com/RPC2';
+    protected static $endpoint = 'http://betty.userland.com/RPC2';
 
     /**
      * @var mixed

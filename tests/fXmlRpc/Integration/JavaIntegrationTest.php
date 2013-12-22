@@ -31,13 +31,13 @@ namespace fXmlPRC\Integration;
  */
 class JavaIntegrationTest extends AbstractIntegrationTest
 {
-    protected $endpoint = 'http://localhost:28080';
+    protected static $endpoint = 'http://127.0.0.1:28080';
 
-    protected $errorEndpoint = 'http://localhost:28081/';
+    protected static $errorEndpoint = 'http://127.0.0.1:28081/';
 
-    protected $disabledExtensions = array('nil');
+    protected static $command = 'exec java -jar server.jar 28080 28081';
 
-    protected static $command = 'java -jar server.jar 28080 28081 2>&1';
+    protected static $restartServerInterval = 100;
 
-    protected static $restartServerInterval = 200;
+    protected $disabledExtensions = array('nil', 'php_curl');
 }

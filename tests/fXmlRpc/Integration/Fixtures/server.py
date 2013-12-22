@@ -8,7 +8,7 @@ import signal
 import sys
 from collections import namedtuple
 
-server = SimpleXMLRPCServer(("localhost", 28000), allow_none = True)
+server = SimpleXMLRPCServer(("127.0.0.1", 28000), allow_none = True)
 server.register_introspection_functions()
 
 def echo(v):

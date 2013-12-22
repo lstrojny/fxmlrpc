@@ -20,7 +20,9 @@
         "monolog/monolog": "*",
         "ext-curl": "*",
         "psr/log": "*",
-        "phpunit/phpunit": "3.*"
+        "phpunit/phpunit": "3.*",
+        "symfony/process": "~2",
+        "lstrojny/hmmmath": "*"
     },
     "suggest": {
         "zendframework/zend-http": "To use ZF2 Zend\\Http\\Client as HTTP client",

@@ -11,7 +11,7 @@ before_script:
   - php composer.phar install --dev
   - npm install
 
-script: phpunit --exclude-group integration
+script: phpunit
 
 notifications:
   email:

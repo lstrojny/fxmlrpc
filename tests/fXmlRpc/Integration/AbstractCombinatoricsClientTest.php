@@ -36,7 +36,7 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
 
     private $clientDependencies = array();
 
-    protected $endpoint;
+    protected static $endpoint;
 
     protected $clientsLimit = 0;
 
@@ -113,7 +113,7 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
             new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientProxy),
         );
 
-        if (extension_loaded('curl')) {
+        if (extension_loaded('curl') && !in_array('php_curl', $this->disabledExtensions)) {
             $browserCurl = new \Buzz\Browser();
             $browserCurl->setClient(new \Buzz\Client\Curl());
             $transports[] = new fXmlRpc\Transport\BuzzBrowserBridge($browserCurl);
@@ -132,7 +132,7 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
             $transports[] = new fXmlRpc\Transport\CurlTransport();
         }
 
-        if (extension_loaded('http')) {
+        if (extension_loaded('http') && !in_array('php_http', $this->disabledExtensions)) {
             $transports[] = new fXmlRpc\Transport\PeclHttpBridge(new \HttpRequest());
         }
 
@@ -169,7 +169,7 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
             }
         } else {
             $client = new fXmlRpc\Client(
-                $this->endpoint,
+                static::$endpoint,
                 $this->clientDependencies[0],
                 $this->clientDependencies[1],
                 $this->clientDependencies[2]

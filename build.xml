@@ -22,8 +22,6 @@
     </target>
 
     <target name="phpunit">
-        <exec executable="phpunit" failonerror="true">
-            <arg line="--exclude-group performance"/>
-        </exec>
+        <exec executable="phpunit" failonerror="true"/>
     </target>
 </project>

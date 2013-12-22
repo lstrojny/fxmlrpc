@@ -31,13 +31,13 @@ namespace fXmlPRC\Integration;
  */
 class PythonIntegrationTest extends AbstractIntegrationTest
 {
-    protected $endpoint = 'http://localhost:28000';
+    protected static $endpoint = 'http://127.0.0.1:28000';
 
-    protected $errorEndpoint = 'http://localhost:28001';
+    protected static $errorEndpoint = 'http://127.0.0.1:28001';
 
-    protected static $command = 'python server.py';
+    protected static $command = 'exec python server.py';
 
-    protected static $restartServerInterval = 200;
+    protected static $restartServerInterval = 1000;
 
-    protected $clientsLimit = 50;
+    protected $disabledExtensions = array('php_curl');
 }

@@ -25,63 +25,63 @@
 namespace fXmlPRC\Integration;
 
 use fXmlRpc;
-use Exception;
+use fXmlRpc\ClientInterface;
+use hmmmath\Fibonacci\FibonacciFactory;
+use Symfony\Component\Process\Process;
 
 abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
 {
+    /** @var string */
     protected static $command;
 
+    /** @var Process */
     protected static $server;
 
-    protected static $pipes;
-
     protected static $restartServerInterval = 0;
+
+    protected static $errorEndpoint;
 
     private static $runCount = 0;
 
     protected static function startServer()
     {
-        self::$server = proc_open(
-            static::$command,
-            array(
-                0 => array('pipe', 'r'),
-                1 => array('pipe', 'w'),
-                2 => array('pipe', 'w'),
-            ),
-            self::$pipes,
-            __DIR__ . '/Fixtures'
-        );
+        self::$server = new Process(static::$command, __DIR__ . '/Fixtures');
+        self::$server->start();
+        static::pollWait();
     }
 
     protected static function stopServer()
     {
-        foreach (self::$pipes as $pipe) {
-            fclose($pipe);
-        }
-
-        proc_terminate(self::$server);
-        proc_close(self::$server);
+        self::$server->stop();
     }
 
     public static function setUpBeforeClass()
     {
         static::startServer();
+    }
 
-        if (!is_resource(self::$server)) {
-            throw new \Exception(
-                'Could not start server' . PHP_EOL
-                . fread(static::$pipes[1], 65536) . PHP_EOL
-                . fread(static::$pipes[2], 65536)
-            );
+    private static function pollWait()
+    {
+        $parts = parse_url(static::$endpoint);
+        foreach (FibonacciFactory::sequence(50000, 10000) as $offset => $sleepTime) {
+            usleep($sleepTime);
+
+            $socket = @fsockopen($parts['host'], $parts['port'], $errorNumber, $errorString, 0.5);
+            if ($socket !== false) {
+                fclose($socket);
+                break;
+            }
+
+            if ($offset > 5) {
+                static::startServer();
+                break;
+            }
         }
-
-        sleep(2);
     }
 
     public static function tearDownAfterClass()
     {
         static::stopServer();
-        sleep(1);
     }
 
     public function setUp()
@@ -95,14 +95,14 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
         }
 
         self::$runCount = 0;
-        static::tearDownAfterClass();
-        static::setUpBeforeClass();
+        static::stopServer();
+        static::startServer();
     }
 
     /**
      * @dataProvider getClients
      */
-    public function testNil($client)
+    public function testNil(ClientInterface $client)
     {
         $result = null;
         $this->assertSame($result, $client->call('system.echoNull', array($result)));
@@ -111,7 +111,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testArray($client)
+    public function testArray(ClientInterface $client)
     {
         $result = range(0, 10);
         $this->assertSame($result, $client->call('system.echo', array($result)));
@@ -120,7 +120,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testStruct($client)
+    public function testStruct(ClientInterface $client)
     {
         $result = array('FOO' => 'BAR', 'BAZ' => 'BLA');
         $this->assertEquals($result, $client->call('system.echo', array($result)));
@@ -129,7 +129,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testString($client)
+    public function testString(ClientInterface $client)
     {
         $result = 'HELLO WORLD <> & ÜÖÄ';
         $this->assertSame($result, $client->call('system.echo', array($result)));
@@ -138,7 +138,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testBase64($client)
+    public function testBase64(ClientInterface $client)
     {
         $expected = fXmlRpc\Value\Base64::serialize('HELLO WORLD');
         $result = $client->call('system.echo', array($expected));
@@ -149,7 +149,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testInteger($client)
+    public function testInteger(ClientInterface $client)
     {
         $result = 100;
         $this->assertSame($result, $client->call('system.echo', array($result)));
@@ -158,7 +158,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testNegativeInteger($client)
+    public function testNegativeInteger(ClientInterface $client)
     {
         $result = -100;
         $this->assertSame($result, $client->call('system.echo', array($result)));
@@ -167,7 +167,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testFloat($client)
+    public function testFloat(ClientInterface $client)
     {
         $result = 100.12;
         $this->assertSame($result, $client->call('system.echo', array($result)));
@@ -176,7 +176,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testNegativeFloat($client)
+    public function testNegativeFloat(ClientInterface $client)
     {
         $result = -100.12;
         $this->assertSame($result, $client->call('system.echo', array($result)));
@@ -185,7 +185,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testDate($client)
+    public function testDate(ClientInterface $client)
     {
         $result = new \DateTime('2011-01-12 23:12:10', new \DateTimeZone('UTC'));
         $this->assertEquals($result, $client->call('system.echo', array($result)));
@@ -194,7 +194,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testComplexStruct($client)
+    public function testComplexStruct(ClientInterface $client)
     {
         $result = array(
             'el1' => array('one', 'two', 'three'),
@@ -216,7 +216,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testFault($client)
+    public function testFault(ClientInterface $client)
     {
         try {
             $client->call('system.fault');
@@ -232,9 +232,9 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /**
      * @dataProvider getClients
      */
-    public function testServerReturnsInvalidResult($client)
+    public function testServerReturnsInvalidResult(ClientInterface $client)
     {
-        $client->setUri($this->errorEndpoint);
+        $client->setUri(static::$errorEndpoint);
 
         try {
             $client->call('system.failure');
@@ -247,24 +247,4 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
             $this->assertSame(500, $e->getCode());
         }
     }
-
-    /**
-     * @dataProvider getClients
-     */
-    public function testServerNotReachableViaTcpIp($client)
-    {
-        $client->setUri('http://localhost:23124/');
-
-        try {
-            $client->call('system.failure');
-            $this->fail('Exception expected');
-        } catch (\fXmlRpc\Exception\TcpException $e) {
-            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
-            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
-            $this->assertInstanceOf('RuntimeException', $e);
-            $this->assertStringStartsWith('A transport error occurred', $e->getMessage());
-            $this->assertSame(0, $e->getCode());
-        }
-    }
-
 }
