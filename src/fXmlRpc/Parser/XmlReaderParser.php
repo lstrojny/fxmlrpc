@@ -49,6 +49,10 @@ class XmlReaderParser implements ParserInterface
     {
         $useErrors = libxml_use_internal_errors(true);
 
+        if (!defined('LIBXML_PARSEHUGE')) {
+            define('LIBXML_PARSEHUGE', 0);
+        }
+
         $xml = new XMLReader();
         $xml->xml(
             $xmlString,
