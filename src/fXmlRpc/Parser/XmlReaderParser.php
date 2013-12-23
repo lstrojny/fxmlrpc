@@ -48,26 +48,55 @@ class XmlReaderParser implements ParserInterface
     {
         $useErrors = libxml_use_internal_errors(true);
 
-        if (!defined('LIBXML_PARSEHUGE')) {
-            define('LIBXML_PARSEHUGE', 0);
-        }
-
         $xml = new XMLReader();
-        $xml->xml(
-            $xmlString,
-            'UTF-8',
-            LIBXML_COMPACT | LIBXML_PARSEHUGE | LIBXML_NOCDATA | LIBXML_NOBLANKS
-        );
+        $xml->xml($xmlString, 'UTF-8', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS);
         $xml->setParserProperty(XMLReader::VALIDATE, false);
         $xml->setParserProperty(XMLReader::LOADDTD, false);
 
+// This following assignments are auto-generated using fXmlRpc\CodeGenerator\XmlReaderParserBitmaskGenerator
+// Don’t edit manually
+        static $flagmethodResponse = 0b000000000000000000000000001;
+        static $flagparams = 0b000000000000000000000000010;
+        static $flagfault = 0b000000000000000000000000100;
+        static $flagparam = 0b000000000000000000000001000;
+        static $flagvalue = 0b000000000000000000000010000;
+        static $flagarray = 0b000000000000000000000100000;
+        static $flagmember = 0b000000000000000000001000000;
+        static $flagname = 0b000000000000000000010000000;
+        ${'flag#text'} = 0b000000000000000000100000000;
+        static $flagstring = 0b000000000000000001000000000;
+        static $flagstruct = 0b000000000000000010000000000;
+        static $flagint = 0b000000000000000100000000000;
+        static $flagbiginteger = 0b000000000000001000000000000;
+        static $flagi8 = 0b000000000000010000000000000;
+        static $flagi4 = 0b000000000000100000000000000;
+        static $flagi2 = 0b000000000001000000000000000;
+        static $flagi1 = 0b000000000010000000000000000;
+        static $flagboolean = 0b000000000100000000000000000;
+        static $flagdouble = 0b000000001000000000000000000;
+        static $flagfloat = 0b000000010000000000000000000;
+        static $flagbigdecimal = 0b000000100000000000000000000;
+        ${'flagdateTime.iso8601'} = 0b000001000000000000000000000;
+        static $flagdateTime = 0b000010000000000000000000000;
+        static $flagbase64 = 0b000100000000000000000000000;
+        static $flagnil = 0b001000000000000000000000000;
+        static $flagdom = 0b010000000000000000000000000;
+        static $flagdata = 0b100000000000000000000000000;
+// End of auto-generated code
+
         $aggregates = [];
         $depth = 0;
-        $nextElements = ['methodResponse' => true];
+        $nextExpectedElements = 0b000000000000000000000000001;
+        $i = 0;
         while ($xml->read()) {
+            $i++;
             $nodeType = $xml->nodeType;
 
-            if ($nodeType === XMLReader::COMMENT || $nodeType === XMLReader::DOC_TYPE) {
+            if (($nodeType === XMLReader::COMMENT || $nodeType === XMLReader::DOC_TYPE) ||
+                (
+                   $nodeType === XMLReader::SIGNIFICANT_WHITESPACE &&
+                   ($nextExpectedElements & 0b000000000000000000100000000) !== 0b000000000000000000100000000)
+                ) {
                 continue;
             }
 
@@ -75,13 +104,17 @@ class XmlReaderParser implements ParserInterface
                 return '';
             }
 
-            if ($nodeType === XMLReader::SIGNIFICANT_WHITESPACE && !isset($nextElements['#text'])) {
-                continue;
-            }
-
             $tagName = $xml->localName;
-            if ($nextElements !== null && !isset($nextElements[$tagName])) {
-                throw RuntimeException::unexpectedTag($tagName, $nextElements, $xml->depth, $xml->readOuterXml());
+            if ($nextExpectedElements !== null &&
+                ($flag = isset(${'flag' . $tagName}) ? ${'flag' . $tagName} : -1) &&
+                ($nextExpectedElements & $flag) !== $flag) {
+                throw RuntimeException::unexpectedTag(
+                    $tagName,
+                    $nextExpectedElements,
+                    get_defined_vars(),
+                    $xml->depth,
+                    $xml->readOuterXml()
+                );
             }
 
             PROCESSING:
@@ -89,70 +122,53 @@ class XmlReaderParser implements ParserInterface
                 case XMLReader::ELEMENT:
                     switch ($tagName) {
                         case 'methodResponse':
-                            $nextElements = ['params' => true, 'fault' => true];
-                            break;
-
-                        case 'fault':
-                            $nextElements = ['value' => true];
-                            $isFault = true;
+                            // Next: params, fault
+                            $nextExpectedElements = 0b000000000000000000000000110;
                             break;
 
                         case 'params':
-                            $nextElements = ['param' => true];
+                            // Next: param
+                            $nextExpectedElements = 0b000000000000000000000001000;
                             $aggregates[$depth] = [];
                             $isFault = false;
                             break;
 
+                        case 'fault':
+                            $isFault = true;
+                            // Break intentionally omitted
                         case 'param':
-                            $nextElements = ['value' => true];
+                            // Next: value
+                            $nextExpectedElements = 0b000000000000000000000010000;
                             break;
 
                         case 'array':
-                            $nextElements = ['data' => true, 'array' => true, 'value' => true];
                             $aggregates[++$depth] = [];
-                            break;
-
+                            // Break intentionally omitted
                         case 'data':
-                            $nextElements = ['data' => true, 'array' => true, 'value' => true];
+                            // Next: array, data, value
+                            $nextExpectedElements = 0b100000000000000000000110000;
                             break;
 
                         case 'struct':
-                            $nextElements = ['member' => true, 'struct' => true, 'value' => true];
+                            // Next: struct, member, value
+                            $nextExpectedElements = 0b000000000000000010001010000;
                             $aggregates[++$depth] = [];
                             break;
 
                         case 'member':
-                            $nextElements = ['name' => true, 'value' => true];
+                            // Next: name, value
+                            $nextExpectedElements = 0b000000000000000000010010000;
                             $aggregates[++$depth] = [];
                             break;
 
                         case 'name':
-                            $nextElements = ['#text' => true];
+                            // Next: #text
+                            $nextExpectedElements = 0b000000000000000000100000000;
                             $type = 'name';
                             break;
 
                         case 'value':
-                            $nextElements = [
-                                'string'           => true,
-                                'array'            => true,
-                                'struct'           => true,
-                                'int'              => true,
-                                'biginteger'       => true,
-                                'i8'               => true,
-                                'i4'               => true,
-                                'i2'               => true,
-                                'i1'               => true,
-                                'boolean'          => true,
-                                'double'           => true,
-                                'float'            => true,
-                                'bigdecimal'       => true,
-                                'dateTime.iso8601' => true,
-                                'dateTime'         => true,
-                                'base64'           => true,
-                                'nil'              => true,
-                                'dom'              => true,
-                                '#text'            => true,
-                            ];
+                            $nextExpectedElements = 0b011111111111111111100100000;
                             $type = 'value';
                             break;
 
@@ -162,13 +178,15 @@ class XmlReaderParser implements ParserInterface
                         case 'i8':
                         case 'dateTime.iso8601':
                         case 'dateTime':
-                            $nextElements = ['#text' => true, $tagName => true, 'value' => true];
+                            // Next: value, $tagName, #text
+                            $nextExpectedElements = 0b000000000000000000100010000 | ${'flag' . $tagName};
                             $type = $tagName;
                             $aggregates[$depth + 1] = '';
                             break;
 
                         case 'nil':
-                            $nextElements = [$tagName => true, 'value' => true];
+                            // Next: value, $tagName
+                            $nextExpectedElements = 0b001000000000000000000010000 | ${'flag' . $tagName};
                             $type = $tagName;
                             $aggregates[$depth + 1] = null;
                             break;
@@ -177,13 +195,15 @@ class XmlReaderParser implements ParserInterface
                         case 'i4':
                         case 'i2':
                         case 'i1':
-                            $nextElements = ['#text' => true, $tagName => true, 'value' => true];
+                            // Next: value, #text, $tagName
+                            $nextExpectedElements = 0b000000000000000000100010000 | ${'flag' . $tagName};
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0;
                             break;
 
                         case 'boolean':
-                            $nextElements = ['#text' => true, $tagName => true, 'value' => true];
+                            // Next: value, #text, $tagName
+                            $nextExpectedElements = 0b000000000000000000100010000 | ${'flag' . $tagName};
                             $type = 'boolean';
                             $aggregates[$depth + 1] = false;
                             break;
@@ -191,7 +211,8 @@ class XmlReaderParser implements ParserInterface
                         case 'double':
                         case 'float':
                         case 'bigdecimal':
-                            $nextElements = ['#text' => true, $tagName => true, 'value' => true];
+                            // Next: value, #text, $tagName
+                            $nextExpectedElements = 0b000000000000000000100010000 | ${'flag' . $tagName};
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0.0;
                             break;
@@ -199,7 +220,7 @@ class XmlReaderParser implements ParserInterface
                         case 'dom':
                             $type = 'dom';
                             // Disable type checking
-                            $nextElements = null;
+                            $nextExpectedElements = null;
                             $aggregates[$depth + 1] = $xml->readInnerXml();
                             break;
                     }
@@ -212,26 +233,19 @@ class XmlReaderParser implements ParserInterface
                             break 3;
 
                         case 'param':
-                            $nextElements = ['param'  => true, 'params' => true];
+                            // Next: params, param
+                            $nextExpectedElements = 0b000000000000000000000001010;
                             break;
 
                         case 'value':
-                            $nextElements = [
-                                'param'  => true,
-                                'value'  => true,
-                                'data'   => true,
-                                'member' => true,
-                                'name'   => true,
-                                'int'    => true,
-                                'i4'     => true,
-                                'i2'     => true,
-                                'i1'     => true,
-                                'base64' => true,
-                                'fault'  => true,
-                            ];
+                            $nextExpectedElements = 0b100100000011100100011011100;
                             $aggregates[$depth][] = $aggregates[$depth + 1];
                             break;
 
+                        case 'array':
+                        case 'struct':
+                            --$depth;
+                            // Break intentionally omitted
                         case 'string':
                         case 'int':
                         case 'biginteger':
@@ -247,28 +261,26 @@ class XmlReaderParser implements ParserInterface
                         case 'dateTime':
                         case 'base64':
                         case 'nil':
-                            $nextElements = ['value' => true];
+                            // Next: value
+                            $nextExpectedElements = 0b000000000000000000000010000;
                             break;
 
                         case 'data':
-                            $nextElements = ['array' => true];
+                            // Next: array
+                            $nextExpectedElements = 0b000000000000000000000100000;
                             break;
 
                         case 'name':
-                            $nextElements = ['value' => true, 'member' => true];
+                            // Next: value, member
+                            $nextExpectedElements = 0b000000000000000000001010000;
                             $aggregates[$depth]['name'] = $aggregates[$depth + 1];
                             break;
 
                         case 'member':
-                            $nextElements = ['struct' => true, 'member' => true];
+                            // Next: struct, member
+                            $nextExpectedElements = 0b000000000000000010001000000;
                             $aggregates[$depth - 1][$aggregates[$depth]['name']] = $aggregates[$depth][0];
                             unset($aggregates[$depth], $aggregates[$depth + 1]);
-                            --$depth;
-                            break;
-
-                        case 'array':
-                        case 'struct':
-                            $nextElements = ['value' => true];
                             --$depth;
                             break;
                     }
@@ -326,10 +338,11 @@ class XmlReaderParser implements ParserInterface
                     }
 
                     $aggregates[$depth + 1] = $value;
-                    if ($nextElements === null) {
+                    if ($nextExpectedElements === null) {
                         break;
                     }
-                    $nextElements = [$type => true];
+                    // Next: any
+                    $nextExpectedElements = 0b111111111111111111111111111;
                     break;
             }
 
