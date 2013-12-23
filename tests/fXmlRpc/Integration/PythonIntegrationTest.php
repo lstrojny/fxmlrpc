@@ -37,7 +37,7 @@ class PythonIntegrationTest extends AbstractIntegrationTest
 
     protected static $command = 'exec python server.py';
 
-    protected static $restartServerInterval = 1000;
+    protected static $restartServerInterval = 500;
 
     protected $disabledExtensions = array('php_curl');
 }
