@@ -38,6 +38,8 @@ class NodeIntegrationTest extends AbstractIntegrationTest
 
     protected static $command = 'exec node server.js';
 
+    protected static $restartServerInterval = 200;
+
     /**
      * @dataProvider getClients
      */
