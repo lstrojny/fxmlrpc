@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Parser;
 
 /**
@@ -32,8 +31,8 @@ interface ParserInterface
     /**
      * Parse XML string into PHP representation
      *
-     * @param  string $xmlString
-     * @param  bool   $isFault
+     * @param  string  $xmlString
+     * @param  boolean $isFault
      * @return string
      */
     public function parse($xmlString, &$isFault);

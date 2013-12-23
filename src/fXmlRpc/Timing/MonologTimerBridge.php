@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Timing;
 
 use Monolog\Logger;
@@ -55,7 +54,7 @@ class MonologTimerBridge extends AbstractTimerBridge
         $this->logger->addRecord(
             $level,
             sprintf($this->messageTemplate, $callTime),
-            array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
+            ['xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments]
         );
     }
 }

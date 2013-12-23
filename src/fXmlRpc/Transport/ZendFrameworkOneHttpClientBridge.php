@@ -21,26 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Transport;
 
-use Zend_Http_Client;
-use Zend_Http_Client_Adapter_Exception;
-use Zend_Http_Client_Exception;
+use Zend_Http_Client as HttpClient;
+use Zend_Http_Client_Adapter_Exception as HttpClientAdapterException;
+use Zend_Http_Client_Exception as HttpClientException;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
 
 class ZendFrameworkOneHttpClientBridge implements TransportInterface
 {
     /**
-     * @var Zend_Http_Client
+     * @var HttpClient
      */
     private $client;
 
     /**
-     * @param Zend_Http_Client $client
+     * @param HttpClient $client
      */
-    public function __construct(Zend_Http_Client $client)
+    public function __construct(HttpClient $client)
     {
         $this->client = $client;
     }
@@ -51,13 +50,13 @@ class ZendFrameworkOneHttpClientBridge implements TransportInterface
     public function send($url, $payload)
     {
         try {
-            $response =  $this->client
+            $response = $this->client
                 ->setUri($url)
                 ->setRawData($payload)
                 ->request('POST');
-        } catch (Zend_Http_Client_Adapter_Exception $e) {
+        } catch (HttpClientAdapterException $e) {
             throw TcpException::transportError($e);
-        } catch (Zend_Http_Client_Exception $e) {
+        } catch (HttpClientException $e) {
             throw TcpException::transportError($e);
         }
 

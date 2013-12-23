@@ -53,7 +53,7 @@ class ZendFrameworkTwoTimerBridge extends AbstractTimerBridge
         $level = $this->getLevel($callTime);
         $this->logger->{$level}(
             sprintf($this->messageTemplate, $callTime),
-            array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
+            ['xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments]
         );
     }
 }

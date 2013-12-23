@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc;
 
 class Proxy
@@ -44,7 +43,7 @@ class Proxy
     /**
      * @var Proxy[string]
      */
-    private $proxies = array();
+    private $proxies = [];
 
     /**
      * @param ClientInterface $client

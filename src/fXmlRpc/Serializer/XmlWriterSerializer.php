@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Serializer;
 
 use XMLWriter;
@@ -42,7 +41,7 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
     /**
      * @var array
      */
-    private $extensions = array();
+    private $extensions = [];
 
     public function __construct()
     {
@@ -81,7 +80,7 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
     /**
      * {@inheritdoc}
      */
-    public function serialize($methodName, array $params = array())
+    public function serialize($methodName, array $params = [])
     {
         $writer = $this->writer;
 
@@ -90,17 +89,17 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
         $writer->writeElement('methodName', $methodName);
         $writer->startElement('params');
 
-        $endNode = function() use ($writer) {
+        $endNode = static function () use ($writer) {
             $writer->endElement();
         };
-        $valueNode = function() use ($writer) {
+        $valueNode = static function () use ($writer) {
             $writer->startElement('value');
         };
-        $paramNode = function() use ($writer) {
+        $paramNode = static function () use ($writer) {
             $writer->startElement('param');
         };
 
-        $toBeVisited = array();
+        $toBeVisited = [];
         foreach (array_reverse($params) as $param) {
             $toBeVisited[] = $endNode;
             $toBeVisited[] = $param;
@@ -145,7 +144,9 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
             } elseif ($type === 'array') {
                 /** Find out if it is a struct or an array */
                 $min = 0;
-                foreach ($node as $min => &$child) break;
+                foreach ($node as $min => &$child) {
+                    break;
+                }
                 $isStruct = false;
                 $length = count($node) + $min;
                 for ($a = $min; $a < $length; ++$a) {
@@ -162,7 +163,7 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
                     foreach (array_reverse($node) as $value) {
                         $toBeVisited[] = $value;
                     }
-                    $toBeVisited[] = function() use ($writer) {
+                    $toBeVisited[] = static function () use ($writer) {
                         $writer->startElement('array');
                         $writer->startElement('data');
                     };
@@ -175,14 +176,14 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
                     foreach (array_reverse($node, true) as $key => $value) {
                         $toBeVisited[] = $endNode;
                         $toBeVisited[] = $value;
-                        $toBeVisited[] = function() use ($writer, $key) {
+                        $toBeVisited[] = static function () use ($writer, $key) {
                             $writer->writeElement('name', $key);
                         };
-                        $toBeVisited[] = function() use ($writer) {
+                        $toBeVisited[] = static function () use ($writer) {
                             $writer->startElement('member');
                         };
                     }
-                    $toBeVisited[] = function() use ($writer) {
+                    $toBeVisited[] = static function () use ($writer) {
                         $writer->startElement('struct');
                     };
                     $toBeVisited[] = $valueNode;

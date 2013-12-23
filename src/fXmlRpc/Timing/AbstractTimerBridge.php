@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Timing;
 
 /**
@@ -38,7 +37,7 @@ abstract class AbstractTimerBridge implements TimerInterface
     protected $logger;
 
     /**
-     * @var array|int
+     * @var array|integer
      */
     protected $level;
 
@@ -66,7 +65,7 @@ abstract class AbstractTimerBridge implements TimerInterface
      * Get log level by callTime
      *
      * @param  float $callTime
-     * @return int
+     * @return integer
      */
     protected function getLevel($callTime)
     {

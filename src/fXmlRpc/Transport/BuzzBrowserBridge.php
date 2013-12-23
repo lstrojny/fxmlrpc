@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Transport;
 
 use Buzz\Browser;
@@ -49,7 +48,7 @@ class BuzzBrowserBridge implements TransportInterface
     {
         try {
             /** @var $response Response */
-            $response = $this->browser->post($uri, array(), $payload);
+            $response = $this->browser->post($uri, [], $payload);
         } catch (RuntimeException $e) {
             throw TcpException::transportError($e);
         }

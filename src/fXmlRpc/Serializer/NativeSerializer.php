@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Serializer;
 
 use DateTime;
@@ -41,9 +40,9 @@ class NativeSerializer implements SerializerInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize($method, array $params = array())
+    public function serialize($method, array $params = [])
     {
-        $toBeVisited = array(&$params);
+        $toBeVisited = [&$params];
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
 
             $type = gettype($value);
@@ -72,11 +71,7 @@ class NativeSerializer implements SerializerInterface
         return xmlrpc_encode_request(
             $method,
             $params,
-            array(
-                'encoding'  => 'UTF-8',
-                'escaping'  => 'markup',
-                'verbosity' => 'no_white_space',
-            )
+            ['encoding' => 'UTF-8', 'escaping' => 'markup', 'verbosity' => 'no_white_space']
         );
     }
 }

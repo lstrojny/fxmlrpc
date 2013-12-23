@@ -24,7 +24,7 @@
 
 namespace fXmlRpc\Timing;
 
-use Zend_Log;
+use Zend_Log as Log;
 
 class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
 {
@@ -34,14 +34,14 @@ class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
      * Allows passing custom log level and message template (with sprintf() control characters) for log message
      * customization
      *
-     * @param Zend_Log $logger
+     * @param Log $logger
      * @param integer  $level
      * @param string   $messageTemplate
      */
-    public function __construct(Zend_Log $logger, $level = null, $messageTemplate = null)
+    public function __construct(Log $logger, $level = null, $messageTemplate = null)
     {
         $this->logger = $logger;
-        $this->setLevel($level, Zend_Log::DEBUG);
+        $this->setLevel($level, Log::DEBUG);
         $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
@@ -53,7 +53,7 @@ class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
         $this->logger->log(
             sprintf($this->messageTemplate, $callTime),
             $this->getLevel($callTime),
-            array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
+            ['xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments]
         );
     }
 }

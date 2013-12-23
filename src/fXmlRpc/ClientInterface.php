@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc;
 
 interface ClientInterface
@@ -74,7 +73,7 @@ interface ClientInterface
      * @param array  $params
      * @return mixed
      */
-    public function call($methodName, array $params = array());
+    public function call($methodName, array $params = []);
 
     /**
      * Start sequence of multiccallss

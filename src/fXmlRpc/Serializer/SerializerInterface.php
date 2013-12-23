@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Serializer;
 
 /**
@@ -36,5 +35,5 @@ interface SerializerInterface
      * @param  array  $params
      * @return string
      */
-    public function serialize($method, array $params = array());
+    public function serialize($method, array $params = []);
 }

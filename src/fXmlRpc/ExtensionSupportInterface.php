@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc;
 
 interface ExtensionSupportInterface
@@ -32,7 +31,7 @@ interface ExtensionSupportInterface
      * Enables extension
      *
      * @param  string $extension
-     * @return void
+     * @return null
      */
     public function enableExtension($extension);
 
@@ -40,7 +39,7 @@ interface ExtensionSupportInterface
      * Disables extension
      *
      * @param  string $extension
-     * @return void
+     * @return null
      */
     public function disableExtension($extension);
 

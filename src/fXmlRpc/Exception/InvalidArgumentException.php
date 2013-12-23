@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Exception;
 
 use InvalidArgumentException as BaseInvalidArgumentException;
@@ -35,7 +34,9 @@ class InvalidArgumentException extends BaseInvalidArgumentException implements E
                 'Expected parameter %d to be of type "%s", "%s" given',
                 $position,
                 $expected,
-                is_object($actualValue) ? sprintf('%s" of type "%s', gettype($actualValue), get_class($actualValue)) : gettype($actualValue)
+                is_object($actualValue)
+                    ? sprintf('%s" of type "%s', gettype($actualValue), get_class($actualValue))
+                    : gettype($actualValue)
             )
         );
     }

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Timing;
 
 use Psr\Log\LoggerInterface;
@@ -51,7 +50,7 @@ class Psr3TimerBridge extends AbstractTimerBridge
         $this->logger->log(
             $this->getLevel($callTime),
             sprintf($this->messageTemplate, $callTime),
-            array('xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments)
+            ['xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments]
         );
     }
 }

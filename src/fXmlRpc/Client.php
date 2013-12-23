@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc;
 
 use fXmlRpc\Transport\TransportInterface;
@@ -58,12 +57,12 @@ final class Client implements ClientInterface
     /**
      * @var array
      */
-    private $prependParams = array();
+    private $prependParams = [];
 
     /**
      * @var array
      */
-    private $appendParams = array();
+    private $appendParams = [];
 
     /**
      * Create new client instance
@@ -145,7 +144,7 @@ final class Client implements ClientInterface
      * {@inheritdoc}
      * @throws Exception\ResponseException
      */
-    public function call($methodName, array $params = array())
+    public function call($methodName, array $params = [])
     {
         if (!is_string($methodName)) {
             throw InvalidArgumentException::expectedParameter(0, 'string', $methodName);

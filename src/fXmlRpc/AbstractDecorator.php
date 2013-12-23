@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc;
 
 /**
@@ -95,7 +94,7 @@ abstract class AbstractDecorator implements ClientInterface
     /**
      * {@inheritdoc}
      */
-    public function call($methodName, array $arguments = array())
+    public function call($methodName, array $arguments = [])
     {
         return $this->wrapped->call($methodName, $arguments);
     }

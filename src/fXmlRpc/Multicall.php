@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc;
 
 use fXmlRpc\Exception\InvalidArgumentException;
@@ -34,19 +33,19 @@ final class Multicall
     private $client;
 
     /**
-     * @var int
+     * @var integer
      */
     private $index = 0;
 
     /**
      * @var array
      */
-    private $calls = array();
+    private $calls = [];
 
     /**
      * @var array
      */
-    private $handlers = array();
+    private $handlers = [];
 
     /**
      * @var callable
@@ -76,7 +75,7 @@ final class Multicall
      * @throws InvalidArgumentException
      * @return self
      */
-    public function addCall($methodName, array $params = array(), $onSuccess = null, $onError = null)
+    public function addCall($methodName, array $params = [], $onSuccess = null, $onError = null)
     {
         if (!is_string($methodName)) {
             throw InvalidArgumentException::expectedParameter(1, 'string', $methodName);
@@ -136,7 +135,7 @@ final class Multicall
      */
     public function execute()
     {
-        $results = $this->client->call('system.multicall', array($this->calls));
+        $results = $this->client->call('system.multicall', [$this->calls]);
 
         foreach ($results as $index => $result) {
             $this->processResult($this->handlers[$index], $result);
@@ -158,9 +157,9 @@ final class Multicall
     }
 
     /**
-     * @param callable|void $onSuccess
-     * @param callable|void $onError
-     * @param bool          $isError
+     * @param callable|null $onSuccess
+     * @param callable|null $onError
+     * @param boolean       $isError
      * @param mixed         $result
      */
     protected function invokeHandler($onSuccess, $onError, $isError, $result)

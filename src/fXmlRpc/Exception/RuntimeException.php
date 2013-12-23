@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Exception;
 
 use RuntimeException as BaseRuntimeException;
@@ -33,7 +32,7 @@ class RuntimeException extends BaseRuntimeException implements ExceptionInterfac
         return new static(
             sprintf(
                 'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
-                join('", "', array_keys($expectedElements)),
+                implode('", "', array_keys($expectedElements)),
                 $tagName,
                 $depth,
                 $xml

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Timing;
 
 use fXmlRpc\ClientInterface;
@@ -50,7 +49,7 @@ class TimingDecorator extends AbstractDecorator
     /**
      * {@inheritdoc}
      */
-    public function call($methodName, array $arguments = array())
+    public function call($methodName, array $arguments = [])
     {
         $startTime = microtime(true);
         $result = parent::call($methodName, $arguments);

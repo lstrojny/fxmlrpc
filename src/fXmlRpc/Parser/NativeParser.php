@@ -47,12 +47,12 @@ class NativeParser implements ParserInterface
 
         $isFault = false;
 
-        $toBeVisited = array(&$result);
+        $toBeVisited = [&$result];
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
 
             $type = gettype($value);
             if ($type === 'object') {
-                $xmlRpcType = $value->xmlrpc_type;
+                $xmlRpcType = $value->{'xmlrpc_type'};
                 if ($xmlRpcType === 'datetime') {
                     $value = DateTime::createFromFormat(
                         'Ymd\TH:i:s',

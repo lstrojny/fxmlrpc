@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Parser;
 
 use fXmlRpc\Value\Base64;
@@ -62,9 +61,9 @@ class XmlReaderParser implements ParserInterface
         $xml->setParserProperty(XMLReader::VALIDATE, false);
         $xml->setParserProperty(XMLReader::LOADDTD, false);
 
-        $aggregates = array();
+        $aggregates = [];
         $depth = 0;
-        $nextElements = array('methodResponse' => true);
+        $nextElements = ['methodResponse' => true];
         while ($xml->read()) {
             $nodeType = $xml->nodeType;
 
@@ -85,55 +84,55 @@ class XmlReaderParser implements ParserInterface
                 throw RuntimeException::unexpectedTag($tagName, $nextElements, $xml->depth, $xml->readOuterXml());
             }
 
-            processing:
+            PROCESSING:
             switch ($nodeType) {
                 case XMLReader::ELEMENT:
                     switch ($tagName) {
                         case 'methodResponse':
-                            $nextElements = array('params' => true, 'fault' => true);
+                            $nextElements = ['params' => true, 'fault' => true];
                             break;
 
                         case 'fault':
-                            $nextElements = array('value' => true);
+                            $nextElements = ['value' => true];
                             $isFault = true;
                             break;
 
                         case 'params':
-                            $nextElements = array('param' => true);
-                            $aggregates[$depth] = array();
+                            $nextElements = ['param' => true];
+                            $aggregates[$depth] = [];
                             $isFault = false;
                             break;
 
                         case 'param':
-                            $nextElements = array('value' => true);
+                            $nextElements = ['value' => true];
                             break;
 
                         case 'array':
-                            $nextElements = array('data' => true, 'array' => true, 'value' => true);
-                            $aggregates[++$depth] = array();
+                            $nextElements = ['data' => true, 'array' => true, 'value' => true];
+                            $aggregates[++$depth] = [];
                             break;
 
                         case 'data':
-                            $nextElements = array('data' => true, 'array' => true, 'value' => true);
+                            $nextElements = ['data' => true, 'array' => true, 'value' => true];
                             break;
 
                         case 'struct':
-                            $nextElements = array('member' => true, 'struct' => true, 'value' => true);
-                            $aggregates[++$depth] = array();
+                            $nextElements = ['member' => true, 'struct' => true, 'value' => true];
+                            $aggregates[++$depth] = [];
                             break;
 
                         case 'member':
-                            $nextElements = array('name' => true, 'value' => true);
-                            $aggregates[++$depth] = array();
+                            $nextElements = ['name' => true, 'value' => true];
+                            $aggregates[++$depth] = [];
                             break;
 
                         case 'name':
-                            $nextElements = array('#text' => true);
+                            $nextElements = ['#text' => true];
                             $type = 'name';
                             break;
 
                         case 'value':
-                            $nextElements = array(
+                            $nextElements = [
                                 'string'           => true,
                                 'array'            => true,
                                 'struct'           => true,
@@ -153,7 +152,7 @@ class XmlReaderParser implements ParserInterface
                                 'nil'              => true,
                                 'dom'              => true,
                                 '#text'            => true,
-                            );
+                            ];
                             $type = 'value';
                             break;
 
@@ -163,13 +162,13 @@ class XmlReaderParser implements ParserInterface
                         case 'i8':
                         case 'dateTime.iso8601':
                         case 'dateTime':
-                            $nextElements = array('#text' => true, $tagName => true, 'value' => true);
+                            $nextElements = ['#text' => true, $tagName => true, 'value' => true];
                             $type = $tagName;
                             $aggregates[$depth + 1] = '';
                             break;
 
                         case 'nil':
-                            $nextElements = array($tagName => true, 'value' => true);
+                            $nextElements = [$tagName => true, 'value' => true];
                             $type = $tagName;
                             $aggregates[$depth + 1] = null;
                             break;
@@ -178,13 +177,13 @@ class XmlReaderParser implements ParserInterface
                         case 'i4':
                         case 'i2':
                         case 'i1':
-                            $nextElements = array('#text' => true, $tagName => true, 'value' => true);
+                            $nextElements = ['#text' => true, $tagName => true, 'value' => true];
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0;
                             break;
 
                         case 'boolean':
-                            $nextElements = array('#text' => true, $tagName => true, 'value' => true);
+                            $nextElements = ['#text' => true, $tagName => true, 'value' => true];
                             $type = 'boolean';
                             $aggregates[$depth + 1] = false;
                             break;
@@ -192,7 +191,7 @@ class XmlReaderParser implements ParserInterface
                         case 'double':
                         case 'float':
                         case 'bigdecimal':
-                            $nextElements = array('#text' => true, $tagName => true, 'value' => true);
+                            $nextElements = ['#text' => true, $tagName => true, 'value' => true];
                             $type = $tagName;
                             $aggregates[$depth + 1] = 0.0;
                             break;
@@ -213,14 +212,11 @@ class XmlReaderParser implements ParserInterface
                             break 3;
 
                         case 'param':
-                            $nextElements = array(
-                                'param'  => true,
-                                'params' => true,
-                            );
+                            $nextElements = ['param'  => true, 'params' => true];
                             break;
 
                         case 'value':
-                            $nextElements = array(
+                            $nextElements = [
                                 'param'  => true,
                                 'value'  => true,
                                 'data'   => true,
@@ -232,7 +228,7 @@ class XmlReaderParser implements ParserInterface
                                 'i1'     => true,
                                 'base64' => true,
                                 'fault'  => true,
-                            );
+                            ];
                             $aggregates[$depth][] = $aggregates[$depth + 1];
                             break;
 
@@ -251,20 +247,20 @@ class XmlReaderParser implements ParserInterface
                         case 'dateTime':
                         case 'base64':
                         case 'nil':
-                            $nextElements = array('value' => true);
+                            $nextElements = ['value' => true];
                             break;
 
                         case 'data':
-                            $nextElements = array('array' => true);
+                            $nextElements = ['array' => true];
                             break;
 
                         case 'name':
-                            $nextElements = array('value' => true, 'member' => true);
+                            $nextElements = ['value' => true, 'member' => true];
                             $aggregates[$depth]['name'] = $aggregates[$depth + 1];
                             break;
 
                         case 'member':
-                            $nextElements = array('struct' => true, 'member' => true);
+                            $nextElements = ['struct' => true, 'member' => true];
                             $aggregates[$depth - 1][$aggregates[$depth]['name']] = $aggregates[$depth][0];
                             unset($aggregates[$depth], $aggregates[$depth + 1]);
                             --$depth;
@@ -272,7 +268,7 @@ class XmlReaderParser implements ParserInterface
 
                         case 'array':
                         case 'struct':
-                            $nextElements = array('value' => true);
+                            $nextElements = ['value' => true];
                             --$depth;
                             break;
                     }
@@ -295,7 +291,7 @@ class XmlReaderParser implements ParserInterface
                         case 'double':
                         case 'float':
                         case 'bigdecimal':
-                            $value = (double) $xml->value;
+                            $value = (float) $xml->value;
                             break;
 
                         case 'dateTime.iso8601':
@@ -333,13 +329,13 @@ class XmlReaderParser implements ParserInterface
                     if ($nextElements === null) {
                         break;
                     }
-                    $nextElements = array($type => true);
+                    $nextElements = [$type => true];
                     break;
             }
 
             if ($xml->isEmptyElement && $nodeType !== XMLReader::END_ELEMENT) {
                 $nodeType = XMLReader::END_ELEMENT;
-                goto processing;
+                goto PROCESSING;
             }
         }
 

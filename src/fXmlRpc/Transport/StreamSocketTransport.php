@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Transport;
 
 use fXmlRpc\Exception\HttpException;
@@ -35,13 +34,13 @@ class StreamSocketTransport implements TransportInterface
     public function send($uri, $payload)
     {
         $context = stream_context_create(
-            array(
-                'http' => array(
+            [
+                'http' => [
                     'method'  => 'POST',
                     'header'  => 'Content-Type: text/xml',
                     'content' => $payload,
-                )
-            )
+                ]
+            ]
         );
 
         $response = @file_get_contents($uri, false, $context);

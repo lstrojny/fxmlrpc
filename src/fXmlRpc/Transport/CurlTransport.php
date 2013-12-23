@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Transport;
 
 use fXmlRpc\Exception\HttpException;
@@ -40,15 +39,15 @@ class CurlTransport implements TransportInterface
 
         curl_setopt_array(
             $this->handle,
-            array(
-                CURLOPT_HTTPHEADER        => array('Content-Type: text/xml'),
+            [
+                CURLOPT_HTTPHEADER        => ['Content-Type: text/xml'],
                 CURLOPT_RETURNTRANSFER    => true,
                 CURLOPT_HEADER            => true,
                 CURLOPT_MAXREDIRS         => 5,
                 CURLOPT_TIMEOUT_MS        => 5000,
                 CURLOPT_CONNECTTIMEOUT_MS => 5000,
                 CURLOPT_POST              => true,
-            )
+            ]
         );
     }
 
