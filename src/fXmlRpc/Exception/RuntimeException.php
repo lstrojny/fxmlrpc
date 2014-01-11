@@ -27,12 +27,23 @@ use RuntimeException as BaseRuntimeException;
 
 class RuntimeException extends BaseRuntimeException implements ExceptionInterface
 {
-    public static function unexpectedTag($tagName, array $expectedElements, $depth, $xml)
+    public static function unexpectedTag($tagName, $elements, array $definedVariables, $depth, $xml)
     {
+        $expectedElements = [];
+        foreach ($definedVariables as $variableName => $variable) {
+            if (substr($variableName, 0, 4) !== 'flag') {
+                continue;
+            }
+
+            if (($elements & $variable) === $variable) {
+                $expectedElements[] = substr($variableName, 4);
+            }
+        }
+
         return new static(
             sprintf(
                 'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
-                implode('", "', array_keys($expectedElements)),
+                implode('", "', $expectedElements),
                 $tagName,
                 $depth,
                 $xml
