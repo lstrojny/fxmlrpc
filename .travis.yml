@@ -6,8 +6,7 @@ php:
 
 before_script:
   - which pecl && echo yes | pecl install pecl_http || true
-  - wget http://getcomposer.org/composer.phar
-  - php composer.phar install --dev
+  - composer install --dev
   - npm install
 
 script: phpunit
