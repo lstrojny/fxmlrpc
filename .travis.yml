@@ -6,14 +6,10 @@ php:
 
 before_script:
   - which pecl && echo yes | pecl install pecl_http || true
-  - composer install --dev
+  - composer install
   - npm install
 
 script: phpunit
-
-notifications:
-  email:
-    - lstrojny@php.net
 
 matrix:
   allow_failures:
