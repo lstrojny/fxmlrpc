@@ -1,4 +1,4 @@
-# fxmlrpc: really fast XML/RPC for PHP [![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.png)](http://travis-ci.org/lstrojny/fxmlrpc)
+# fxmlrpc: really fast XML/RPC for PHP [![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.svg)](http://travis-ci.org/lstrojny/fxmlrpc)
 
  - A convenient, object oriented API (similar to the XML/RPC client in Zend Framework)
  - Very fast serializing and parsing of the XML payloads involved

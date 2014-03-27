@@ -127,10 +127,10 @@ class XmlReaderParserBitmaskGenerator
     public function generate()
     {
         $code = [];
-        $bitmask = 0b1;
+        $bitmask = 1;
         foreach ($this->basicTypes as $type) {
             $code[] = $this->createBitmaskVariable($type, $bitmask, 'flag');
-            $bitmask = $bitmask << 0b01;
+            $bitmask = $bitmask << 1;
         }
 
         foreach ($this->combinedTypes as $type => $combination) {
