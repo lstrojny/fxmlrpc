@@ -117,7 +117,7 @@ class XmlReaderParser implements ParserInterface
                 );
             }
 
-            PROCESSING:
+            processing:
             switch ($nodeType) {
                 case XMLReader::ELEMENT:
                     switch ($tagName) {
@@ -348,7 +348,7 @@ class XmlReaderParser implements ParserInterface
 
             if ($xml->isEmptyElement && $nodeType !== XMLReader::END_ELEMENT) {
                 $nodeType = XMLReader::END_ELEMENT;
-                goto PROCESSING;
+                goto processing;
             }
         }
 
