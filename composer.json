@@ -20,7 +20,7 @@
         "monolog/monolog": "*",
         "ext-curl": "*",
         "psr/log": "*",
-        "phpunit/phpunit": "3.*",
+        "phpunit/phpunit": "~4",
         "symfony/process": "~2",
         "lstrojny/hmmmath": "*",
         "internations/kodierungsregelwerksammlung": "dev-master"
