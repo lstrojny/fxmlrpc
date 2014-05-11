@@ -39,5 +39,5 @@ class JavaIntegrationTest extends AbstractIntegrationTest
 
     protected static $restartServerInterval = 100;
 
-    protected $disabledExtensions = array('nil', 'php_curl');
+    protected $disabledExtensions = array('nil', 'php_curl', 'xmlrpc_header');
 }

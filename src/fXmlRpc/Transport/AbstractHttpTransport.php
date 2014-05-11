@@ -23,46 +23,33 @@
  */
 namespace fXmlRpc\Transport;
 
-use Zend\Http\Client;
-use Zend\Http\Client\Adapter\Exception\RuntimeException;
-use fXmlRpc\Exception\HttpException;
-use fXmlRpc\Exception\TcpException;
-
-class ZendFrameworkTwoHttpClientBridge extends AbstractHttpTransport
+abstract class AbstractHttpTransport implements HttpTransportInterface
 {
-    /**
-     * @var Client
-     */
-    private $client;
+    /** @var string */
+    protected $contentType = 'text/xml';
 
-    /**
-     * @param Client $client
-     */
-    public function __construct(Client $client)
+    /** @var string */
+    protected $charset = 'UTF-8';
+
+    /** {@inheritdoc} */
+    public function setContentType($contentType)
     {
-        $this->client = $client;
+        $this->contentType = $contentType;
+    }
+
+    /** {@inheritdoc} */
+    public function setCharset($charset)
+    {
+        $this->charset = $charset;
     }
 
     /**
-     * {@inheritdoc}
+     * Return content type header string
+     *
+     * @return string
      */
-    public function send($url, $payload)
+    protected function getContentTypeHeader()
     {
-        try {
-            $response = $this->client
-                ->setMethod('POST')
-                ->setUri($url)
-                ->setRawBody($payload)
-                ->setHeaders(['Content-Type' => $this->getContentTypeHeader()])
-                ->send();
-        } catch (RuntimeException $e) {
-            throw TcpException::transportError($e);
-        }
-
-        if ($response->getStatusCode() !== 200) {
-            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
-        }
-
-        return $response->getBody();
+        return sprintf('%s; charset=%s', $this->contentType, $this->charset);
     }
 }

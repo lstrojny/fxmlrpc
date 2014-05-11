@@ -26,7 +26,7 @@ namespace fXmlRpc\Transport;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
 
-class StreamSocketTransport implements TransportInterface
+class StreamSocketTransport extends AbstractHttpTransport
 {
     /**
      * {@inheritdoc}
@@ -37,7 +37,7 @@ class StreamSocketTransport implements TransportInterface
             [
                 'http' => [
                     'method'  => 'POST',
-                    'header'  => 'Content-Type: text/xml',
+                    'header'  => 'Content-Type: ' . $this->getContentTypeHeader(),
                     'content' => $payload,
                 ]
             ]

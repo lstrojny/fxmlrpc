@@ -29,7 +29,7 @@ use Zend_Http_Client_Exception as HttpClientException;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
 
-class ZendFrameworkOneHttpClientBridge implements TransportInterface
+class ZendFrameworkOneHttpClientBridge extends AbstractHttpTransport
 {
     /**
      * @var HttpClient
@@ -52,6 +52,7 @@ class ZendFrameworkOneHttpClientBridge implements TransportInterface
         try {
             $response = $this->client
                 ->setUri($url)
+                ->setHeaders('Content-Type', $this->getContentTypeHeader())
                 ->setRawData($payload)
                 ->request('POST');
         } catch (HttpClientAdapterException $e) {

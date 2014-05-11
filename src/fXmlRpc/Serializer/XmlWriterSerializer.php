@@ -216,6 +216,13 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
         $writer->endElement();
         $writer->endElement();
 
-        return $writer->flush(true);
+        $xml = $writer->flush(true);
+
+        // NativeSerializer does not inject a newline after the declaration
+        if ($xml[38] === "\n") {
+            $xml = substr($xml, 0, 38) . substr($xml, 39);
+        }
+
+        return $xml;
     }
 }
