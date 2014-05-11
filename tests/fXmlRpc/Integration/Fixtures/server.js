@@ -3,6 +3,15 @@ var xmlrpc = require('xmlrpc'),
     http = require('http'),
     httpServer = http.createServer();
 
+var currentRequest;
+xmlRpcServer.httpServer.on('request', function(req) {
+    currentRequest = req;
+});
+
+xmlRpcServer.on('system.header', function(err, params, callback) {
+    callback(null, currentRequest.headers[params[0]]);
+});
+
 xmlRpcServer.on('system.echo', function(err, params, callback) {
     callback(null, params[0]);
 });
@@ -10,6 +19,7 @@ xmlRpcServer.on('system.echo', function(err, params, callback) {
 xmlRpcServer.on('system.echoNull', function(err, params, callback) {
     callback(null, null);
 });
+
 xmlRpcServer.on('system.fault', function(err, params, callback) {
     callback({faultCode: 123, faultString: 'ERROR'});
 });

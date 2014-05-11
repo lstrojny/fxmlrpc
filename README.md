@@ -10,6 +10,7 @@
 
 ## Latest improvements
 
+ - `[FEATURE]` Allow transport content type and charset to be controlled (see #9)
  - `[BC]` Removing outdated PeclHttpBridge
  - `[BC]` Requiring PHP 5.4
  - `[BUG]` Fixing huge issue in `XmlWriterSerializer` (see #4 for details)

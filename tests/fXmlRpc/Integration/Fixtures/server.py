@@ -6,23 +6,55 @@ from SocketServer import TCPServer
 from threading import Thread
 import signal
 import sys
-from collections import namedtuple
 
-server = SimpleXMLRPCServer(("127.0.0.1", 28000), allow_none = True)
+class Server(SimpleXMLRPCServer):
+    def __init__(self, *args, **kargs):
+        class RequestHandler(SimpleXMLRPCRequestHandler):
+                def _dispatch(self, method, params):
+                    """
+                    Overridden to pass request handler to the handling function so that the function can play around
+                    with HTTP headers and stuff
+                    """
+                    params = (self, ) + params
+                    func = None
+                    try:
+                        func = self.server.funcs[method]
+                    except KeyError:
+                        if self.server.instance is not None:
+                            if hasattr(self.server.instance, '_dispatch'):
+                                return self.server.instance._dispatch(method, params)
+                            else:
+                                try:
+                                    func = _resolve_dotted_attribute(self.server.instance, method)
+                                except AttributeError:
+                                    pass
+
+                    if func is not None:
+                        return apply(func, params)
+                    else:
+                        raise Exception('method "%s" is not supported' % method)
+
+        SimpleXMLRPCServer.__init__(self, requestHandler=RequestHandler, *args, **kargs)
+
+server = Server(("127.0.0.1", 28000), allow_none = True)
 server.register_introspection_functions()
 
-def echo(v):
+def echo(handler, v):
     return v
 
-def echoNull(v):
+def echoNull(handler, v):
     return None
 
-def fault():
+def echoHeader(handler, header):
+    return handler.headers[header]
+
+def fault(handler):
     raise Fault(123, "ERROR")
 
 server.register_function(echo, 'system.echo')
 server.register_function(echoNull, 'system.echoNull')
 server.register_function(fault, 'system.fault')
+server.register_function(echoHeader, 'system.header')
 
 
 class ErrorHTTPHandler(SimpleHTTPRequestHandler):

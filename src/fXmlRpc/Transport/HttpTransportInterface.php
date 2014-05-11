@@ -23,46 +23,22 @@
  */
 namespace fXmlRpc\Transport;
 
-use Zend\Http\Client;
-use Zend\Http\Client\Adapter\Exception\RuntimeException;
-use fXmlRpc\Exception\HttpException;
-use fXmlRpc\Exception\TcpException;
-
-class ZendFrameworkTwoHttpClientBridge extends AbstractHttpTransport
+/**
+ * Transport interface for HTTP based transports
+ */
+interface HttpTransportInterface extends TransportInterface
 {
     /**
-     * @var Client
+     * Set transport content type
+     *
+     * @param string $contentType
      */
-    private $client;
+    public function setContentType($contentType);
 
     /**
-     * @param Client $client
+     * Set transport charset
+     *
+     * @param string $charset
      */
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function send($url, $payload)
-    {
-        try {
-            $response = $this->client
-                ->setMethod('POST')
-                ->setUri($url)
-                ->setRawBody($payload)
-                ->setHeaders(['Content-Type' => $this->getContentTypeHeader()])
-                ->send();
-        } catch (RuntimeException $e) {
-            throw TcpException::transportError($e);
-        }
-
-        if ($response->getStatusCode() !== 200) {
-            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
-        }
-
-        return $response->getBody();
-    }
+    public function setCharset($charset);
 }

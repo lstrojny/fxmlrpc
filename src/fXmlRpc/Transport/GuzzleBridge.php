@@ -32,7 +32,7 @@ use Guzzle\Http\Exception\CurlException;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
 
-class GuzzleBridge implements TransportInterface
+class GuzzleBridge extends AbstractHttpTransport
 {
     /**
      * @var Client
@@ -53,8 +53,9 @@ class GuzzleBridge implements TransportInterface
     public function send($uri, $payload)
     {
         try {
-            $response = $this->client->post($uri, null, $payload)
-                                     ->send();
+            $response = $this->client
+                ->post($uri, ['Content-Type' => $this->getContentTypeHeader()], $payload)
+                ->send();
         } catch (CurlException $e) {
             throw TcpException::transportError($e);
         } catch (CompatCurlException $e) {

@@ -29,7 +29,7 @@ use RuntimeException;
 use fXmlRpc\Exception\TcpException;
 use fXmlRpc\Exception\HttpException;
 
-class BuzzBrowserBridge implements TransportInterface
+class BuzzBrowserBridge extends AbstractHttpTransport
 {
     /**
      * @var Browser
@@ -48,7 +48,7 @@ class BuzzBrowserBridge implements TransportInterface
     {
         try {
             /** @var $response Response */
-            $response = $this->browser->post($uri, [], $payload);
+            $response = $this->browser->post($uri, ['Content-Type' => $this->getContentTypeHeader()], $payload);
         } catch (RuntimeException $e) {
             throw TcpException::transportError($e);
         }

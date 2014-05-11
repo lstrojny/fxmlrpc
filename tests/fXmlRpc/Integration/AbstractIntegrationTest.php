@@ -26,6 +26,8 @@ namespace fXmlPRC\Integration;
 
 use fXmlRpc;
 use fXmlRpc\ClientInterface;
+use fXmlRpc\Transport\HttpTransportInterface;
+use fXmlRpc\Transport\TransportInterface;
 use hmmmath\Fibonacci\FibonacciFactory;
 use Symfony\Component\Process\Process;
 
@@ -246,5 +248,45 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
             $this->assertStringStartsWith('An HTTP error occurred', $e->getMessage());
             $this->assertSame(500, $e->getCode());
         }
+    }
+
+    /**
+     * @dataProvider getClients
+     */
+    public function testHeaderDefaultContentTypeIsTextXmlAndCharsetIsUtf8(ClientInterface $client, TransportInterface $transport)
+    {
+        if (in_array('xmlrpc_header', $this->disabledExtensions)) {
+            $this->markTestSkipped('Missing system.header() call');
+        }
+
+        $this->assertSame('text/xml; charset=UTF-8', $client->call('system.header', ['content-type']));
+    }
+
+    /**
+     * @dataProvider getClients
+     */
+    public function testHeaderCustomContentTypeAndCharset(ClientInterface $client, TransportInterface $transport)
+    {
+        if (in_array('xmlrpc_header', $this->disabledExtensions)) {
+            $this->markTestSkipped('Missing system.header() call');
+        }
+
+        if ($transport instanceof HttpTransportInterface) {
+            $transport->setCharset('ascii');
+            $transport->setContentType('application/xml');
+            $this->assertSame('application/xml; charset=ascii', $client->call('system.header', ['content-type']));
+        }
+    }
+
+    /**
+     * @dataProvider getClients
+     */
+    public function testHeaderContentLengthIsSent(ClientInterface $client)
+    {
+        if (in_array('xmlrpc_header', $this->disabledExtensions)) {
+            $this->markTestSkipped('Missing system.header() call');
+        }
+
+        $this->assertLessThanOrEqual('179', $client->call('system.header', ['content-length']));
     }
 }

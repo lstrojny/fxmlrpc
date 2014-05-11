@@ -26,7 +26,7 @@ namespace fXmlRpc\Transport;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
 
-class CurlTransport implements TransportInterface
+class CurlTransport extends AbstractHttpTransport
 {
     /**
      * @var resource
@@ -40,7 +40,6 @@ class CurlTransport implements TransportInterface
         curl_setopt_array(
             $this->handle,
             [
-                CURLOPT_HTTPHEADER        => ['Content-Type: text/xml'],
                 CURLOPT_RETURNTRANSFER    => true,
                 CURLOPT_HEADER            => true,
                 CURLOPT_MAXREDIRS         => 5,
@@ -63,8 +62,14 @@ class CurlTransport implements TransportInterface
      */
     public function send($uri, $payload)
     {
-        curl_setopt($this->handle, CURLOPT_URL, $uri);
-        curl_setopt($this->handle, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt_array(
+            $this->handle,
+            [
+                CURLOPT_URL        => $uri,
+                CURLOPT_POSTFIELDS => $payload,
+                CURLOPT_HTTPHEADER => ['Content-Type: '. $this->getContentTypeHeader()],
+            ]
+        );
 
         $response = curl_exec($this->handle);
         if ($response === false || strlen($response) < 1) {
