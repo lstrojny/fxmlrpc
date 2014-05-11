@@ -132,10 +132,6 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
             $transports[] = new fXmlRpc\Transport\CurlTransport();
         }
 
-        if (extension_loaded('http') && !in_array('php_http', $this->disabledExtensions)) {
-            $transports[] = new fXmlRpc\Transport\PeclHttpBridge(new \HttpRequest());
-        }
-
         return $transports;
     }
 

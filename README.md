@@ -10,6 +10,7 @@
 
 ## Latest improvements
 
+ - `[BC]` Removing outdated PeclHttpBridge
  - `[BC]` Requiring PHP 5.4
  - `[BUG]` Fixing huge issue in `XmlWriterSerializer` (see #4 for details)
  - `[FEATURE]` Special API for multicall
