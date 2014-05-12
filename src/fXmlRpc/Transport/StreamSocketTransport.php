@@ -28,16 +28,14 @@ use fXmlRpc\Exception\TcpException;
 
 class StreamSocketTransport extends AbstractHttpTransport
 {
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function send($uri, $payload)
     {
         $context = stream_context_create(
             [
                 'http' => [
                     'method'  => 'POST',
-                    'header'  => 'Content-Type: ' . $this->getContentTypeHeader(),
+                    'header'  => $this->getHeadersString(),
                     'content' => $payload,
                 ]
             ]

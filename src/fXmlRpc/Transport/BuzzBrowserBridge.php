@@ -31,9 +31,7 @@ use fXmlRpc\Exception\HttpException;
 
 class BuzzBrowserBridge extends AbstractHttpTransport
 {
-    /**
-     * @var Browser
-     */
+    /** @var Browser */
     private $browser;
 
     public function __construct(Browser $browser)
@@ -41,14 +39,12 @@ class BuzzBrowserBridge extends AbstractHttpTransport
         $this->browser = $browser;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function send($uri, $payload)
     {
         try {
             /** @var $response Response */
-            $response = $this->browser->post($uri, ['Content-Type' => $this->getContentTypeHeader()], $payload);
+            $response = $this->browser->post($uri, $this->getHeaders(true), $payload);
         } catch (RuntimeException $e) {
             throw TcpException::transportError($e);
         }

@@ -25,22 +25,45 @@ namespace fXmlRpc\Transport;
 
 abstract class AbstractHttpTransport implements HttpTransportInterface
 {
-    /** @var string */
-    protected $contentType = 'text/xml';
+    /** @var array */
+    private $headers = [];
 
     /** @var string */
-    protected $charset = 'UTF-8';
+    private $contentType = 'text/xml';
+
+    /** @var string */
+    private $charset = 'UTF-8';
+
+    /** {@inheritdoc} */
+    public function setHeader($header, $value)
+    {
+        $this->headers[$header] = $value;
+
+        return $this;
+    }
+
+    /** {@inheritdoc} */
+    public function setHeaders(array $headers)
+    {
+        $this->headers = array_replace($this->headers, $headers);
+
+        return $this;
+    }
 
     /** {@inheritdoc} */
     public function setContentType($contentType)
     {
-        $this->contentType = $contentType;
+        $this->contentType = $contentType === null ? 'text/xml' : $contentType;
+
+        return $this;
     }
 
     /** {@inheritdoc} */
     public function setCharset($charset)
     {
         $this->charset = $charset;
+
+        return $this;
     }
 
     /**
@@ -48,8 +71,47 @@ abstract class AbstractHttpTransport implements HttpTransportInterface
      *
      * @return string
      */
-    protected function getContentTypeHeader()
+    private function getContentTypeHeader()
     {
+        if ($this->charset === null) {
+            return $this->contentType;
+        }
+
         return sprintf('%s; charset=%s', $this->contentType, $this->charset);
+    }
+
+    /**
+     * Get header array
+     *
+     * @param bool $filterNullValues Filter null values from headers
+     * @return array
+     */
+    protected function getHeaders($filterNullValues = false)
+    {
+        $headers = $this->headers;
+
+        if ($filterNullValues) {
+            $headers = array_filter($headers, static function ($v) {return $v !== null;});
+        }
+
+        $headers['Content-Type'] = $this->getContentTypeHeader();
+
+        return $headers;
+    }
+
+    /**
+     * Get headers as string
+     *
+     * @return string
+     */
+    protected function getHeadersString()
+    {
+        $headerString = '';
+        foreach ($this->getHeaders(true) as $header => $value) {
+
+            $headerString .= $header . ': ' . $value . "\r\n";
+        }
+
+        return $headerString;
     }
 }

@@ -272,9 +272,15 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
         }
 
         if ($transport instanceof HttpTransportInterface) {
-            $transport->setCharset('ascii');
-            $transport->setContentType('application/xml');
+            $this->assertSame($transport, $transport->setCharset('ascii'));
+            $this->assertSame($transport, $transport->setContentType('application/xml'));
             $this->assertSame('application/xml; charset=ascii', $client->call('system.header', ['content-type']));
+
+            $this->assertSame($transport, $transport->setCharset(null));
+            $this->assertSame('application/xml', $client->call('system.header', ['content-type']));
+
+            $this->assertSame($transport, $transport->setContentType(null));
+            $this->assertSame('text/xml', $client->call('system.header', ['content-type']));
         }
     }
 
@@ -288,5 +294,32 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
         }
 
         $this->assertLessThanOrEqual('179', $client->call('system.header', ['content-length']));
+    }
+
+    /**
+     * @dataProvider getClients
+     */
+    public function testHeaderCustomIsSent(ClientInterface $client, TransportInterface $transport)
+    {
+        if (in_array('xmlrpc_header', $this->disabledExtensions)) {
+            $this->markTestSkipped('Missing system.header() call');
+        }
+
+        if ($transport instanceof HttpTransportInterface) {
+            $this->assertSame($transport, $transport->setHeader('X-Foo', 'Bar'));
+            $this->assertSame('Bar', $client->call('system.header', ['x-foo']), 'X-Foo newly set');
+
+            $this->assertSame($transport, $transport->setHeaders(['X-Bar' => 'Foo']));
+            $this->assertSame('Foo', $client->call('system.header', ['x-bar']), 'X-Bar newly set');
+
+            $this->assertSame($transport, $transport->setHeader('X-Foo', 'Bar'));
+            $this->assertSame('Bar', $client->call('system.header', ['x-foo']), 'X-Foo still set');
+
+            $this->assertSame($transport, $transport->setHeader('X-Foo', null));
+            $this->assertSame(null, $client->call('system.header', ['x-foo']), 'X-Foo unset');
+
+            $this->assertSame($transport, $transport->setHeaders(['X-Bar' => 'Foo']));
+            $this->assertSame('Foo', $client->call('system.header', ['x-bar']), 'X-Bar still set');
+        }
     }
 }

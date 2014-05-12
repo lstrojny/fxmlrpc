@@ -10,6 +10,7 @@
 
 ## Latest improvements
 
+ - `[FEATURE]` Allow HTTP transport headers to be controlled
  - `[FEATURE]` Allow transport content type and charset to be controlled (see #9)
  - `[BC]` Removing outdated PeclHttpBridge
  - `[BC]` Requiring PHP 5.4

@@ -52,7 +52,7 @@ class ZendFrameworkOneHttpClientBridge extends AbstractHttpTransport
         try {
             $response = $this->client
                 ->setUri($url)
-                ->setHeaders('Content-Type', $this->getContentTypeHeader())
+                ->setHeaders($this->getHeaders())
                 ->setRawData($payload)
                 ->request('POST');
         } catch (HttpClientAdapterException $e) {

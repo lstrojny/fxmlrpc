@@ -26,12 +26,10 @@ namespace fXmlRpc\Transport;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
 
-class CurlTransport extends AbstractHttpTransport
+final class CurlTransport extends AbstractHttpTransport
 {
-    /**
-     * @var resource
-     */
-    protected $handle;
+    /** @var resource */
+    private $handle;
 
     public function __construct()
     {
@@ -57,9 +55,7 @@ class CurlTransport extends AbstractHttpTransport
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function send($uri, $payload)
     {
         curl_setopt_array(
@@ -67,7 +63,7 @@ class CurlTransport extends AbstractHttpTransport
             [
                 CURLOPT_URL        => $uri,
                 CURLOPT_POSTFIELDS => $payload,
-                CURLOPT_HTTPHEADER => ['Content-Type: '. $this->getContentTypeHeader()],
+                CURLOPT_HTTPHEADER => explode("\r\n", $this->getHeadersString()),
             ]
         );
 

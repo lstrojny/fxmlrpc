@@ -53,7 +53,7 @@ class ZendFrameworkTwoHttpClientBridge extends AbstractHttpTransport
                 ->setMethod('POST')
                 ->setUri($url)
                 ->setRawBody($payload)
-                ->setHeaders(['Content-Type' => $this->getContentTypeHeader()])
+                ->setHeaders($this->getHeaders(true))
                 ->send();
         } catch (RuntimeException $e) {
             throw TcpException::transportError($e);

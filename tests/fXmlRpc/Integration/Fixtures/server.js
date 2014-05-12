@@ -9,7 +9,8 @@ xmlRpcServer.httpServer.on('request', function(req) {
 });
 
 xmlRpcServer.on('system.header', function(err, params, callback) {
-    callback(null, currentRequest.headers[params[0]]);
+    var value = currentRequest.headers[params[0]];
+    callback(null,  typeof value === "undefined" ? null : value);
 });
 
 xmlRpcServer.on('system.echo', function(err, params, callback) {

@@ -32,16 +32,12 @@ use Guzzle\Http\Exception\CurlException;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
 
-class GuzzleBridge extends AbstractHttpTransport
+final class GuzzleBridge extends AbstractHttpTransport
 {
-    /**
-     * @var Client
-     */
+    /** @var Client */
     private $client;
 
-    /**
-     * @param Client $client
-     */
+    /** @param Client $client */
     public function __construct(Client $client)
     {
         $this->client = $client;
@@ -54,7 +50,7 @@ class GuzzleBridge extends AbstractHttpTransport
     {
         try {
             $response = $this->client
-                ->post($uri, ['Content-Type' => $this->getContentTypeHeader()], $payload)
+                ->post($uri, $this->getHeaders(true), $payload)
                 ->send();
         } catch (CurlException $e) {
             throw TcpException::transportError($e);

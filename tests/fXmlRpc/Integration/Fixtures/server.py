@@ -46,7 +46,7 @@ def echoNull(handler, v):
     return None
 
 def echoHeader(handler, header):
-    return handler.headers[header]
+    return handler.headers.get(header, None)
 
 def fault(handler):
     raise Fault(123, "ERROR")
