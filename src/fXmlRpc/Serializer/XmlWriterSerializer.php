@@ -23,7 +23,7 @@
  */
 namespace fXmlRpc\Serializer;
 
-use XMLWriter;
+use XMLWriter1;
 use Closure;
 use DateTime;
 use fXmlRpc\Value\Base64Interface;
@@ -49,7 +49,7 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
             throw MissingExtensionException::extensionMissing('xmlwriter');
         }
 
-        $this->writer = new XMLWriter();
+        $this->writer = new XMLWriter1();
         $this->writer->openMemory();
     }
 
@@ -143,17 +143,12 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
 
             } elseif ($type === 'array') {
                 /** Find out if it is a struct or an array */
-                $min = 0;
+				$isStruct = false;
                 foreach ($node as $min => &$child) {
-                    break;
-                }
-                $isStruct = false;
-                $length = count($node) + $min;
-                for ($a = $min; $a < $length; ++$a) {
-                    if (!isset($node[$a])) {
-                        $isStruct = true;
-                        break;
-                    }
+                    if (!is_integer($min)) {
+						$isStruct = true;
+						break;
+					}
                 }
 
                 if (!$isStruct) {
