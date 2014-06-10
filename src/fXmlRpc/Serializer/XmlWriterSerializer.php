@@ -23,7 +23,7 @@
  */
 namespace fXmlRpc\Serializer;
 
-use XMLWriter1;
+use XMLWriter;
 use Closure;
 use DateTime;
 use fXmlRpc\Value\Base64Interface;
@@ -49,7 +49,7 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
             throw MissingExtensionException::extensionMissing('xmlwriter');
         }
 
-        $this->writer = new XMLWriter1();
+        $this->writer = new XMLWriter();
         $this->writer->openMemory();
     }
 
