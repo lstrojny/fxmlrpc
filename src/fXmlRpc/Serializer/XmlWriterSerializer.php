@@ -80,13 +80,14 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
     /**
      * {@inheritdoc}
      */
-    public function serialize($methodName, array $params = [])
+    public function serialize($methodName, array $params = [], array $options = [])
     {
+		$options += ['encoding' => 'UTF-8', 'escaping' => []];
         $writer = $this->writer;
-
-        $writer->startDocument('1.0', 'UTF-8');
+		$ElementWriter = $this->_getElementWriter($options['escaping']);
+        $writer->startDocument('1.0', $options['encoding']);
         $writer->startElement('methodCall');
-        $writer->writeElement('methodName', $methodName);
+        $ElementWriter($writer, 'methodName', $methodName);
         $writer->startElement('params');
 
         $endNode = static function () use ($writer) {
@@ -114,12 +115,12 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
 
             if ($type === 'string') {
                 $writer->startElement('value');
-                $writer->writeElement('string', $node);
+                $ElementWriter($writer, 'string', $node);
                 $writer->endElement();
 
             } elseif ($type === 'integer') {
                 $writer->startElement('value');
-                $writer->writeElement('int', $node);
+                $ElementWriter($writer, 'int', $node);
                 $writer->endElement();
 
             } elseif ($type === 'double') {
@@ -128,17 +129,17 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
                 }
 
                 $writer->startElement('value');
-                $writer->writeElement('double', $node);
+                $ElementWriter($writer, 'double', $node);
                 $writer->endElement();
 
             } elseif ($type === 'boolean') {
                 $writer->startElement('value');
-                $writer->writeElement('boolean', $node ? '1' : '0');
+                $ElementWriter($writer, 'boolean', $node ? '1' : '0');
                 $writer->endElement();
 
             } elseif ($type === 'NULL') {
                 $writer->startElement('value');
-                $writer->writeElement($nilTagName);
+                $ElementWriter($writer, $nilTagName);
                 $writer->endElement();
 
             } elseif ($type === 'array') {
@@ -171,8 +172,8 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
                     foreach (array_reverse($node, true) as $key => $value) {
                         $toBeVisited[] = $endNode;
                         $toBeVisited[] = $value;
-                        $toBeVisited[] = static function () use ($writer, $key) {
-                            $writer->writeElement('name', $key);
+                        $toBeVisited[] = static function () use ($ElementWriter, $writer, $key) {
+                            $ElementWriter($writer, 'name', $key);
                         };
                         $toBeVisited[] = static function () use ($writer) {
                             $writer->startElement('member');
@@ -191,12 +192,12 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
 
                 } elseif ($node instanceof DateTime) {
                     $writer->startElement('value');
-                    $writer->writeElement('dateTime.iso8601', $node->format('Ymd\TH:i:s'));
+                    $ElementWriter($writer, 'dateTime.iso8601', $node->format('Ymd\TH:i:s'));
                     $writer->endElement();
 
                 } elseif ($node instanceof Base64Interface) {
                     $writer->startElement('value');
-                    $writer->writeElement('base64', $node->getEncoded() . "\n");
+                    $ElementWriter($writer, 'base64', $node->getEncoded() . "\n");
                     $writer->endElement();
 
                 } else {
@@ -220,4 +221,25 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
 
         return $xml;
     }
+	
+	/**
+	 * Returns writeElement wrapper
+	 * 
+	 * @param array|string $escaping
+	 * @return callable
+	 */
+	protected function _getElementWriter($escaping) {
+		$isCdata = (is_array($escaping) && in_array('cdata', $escaping, true)) || $escaping == 'cdata';
+		if ($isCdata) {
+			return function (XMLWriter $Writer, $name, $content = null) {
+				return $Writer->startElement($name) &&
+				$Writer->writeCdata($content) &&
+				$Writer->endElement();
+			};
+		} else {
+			return function (XMLWriter $Writer, $name, $content = null) {
+				return $Writer->writeElement($name, $content);
+			};
+		}
+	}
 }

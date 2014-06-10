@@ -33,7 +33,8 @@ interface SerializerInterface
      *
      * @param  string $method
      * @param  array  $params
+     * @param  array  $options
      * @return string
      */
-    public function serialize($method, array $params = []);
+    public function serialize($method, array $params = [], array $options = []);
 }
