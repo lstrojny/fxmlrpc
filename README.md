@@ -151,6 +151,14 @@ $client = new fXmlRpc\Client(
     new fXmlRpc\Transport\GuzzleBridge($httpClient)
 );
 
+/** Guzzle 4+ (http://guzzlephp.org/) */
+$httpClient = new GuzzleHttp\Client();
+$httpClient->...();
+$client = new fXmlRpc\Client(
+    'http://endpoint.com',
+    new fXmlRpc\Transport\Guzzle4Bridge($httpClient)
+);
+
 /** PECL HTTP (http://pecl.php.net/pecl_http) */
 $request = new HttpRequest();
 $request->...();
