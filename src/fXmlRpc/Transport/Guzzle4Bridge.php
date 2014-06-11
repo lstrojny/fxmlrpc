@@ -25,9 +25,6 @@ namespace fXmlRpc\Transport;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use Guzzle\Http\Curl\CurlException as CompatCurlException;
 use GuzzleHttp\Exception\AdapterException;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
@@ -49,17 +46,16 @@ final class Guzzle4Bridge extends AbstractHttpTransport
     public function send($uri, $payload)
     {
         try {
-            $response = $this->client->post($uri, [
-                'headers' => $this->getHeaders(true),
-                'body' => $payload
-            ]);
+            $response = $this->client->post(
+                $uri,
+                [
+                    'headers' => $this->getHeaders(true),
+                    'body' => $payload
+                ]
+            );
         } catch (AdapterException $e) {
             throw TcpException::transportError($e);
         } catch (BadResponseException $e) {
-            throw HttpException::httpError($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
-        } catch (ServerException $e) {
-            throw HttpException::httpError($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
-        } catch (ClientException $e) {
             throw HttpException::httpError($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         }
 
