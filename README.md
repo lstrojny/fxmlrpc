@@ -10,6 +10,7 @@
 
 ## Latest improvements
 
+ - `[FEATURE]` New bridge for Guzzle 4 (contribution by [Robin van der Vleuten](https://github.com/RobinvdVleuten))
  - `[FEATURE]` Allow HTTP transport headers to be controlled
  - `[FEATURE]` Allow transport content type and charset to be controlled (see #9)
  - `[BC]` Removing outdated PeclHttpBridge
