@@ -40,7 +40,7 @@ class NativeSerializer implements SerializerInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize($method, array $params = [])
+    public function serialize($method, array $params = [], array $options = [])
     {
         $toBeVisited = [&$params];
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
@@ -71,7 +71,7 @@ class NativeSerializer implements SerializerInterface
         return xmlrpc_encode_request(
             $method,
             $params,
-            ['encoding' => 'UTF-8', 'escaping' => 'markup', 'verbosity' => 'no_white_space']
+            $options + ['encoding' => 'UTF-8', 'escaping' => 'markup', 'verbosity' => 'no_white_space']
         );
     }
 }
