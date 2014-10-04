@@ -23,6 +23,8 @@
  */
 namespace fXmlRpc;
 
+use fXmlRpc\Transport\TransportInterface;
+
 interface ClientInterface
 {
     /**
@@ -39,6 +41,21 @@ interface ClientInterface
      * @return string
      */
     public function getUri();
+
+    /**
+     * Set transport
+     *
+     * @param TransportInterface $transport
+     * @return null
+     */
+    public function setTransport(TransportInterface $transport);
+
+    /**
+     * Return transport
+     *
+     * @return TransportInterface
+     */
+    public function getTransport();
 
     /**
      * Set default params to be prepended for each call (e.g. authorization information)

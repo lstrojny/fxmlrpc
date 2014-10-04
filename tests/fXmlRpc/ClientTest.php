@@ -165,4 +165,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($multicall, $this->client->multicall());
         $this->assertSame($this->client, $multicall->getClient());
     }
+
+    public function testTransport()
+    {
+        $transport = $this->getMockBuilder('fXmlRpc\Transport\TransportInterface')
+            ->getMock();
+
+        $this->assertSame($this->transport, $this->client->getTransport());
+        $this->assertSame($this->client, $this->client->setTransport($transport));
+        $this->assertSame($transport, $this->client->getTransport());
+    }
 }

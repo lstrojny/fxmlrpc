@@ -111,6 +111,22 @@ final class Client implements ClientInterface
     /**
      * {@inheritdoc}
      */
+    public function setTransport(TransportInterface $transport)
+    {
+        $this->transport = $transport;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function prependParams(array $params)
     {
         $this->prependParams = $params;

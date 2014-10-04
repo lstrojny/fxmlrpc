@@ -23,6 +23,8 @@
  */
 namespace fXmlRpc;
 
+use fXmlRpc\Transport\TransportInterface;
+
 /**
  * Abstract base class for client decorators
  *
@@ -57,6 +59,22 @@ abstract class AbstractDecorator implements ClientInterface
     public function getUri()
     {
         return $this->wrapped->getUri();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTransport(TransportInterface $transport)
+    {
+        return $this->wrapped->setTransport($transport);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransport()
+    {
+        return $this->wrapped->getTransport();
     }
 
     /**
