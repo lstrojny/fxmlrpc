@@ -104,6 +104,8 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
         $zendFrameworkTwoHttpClientProxy = new \Zend\Http\Client();
         $zendFrameworkTwoHttpClientProxy->setAdapter(new \Zend\Http\Client\Adapter\Proxy());
 
+        $artaxClient = new \Artax\Client();
+
         $transports = array(
             new fXmlRpc\Transport\StreamSocketTransport(),
             new fXmlRpc\Transport\BuzzBrowserBridge($browserSocket),
@@ -111,6 +113,7 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
             new fXmlRpc\Transport\ZendFrameworkOneHttpClientBridge($zendFrameworkOneHttpClientProxy),
             new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientSocket),
             new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientProxy),
+            new fXmlRpc\Transport\ArtaxBrowserBridge($artaxClient),
         );
 
         if (extension_loaded('curl') && !in_array('php_curl', $this->disabledExtensions)) {

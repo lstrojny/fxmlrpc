@@ -17,6 +17,7 @@
         "zendframework/zendframework1": "~1",
         "kriswallsmith/buzz": "*",
         "guzzle/guzzle": "*",
+        "amphp/artax": "*",
         "monolog/monolog": "*",
         "ext-curl": "*",
         "psr/log": "*",
