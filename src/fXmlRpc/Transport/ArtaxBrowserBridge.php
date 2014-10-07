@@ -48,7 +48,7 @@ final class ArtaxBrowserBridge extends AbstractHttpTransport
             ->setAllHeaders($this->getHeaders(true));
 
         try {
-            $response = $this->client->request($request);
+            $response = $this->client->request($request)->wait();
         } catch (SocketException $e) {
             throw TcpException::transportError($e);
         }
