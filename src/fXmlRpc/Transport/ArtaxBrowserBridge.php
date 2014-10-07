@@ -23,9 +23,9 @@
  */
 namespace fXmlRpc\Transport;
 
-use Artax\Client;
-use Artax\Request;
-use Artax\SocketException;
+use Amp\Artax\Client;
+use Amp\Artax\Request;
+use Amp\Artax\SocketException;
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TcpException;
 
