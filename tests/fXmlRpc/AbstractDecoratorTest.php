@@ -45,6 +45,7 @@ class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
         $this->wrapped = $this
             ->getMockBuilder('fXmlRpc\ClientInterface')
             ->getMock();
+
         $this->decorator = new NullDecorator($this->wrapped);
     }
 
@@ -66,6 +67,34 @@ class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
             ->with()
             ->will($this->returnValue('uri'));
         $this->assertSame('uri', $this->decorator->getUri());
+    }
+
+    public function testSetTransportInvokesWrappedInstance()
+    {
+        $transport = $this
+            ->getMockBuilder('fXmlRpc\Transport\TransportInterface')
+            ->getMock();
+
+        $this->wrapped
+            ->expects($this->once())
+            ->method('setTransport')
+            ->with($transport)
+            ->will($this->returnValue('return'));
+        $this->assertSame('return', $this->decorator->setTransport($transport));
+    }
+
+    public function testGetTransportInvokesWrappedInstance()
+    {
+        $transport = $this
+            ->getMockBuilder('fXmlRpc\Transport\TransportInterface')
+            ->getMock();
+
+        $this->wrapped
+            ->expects($this->once())
+            ->method('getTransport')
+            ->with()
+            ->will($this->returnValue($transport));
+        $this->assertSame($transport, $this->decorator->getTransport());
     }
 
     public function testCallInvokesWrappedInstance()
