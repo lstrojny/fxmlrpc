@@ -459,6 +459,32 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
         );
         $this->serializer->serialize('method', array($resource));
     }
+
+    public function testSerialeArray()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodCall>
+                <methodName>method</methodName>
+                <params>
+                    <param>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>_FCGI_</name>
+                                <value>
+                                    <string>some value</string>
+                                </value>
+                            </member>
+                        </struct>
+                    </value>
+                </param>
+            </params>
+        </methodCall>';
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize('method', [['_FCGI_' => 'some value']])
+        );
+    }
 }
 
 class Test

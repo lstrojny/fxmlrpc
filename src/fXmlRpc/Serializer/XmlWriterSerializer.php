@@ -143,16 +143,18 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
 
             } elseif ($type === 'array') {
                 /** Find out if it is a struct or an array */
-                $min = 0;
-                foreach ($node as $min => &$child) {
+                $smallestIndex = 0;
+                foreach ($node as $smallestIndex => &$child) {
                     break;
                 }
-                $isStruct = false;
-                $length = count($node) + $min;
-                for ($a = $min; $a < $length; ++$a) {
-                    if (!isset($node[$a])) {
-                        $isStruct = true;
-                        break;
+                $isStruct = !is_int($smallestIndex);
+                if (!$isStruct) {
+                    $length = count($node) + $smallestIndex;
+                    for ($index = $smallestIndex; $index < $length; ++$index) {
+                        if (!isset($node[$index])) {
+                            $isStruct = true;
+                            break;
+                        }
                     }
                 }
 
