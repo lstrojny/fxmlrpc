@@ -11,6 +11,7 @@
 
 ## Latest improvements
 
+ - `[BUG]` Fix serialization issue with XmlWriterSerializer (see #19 for details)
  - `[FEATURE]` New bridge for [artax](https://github.com/amphp/artax) (with contributions by [Markus Staab](https://github.com/staabm))
  - `[FEATURE]` New bridge for Guzzle 4 (contribution by [Robin van der Vleuten](https://github.com/RobinvdVleuten))
  - `[FEATURE]` Allow HTTP transport headers to be controlled
