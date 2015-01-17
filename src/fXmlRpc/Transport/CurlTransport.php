@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012-2013
+ * Copyright (C) 2012-2015
  * cryptocompress <cryptocompress@googlemail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
