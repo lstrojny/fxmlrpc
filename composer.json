@@ -14,6 +14,8 @@
         "php": ">=5.4.0",
         "egeloen/http-adapter": "0.6.*@dev",
         "guzzle/guzzle": "*",
+        "zendframework/zend-log": "~2",
+        "zendframework/zendframework1": "~1",
         "monolog/monolog": "*",
         "psr/log": "*",
         "phpunit/phpunit": "~4",
@@ -23,8 +25,9 @@
     },
     "suggest": {
         "zendframework/zend-log": "To use ZF2 Zend\\Log\\Logger as a logger",
+        "zendframework/zendframework1": "To use ZF1 Log",
         "guzzle/guzzle": "To integrate Guzzle as HTTP client",
-        "monolog/monolog": "To integrate monolog as logger",
+        "monolog/monolog": "To integrate monolog as logger"
     },
     "autoload": {
         "psr-0": {"fXmlRpc": "src/"}
