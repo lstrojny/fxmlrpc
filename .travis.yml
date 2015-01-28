@@ -6,7 +6,6 @@ php:
   - hhvm
 
 before_script:
-  - which pecl && echo yes | pecl install pecl_http || true
   - composer self-update
   - composer install
   - npm install
