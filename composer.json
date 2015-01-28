@@ -13,14 +13,8 @@
     "require-dev": {
         "php": ">=5.4.0",
         "egeloen/http-adapter": "0.6.*@dev",
-        "zendframework/zend-http": "~2",
-        "zendframework/zend-log": "~2",
-        "zendframework/zendframework1": "~1",
-        "kriswallsmith/buzz": "*",
         "guzzle/guzzle": "*",
-        "amphp/artax": "*@dev",
         "monolog/monolog": "*",
-        "ext-curl": "*",
         "psr/log": "*",
         "phpunit/phpunit": "~4",
         "symfony/process": "~2",
@@ -28,13 +22,9 @@
         "internations/kodierungsregelwerksammlung": "dev-master"
     },
     "suggest": {
-        "zendframework/zend-http": "To use ZF2 Zend\\Http\\Client as HTTP client",
         "zendframework/zend-log": "To use ZF2 Zend\\Log\\Logger as a logger",
-        "zendframework/zendframework1": "To use ZF1 Zend_Http_Client as HTTP client",
-        "kriswallsmith/buzz": "To integrate Buzz as HTTP client",
         "guzzle/guzzle": "To integrate Guzzle as HTTP client",
         "monolog/monolog": "To integrate monolog as logger",
-        "ext-http": "Use ext/http as HTTP client"
     },
     "autoload": {
         "psr-0": {"fXmlRpc": "src/"}
