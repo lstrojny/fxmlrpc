@@ -12,6 +12,7 @@
     ],
     "require-dev": {
         "php": ">=5.4.0",
+        "egeloen/http-adapter": "0.6.*@dev",
         "zendframework/zend-http": "~2",
         "zendframework/zend-log": "~2",
         "zendframework/zendframework1": "~1",
