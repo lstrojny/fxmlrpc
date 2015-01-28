@@ -61,18 +61,25 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
 
     private function getParsers()
     {
-        return array(
-            new fXmlRpc\Parser\NativeParser(),
-            new fXmlRpc\Parser\XmlReaderParser(),
-        );
+        $parser = array();
+
+        if (extension_loaded('xmlrpc')) {
+            $parser[] = new fXmlRpc\Parser\NativeParser();
+        }
+
+        $parser[] = new fXmlRpc\Parser\XmlReaderParser();
+
+        return $parser;
     }
 
     private function getSerializers()
     {
         $serializer = array();
 
-        $nativeSerializer = new fXmlRpc\Serializer\NativeSerializer();
-        $serializer[] = $nativeSerializer;
+        if (extension_loaded('xmlrpc')) {
+            $serializer[] = new fXmlRpc\Serializer\NativeSerializer();
+        }
+
 
         if ($this->extensionEnabled('nil')) {
             $xmlWriterSerializer = new fXmlRpc\Serializer\XmlWriterSerializer();
