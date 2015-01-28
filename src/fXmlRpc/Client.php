@@ -23,14 +23,15 @@
  */
 namespace fXmlRpc;
 
-use fXmlRpc\Transport\TransportInterface;
-use fXmlRpc\Transport\StreamSocketTransport;
 use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Parser\XmlReaderParser;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Serializer\XmlWriterSerializer;
+use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\ResponseException;
 use fXmlRpc\Exception\InvalidArgumentException;
+use Ivory\HttpAdapter\HttpAdapterInterface;
+use Ivory\HttpAdapter\HttpAdapterFactory;
 
 final class Client implements ClientInterface
 {
@@ -40,9 +41,9 @@ final class Client implements ClientInterface
     private $uri;
 
     /**
-     * @var Transport\TransportInterface
+     * @var HttpAdapterInterface
      */
-    private $transport;
+    private $httpAdapter;
 
     /**
      * @var Parser\ParserInterface
@@ -71,19 +72,19 @@ final class Client implements ClientInterface
      * are used.
      *
      * @param string                         $uri
-     * @param Transport\TransportInterface   $transport
+     * @param HttpAdapterInterface           $httpAdapter
      * @param Parser\ParserInterface         $parser
      * @param Serializer\SerializerInterface $serializer
      */
     public function __construct(
         $uri = null,
-        TransportInterface $transport = null,
+        HttpAdapterInterface $httpAdapter = null,
         ParserInterface $parser = null,
         SerializerInterface $serializer = null
     )
     {
         $this->uri = $uri;
-        $this->transport = $transport ?: new StreamSocketTransport();
+        $this->httpAdapter = $httpAdapter ?: HttpAdapterFactory::guess();
         $this->parser = $parser ?: new XmlReaderParser();
         $this->serializer = $serializer ?: new XmlWriterSerializer();
     }
@@ -152,10 +153,19 @@ final class Client implements ClientInterface
 
         $params = array_merge($this->prependParams, $params, $this->appendParams);
 
-        $response = $this->parser->parse(
-            $this->transport->send($this->uri, $this->serializer->serialize($methodName, $params)),
-            $isFault
-        );
+        // forcing it here
+        // custom headers can be created using ivory's message factory
+        $headers = [
+            'Content-Type' => 'text/xml; charset=UTF-8'
+        ];
+
+        $response = $this->httpAdapter->post($this->uri, $headers, $this->serializer->serialize($methodName, $params));
+
+        if ($response->getStatusCode() !== 200) {
+            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
+        }
+
+        $response = $this->parser->parse((string) $response->getBody(), $isFault);
 
         if ($isFault) {
             throw ResponseException::fault($response);

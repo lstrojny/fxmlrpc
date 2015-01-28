@@ -44,7 +44,7 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
     {
         $this->generateAllPossibleCombinations(
             array(
-                $this->getTransports(),
+                $this->getTransport(),
                 $this->getParsers(),
                 $this->getSerializers(),
                 $this->getTimerBridges()
@@ -87,58 +87,9 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
         return $serializer;
     }
 
-    private function getTransports()
+    private function getTransport()
     {
-        $browserSocket = new \Buzz\Browser();
-        $browserSocket->setClient(new \Buzz\Client\FileGetContents());
-
-        $zendFrameworkOneHttpClientSocket = new \Zend_Http_Client();
-        $zendFrameworkOneHttpClientSocket->setAdapter(new \Zend_Http_Client_Adapter_Socket());
-
-        $zendFrameworkOneHttpClientProxy = new \Zend_Http_Client();
-        $zendFrameworkOneHttpClientProxy->setAdapter(new \Zend_Http_Client_Adapter_Proxy());
-
-        $zendFrameworkTwoHttpClientSocket = new \Zend\Http\Client();
-        $zendFrameworkTwoHttpClientSocket->setAdapter(new \Zend\Http\Client\Adapter\Socket());
-
-        $zendFrameworkTwoHttpClientProxy = new \Zend\Http\Client();
-        $zendFrameworkTwoHttpClientProxy->setAdapter(new \Zend\Http\Client\Adapter\Proxy());
-
-        $artaxClient = new \Amp\Artax\Client();
-
-        $httpAdapter = \Ivory\HttpAdapter\HttpAdapterFactory::guess();
-
-        $transports = array(
-            new fXmlRpc\Transport\StreamSocketTransport(),
-            new fXmlRpc\Transport\BuzzBrowserBridge($browserSocket),
-            new fXmlRpc\Transport\ZendFrameworkOneHttpClientBridge($zendFrameworkOneHttpClientSocket),
-            new fXmlRpc\Transport\ZendFrameworkOneHttpClientBridge($zendFrameworkOneHttpClientProxy),
-            new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientSocket),
-            new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientProxy),
-            new fXmlRpc\Transport\ArtaxBrowserBridge($artaxClient),
-            new fXmlRpc\Transport\IvoryTransport($httpAdapter),
-        );
-
-        if (extension_loaded('curl') && !in_array('php_curl', $this->disabledExtensions)) {
-            $browserCurl = new \Buzz\Browser();
-            $browserCurl->setClient(new \Buzz\Client\Curl());
-            $transports[] = new fXmlRpc\Transport\BuzzBrowserBridge($browserCurl);
-
-            $zendFrameworkOneHttpClientCurl = new \Zend_Http_Client();
-            $zendFrameworkOneHttpClientCurl->setAdapter(new \Zend_Http_Client_Adapter_Curl());
-            $transports[] = new fXmlRpc\Transport\ZendFrameworkOneHttpClientBridge($zendFrameworkOneHttpClientCurl);
-
-            $zendFrameworkTwoHttpClientCurl = new \Zend\Http\Client();
-            $zendFrameworkTwoHttpClientCurl->setAdapter(new \Zend\Http\Client\Adapter\Curl());
-            $transports[] = new fXmlRpc\Transport\ZendFrameworkTwoHttpClientBridge($zendFrameworkTwoHttpClientCurl);
-
-            $guzzle = new \Guzzle\Http\Client();
-            $transports[] = new fXmlRpc\Transport\GuzzleBridge($guzzle);
-
-            $transports[] = new fXmlRpc\Transport\CurlTransport();
-        }
-
-        return $transports;
+        return [\Ivory\HttpAdapter\HttpAdapterFactory::guess()];
     }
 
     private function getTimerBridges()
