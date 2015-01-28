@@ -58,7 +58,6 @@ final class IvoryTransport implements TransportInterface
         if ($response->getStatusCode() !== 200) {
             throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
         }
-
-        return $response->getBody()->getContents();
+        return (string) $response->getBody();
     }
 }
