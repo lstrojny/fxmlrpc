@@ -23,31 +23,12 @@
  */
 namespace fXmlRpc;
 
-/**
- * Abstract base class for client decorators
- *
- * Extend this base class if you want to decorate functionality of the client
- */
-abstract class AbstractDecorator implements ClientInterface
+interface MulticallClientInterface
 {
-    /** @var ClientInterface */
-    protected $wrapped;
-
-    /** {@inheritdoc} */
-    public function __construct(ClientInterface $wrapped)
-    {
-        $this->wrapped = $wrapped;
-    }
-
-    /** {@inheritdoc} */
-    public function call($methodName, array $arguments = [])
-    {
-        return $this->wrapped->call($methodName, $arguments);
-    }
-
-    /** {@inheritdoc} */
-    public function multicall()
-    {
-        return $this->wrapped->multicall();
-    }
+    /**
+     * Start sequence of multicall
+     *
+     * @return MulticallBuilderInterface
+     */
+    public function multicall();
 }

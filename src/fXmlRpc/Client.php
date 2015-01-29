@@ -34,34 +34,22 @@ use fXmlRpc\Exception\InvalidArgumentException;
 
 final class Client implements ClientInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $uri;
 
-    /**
-     * @var Transport\TransportInterface
-     */
+    /** @var Transport\TransportInterface */
     private $transport;
 
-    /**
-     * @var Parser\ParserInterface
-     */
+    /** @var Parser\ParserInterface */
     private $parser;
 
-    /**
-     * @var Serializer\SerializerInterface
-     */
+    /** @var Serializer\SerializerInterface */
     private $serializer;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $prependParams = [];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $appendParams = [];
 
     /**
@@ -89,7 +77,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Set the endpoint URI
+     *
+     * @param string $uri
      */
     public function setUri($uri)
     {
@@ -101,7 +91,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Return endpoint URI
+     *
+     * @return string
      */
     public function getUri()
     {
@@ -109,7 +101,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Prepend default parameters that should always be prepended
+     *
+     * @param array $params
      */
     public function prependParams(array $params)
     {
@@ -117,7 +111,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get default parameters that are always prepended
+     *
+     * @return array
      */
     public function getPrependParams()
     {
@@ -125,7 +121,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Append default parameters that should always be prepended
+     *
+     * @param array $params
      */
     public function appendParams(array $params)
     {
@@ -133,7 +131,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get default parameters that are always appended
+     *
+     * @return array
      */
     public function getAppendParams()
     {
@@ -164,11 +164,9 @@ final class Client implements ClientInterface
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function multicall()
     {
-        return new Multicall($this);
+        return new MulticallBuilder($this);
     }
 }

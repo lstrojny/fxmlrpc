@@ -23,62 +23,6 @@
  */
 namespace fXmlRpc;
 
-interface ClientInterface
+interface ClientInterface extends CallClientInterface, MulticallClientInterface
 {
-    /**
-     * Set endpoint URI
-     *
-     * @param string $uri
-     * @return null
-     */
-    public function setUri($uri);
-
-    /**
-     * Return endpoint URI
-     *
-     * @return string
-     */
-    public function getUri();
-
-    /**
-     * Set default params to be prepended for each call (e.g. authorization information)
-     *
-     * @param array $params
-     * @return null
-     */
-    public function prependParams(array $params);
-
-    /**
-     * @return array
-     */
-    public function getPrependParams();
-
-    /**
-     * Set default params to be appended for each call (e.g. authorization information)
-     *
-     * @param array $params
-     * @return null
-     */
-    public function appendParams(array $params);
-
-    /**
-     * @return array
-     */
-    public function getAppendParams();
-
-    /**
-     * Execute remote call
-     *
-     * @param string $methodName
-     * @param array  $params
-     * @return mixed
-     */
-    public function call($methodName, array $params = []);
-
-    /**
-     * Start sequence of multiccallss
-     *
-     * @return Multicall
-     */
-    public function multicall();
 }
