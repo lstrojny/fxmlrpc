@@ -37,9 +37,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     private $parser;
 
     /**
-     * @var \fXmlRpc\Transport\TransportInterface
+     * @var \Ivory\HttpAdapter\HttpAdapterInterface
      */
-    private $transport;
+    private $httpAdapter;
 
     /**
      * @var Client
@@ -52,10 +52,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                                  ->getMock();
         $this->parser = $this->getMockBuilder('fXmlRpc\Parser\ParserInterface')
                              ->getMock();
-        $this->transport = $this->getMockBuilder('fXmlRpc\Transport\TransportInterface')
+        $this->httpAdapter = $this->getMockBuilder('Ivory\HttpAdapter\HttpAdapterInterface')
                              ->getMock();
 
-        $this->client = new Client('http://foo.com', $this->transport, $this->parser, $this->serializer);
+        $this->client = new Client('http://foo.com', $this->httpAdapter, $this->parser, $this->serializer);
     }
 
     public function testSettingAndGettingUri()
@@ -67,10 +67,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                          ->method('serialize')
                          ->with('methodName', array('p1', 'p2'))
                          ->will($this->returnValue('REQUEST'));
-        $this->transport->expects($this->once())
-                        ->method('send')
-                        ->with('http://bar.com', 'REQUEST')
-                        ->will($this->returnValue('RESPONSE'));
+        $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
+                     ->getMock();
+        $body->expects($this->once())
+             ->method('__toString')
+             ->will($this->returnValue('RESPONSE'));
+        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
+                         ->getMock();
+        $response->expects($this->once())
+                 ->method('getBody')
+                 ->will($this->returnValue($body));
+        $response->expects($this->once())
+                 ->method('getStatusCode')
+                 ->will($this->returnValue(200));
+        $this->httpAdapter->expects($this->once())
+                        ->method('post')
+                        ->with('http://bar.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
+                        ->will($this->returnValue($response));
         $this->parser->expects($this->once())
                      ->method('parse')
                      ->with('RESPONSE')
@@ -84,10 +97,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                          ->method('serialize')
                          ->with('methodName', array('p1', 'p2'))
                          ->will($this->returnValue('REQUEST'));
-        $this->transport->expects($this->once())
-                        ->method('send')
-                        ->with('http://foo.com', 'REQUEST')
-                        ->will($this->returnValue('RESPONSE'));
+        $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
+                     ->getMock();
+        $body->expects($this->once())
+             ->method('__toString')
+             ->will($this->returnValue('RESPONSE'));
+        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
+                         ->getMock();
+        $response->expects($this->once())
+                 ->method('getBody')
+                 ->will($this->returnValue($body));
+        $response->expects($this->once())
+                 ->method('getStatusCode')
+                 ->will($this->returnValue(200));
+        $this->httpAdapter->expects($this->once())
+                        ->method('post')
+                        ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
+                        ->will($this->returnValue($response));
         $this->parser->expects($this->once())
                      ->method('parse')
                      ->with('RESPONSE')
@@ -102,10 +128,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                          ->method('serialize')
                          ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
                          ->will($this->returnValue('REQUEST'));
-        $this->transport->expects($this->once())
-                        ->method('send')
-                        ->with('http://foo.com', 'REQUEST')
-                        ->will($this->returnValue('RESPONSE'));
+        $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
+                     ->getMock();
+        $body->expects($this->once())
+             ->method('__toString')
+             ->will($this->returnValue('RESPONSE'));
+        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
+                         ->getMock();
+        $response->expects($this->once())
+                 ->method('getBody')
+                 ->will($this->returnValue($body));
+        $response->expects($this->once())
+                 ->method('getStatusCode')
+                 ->will($this->returnValue(200));
+        $this->httpAdapter->expects($this->once())
+                        ->method('post')
+                        ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
+                        ->will($this->returnValue($response));
         $this->parser->expects($this->once())
                      ->method('parse')
                      ->with('RESPONSE')
@@ -124,10 +163,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                          ->method('serialize')
                          ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
                          ->will($this->returnValue('REQUEST'));
-        $this->transport->expects($this->once())
-                        ->method('send')
-                        ->with('http://foo.com', 'REQUEST')
-                        ->will($this->returnValue('RESPONSE'));
+        $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
+                     ->getMock();
+        $body->expects($this->once())
+             ->method('__toString')
+             ->will($this->returnValue('RESPONSE'));
+        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
+                         ->getMock();
+        $response->expects($this->once())
+                 ->method('getBody')
+                 ->will($this->returnValue($body));
+        $response->expects($this->once())
+                 ->method('getStatusCode')
+                 ->will($this->returnValue(200));
+        $this->httpAdapter->expects($this->once())
+                        ->method('post')
+                        ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
+                        ->will($this->returnValue($response));
         $this->parser->expects($this->once())
                      ->method('parse')
                      ->with('RESPONSE')

@@ -36,7 +36,7 @@ class Server(SimpleXMLRPCServer):
 
         SimpleXMLRPCServer.__init__(self, requestHandler=RequestHandler, *args, **kargs)
 
-server = Server(("127.0.0.1", 28000), allow_none = True)
+server = Server(("", 28000), allow_none = True)
 server.register_introspection_functions()
 
 def echo(handler, v):
