@@ -33,14 +33,10 @@ use fXmlRpc\Exception\MissingExtensionException;
 
 class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterface
 {
-    /**
-     * @var XMLWriter
-     */
+    /** @var XMLWriter */
     private $writer;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $extensions = [];
 
     public function __construct()
@@ -53,33 +49,25 @@ class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterf
         $this->writer->openMemory();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function enableExtension($extension)
     {
         $this->extensions[$extension] = true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function disableExtension($extension)
     {
         $this->extensions[$extension] = false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function isExtensionEnabled($extension)
     {
         return isset($this->extensions[$extension]) ? $this->extensions[$extension] : true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function serialize($methodName, array $params = [])
     {
         $writer = $this->writer;

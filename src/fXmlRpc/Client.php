@@ -141,10 +141,7 @@ final class Client implements ClientInterface
         return $this->appendParams;
     }
 
-    /**
-     * {@inheritdoc}
-     * @throws Exception\ResponseException
-     */
+    /** {@inheritdoc} */
     public function call($methodName, array $params = [])
     {
         if (!is_string($methodName)) {

@@ -24,26 +24,23 @@
 
 namespace fXmlRpc;
 
+use fXmlRpc\Parser\ParserInterface;
+use fXmlRpc\Serializer\SerializerInterface;
+use Ivory\HttpAdapter\HttpAdapterInterface;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \fXmlRpc\Serializer\SerializerInterface
-     */
+    /** @var SerializerInterface|MockObject */
     private $serializer;
 
-    /**
-     * @var \fXmlRpc\Parser\ParserInterface
-     */
+    /** @var ParserInterface|MockObject */
     private $parser;
 
-    /**
-     * @var \Ivory\HttpAdapter\HttpAdapterInterface
-     */
+    /** @var HttpAdapterInterface|MockObject */
     private $httpAdapter;
 
-    /**
-     * @var Client
-     */
+    /** @var Client */
     private $client;
 
     public function setUp()
@@ -63,92 +60,110 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('http://foo.com', $this->client->getUri());
         $this->client->setUri('http://bar.com');
         $this->assertSame('http://bar.com', $this->client->getUri());
-        $this->serializer->expects($this->once())
-                         ->method('serialize')
-                         ->with('methodName', array('p1', 'p2'))
-                         ->will($this->returnValue('REQUEST'));
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('methodName', array('p1', 'p2'))
+            ->will($this->returnValue('REQUEST'));
         $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
                      ->getMock();
-        $body->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue('RESPONSE'));
+        $body
+            ->expects($this->once())
+            ->method('__toString')
+            ->will($this->returnValue('RESPONSE'));
         $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
                          ->getMock();
-        $response->expects($this->once())
-                 ->method('getBody')
-                 ->will($this->returnValue($body));
-        $response->expects($this->once())
-                 ->method('getStatusCode')
-                 ->will($this->returnValue(200));
-        $this->httpAdapter->expects($this->once())
-                        ->method('post')
-                        ->with('http://bar.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
-                        ->will($this->returnValue($response));
-        $this->parser->expects($this->once())
-                     ->method('parse')
-                     ->with('RESPONSE')
-                     ->will($this->returnValue('NATIVE VALUE'));
+        $response
+            ->expects($this->once())
+            ->method('getBody')
+            ->will($this->returnValue($body));
+        $response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(200));
+        $this->httpAdapter
+            ->expects($this->once())
+            ->method('post')
+            ->with('http://bar.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
+            ->will($this->returnValue($response));
+        $this->parser
+            ->expects($this->once())
+            ->method('parse')
+            ->with('RESPONSE')
+            ->will($this->returnValue('NATIVE VALUE'));
 
         $this->assertSame('NATIVE VALUE', $this->client->call('methodName', array('p1', 'p2')));    }
 
     public function testCallSerializer()
     {
-        $this->serializer->expects($this->once())
-                         ->method('serialize')
-                         ->with('methodName', array('p1', 'p2'))
-                         ->will($this->returnValue('REQUEST'));
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('methodName', array('p1', 'p2'))
+            ->will($this->returnValue('REQUEST'));
         $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
                      ->getMock();
-        $body->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue('RESPONSE'));
+        $body
+            ->expects($this->once())
+            ->method('__toString')
+            ->will($this->returnValue('RESPONSE'));
         $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
                          ->getMock();
-        $response->expects($this->once())
-                 ->method('getBody')
-                 ->will($this->returnValue($body));
-        $response->expects($this->once())
-                 ->method('getStatusCode')
-                 ->will($this->returnValue(200));
-        $this->httpAdapter->expects($this->once())
-                        ->method('post')
-                        ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
-                        ->will($this->returnValue($response));
-        $this->parser->expects($this->once())
-                     ->method('parse')
-                     ->with('RESPONSE')
-                     ->will($this->returnValue('NATIVE VALUE'));
+        $response
+            ->expects($this->once())
+            ->method('getBody')
+            ->will($this->returnValue($body));
+        $response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(200));
+        $this->httpAdapter
+            ->expects($this->once())
+            ->method('post')
+            ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
+            ->will($this->returnValue($response));
+        $this->parser
+            ->expects($this->once())
+            ->method('parse')
+            ->with('RESPONSE')
+            ->will($this->returnValue('NATIVE VALUE'));
 
         $this->assertSame('NATIVE VALUE', $this->client->call('methodName', array('p1', 'p2')));
     }
 
     public function testPrependingDetaultParams()
     {
-        $this->serializer->expects($this->once())
-                         ->method('serialize')
-                         ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
-                         ->will($this->returnValue('REQUEST'));
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
+            ->will($this->returnValue('REQUEST'));
         $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
                      ->getMock();
-        $body->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue('RESPONSE'));
+        $body
+            ->expects($this->once())
+            ->method('__toString')
+            ->will($this->returnValue('RESPONSE'));
         $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
                          ->getMock();
-        $response->expects($this->once())
-                 ->method('getBody')
-                 ->will($this->returnValue($body));
-        $response->expects($this->once())
-                 ->method('getStatusCode')
-                 ->will($this->returnValue(200));
-        $this->httpAdapter->expects($this->once())
-                        ->method('post')
-                        ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
-                        ->will($this->returnValue($response));
-        $this->parser->expects($this->once())
-                     ->method('parse')
-                     ->with('RESPONSE')
-                     ->will($this->returnValue('NATIVE VALUE'));
+        $response
+            ->expects($this->once())
+            ->method('getBody')
+            ->will($this->returnValue($body));
+        $response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(200));
+        $this->httpAdapter
+            ->expects($this->once())
+            ->method('post')
+            ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
+            ->will($this->returnValue($response));
+        $this->parser
+            ->expects($this->once())
+            ->method('parse')
+            ->with('RESPONSE')
+            ->will($this->returnValue('NATIVE VALUE'));
 
         $this->assertSame(array(), $this->client->getPrependParams());
         $this->client->prependParams(array('p0', 'p1'));
@@ -159,31 +174,37 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testAppendingParams()
     {
-        $this->serializer->expects($this->once())
-                         ->method('serialize')
-                         ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
-                         ->will($this->returnValue('REQUEST'));
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
+            ->will($this->returnValue('REQUEST'));
         $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
                      ->getMock();
-        $body->expects($this->once())
-             ->method('__toString')
-             ->will($this->returnValue('RESPONSE'));
+        $body
+            ->expects($this->once())
+            ->method('__toString')
+            ->will($this->returnValue('RESPONSE'));
         $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
                          ->getMock();
-        $response->expects($this->once())
-                 ->method('getBody')
-                 ->will($this->returnValue($body));
-        $response->expects($this->once())
-                 ->method('getStatusCode')
-                 ->will($this->returnValue(200));
-        $this->httpAdapter->expects($this->once())
-                        ->method('post')
-                        ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
-                        ->will($this->returnValue($response));
-        $this->parser->expects($this->once())
-                     ->method('parse')
-                     ->with('RESPONSE')
-                     ->will($this->returnValue('NATIVE VALUE'));
+        $response
+            ->expects($this->once())
+            ->method('getBody')
+            ->will($this->returnValue($body));
+        $response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(200));
+        $this->httpAdapter
+            ->expects($this->once())
+            ->method('post')
+            ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
+            ->will($this->returnValue($response));
+        $this->parser
+            ->expects($this->once())
+            ->method('parse')
+            ->with('RESPONSE')
+            ->will($this->returnValue('NATIVE VALUE'));
 
         $this->assertSame(array(), $this->client->getAppendParams());
         $this->client->appendParams(array('p2', 'p3'));

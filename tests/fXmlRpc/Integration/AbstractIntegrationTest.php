@@ -26,8 +26,6 @@ namespace fXmlPRC\Integration;
 
 use fXmlRpc;
 use fXmlRpc\ClientInterface;
-use fXmlRpc\Transport\HttpTransportInterface;
-use fXmlRpc\Transport\TransportInterface;
 use hmmmath\Fibonacci\FibonacciFactory;
 use Symfony\Component\Process\Process;
 

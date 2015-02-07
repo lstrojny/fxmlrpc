@@ -2,8 +2,6 @@
 namespace fXmlRpc\Exception;
 
 use ReflectionClass;
-use fXmlRpc\Exception\RuntimeException;
-use fXmlRpc\Exception\InvalidArgumentException;
 
 class ExceptionTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,17 +27,13 @@ class ExceptionTest extends \PHPUnit_Framework_TestCase
         return $arguments;
     }
 
-    /**
-     * @dataProvider provideExceptions
-     */
+    /** @dataProvider provideExceptions */
     public function testAllExceptionsImplementExceptionInterface($exception)
     {
         $this->assertInstanceOf('fXmlRpc\\Exception\\ExceptionInterface', $exception);
     }
 
-    /**
-     * @dataProvider provideExceptions
-     */
+    /** @dataProvider provideExceptions */
     public function testAllExceptionsEitherExtendBasicInvalidArgumentException($exception)
     {
         $this->assertTrue(
@@ -48,17 +42,13 @@ class ExceptionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @dataProvider provideExceptions
-     */
+    /** @dataProvider provideExceptions */
     public function testGettingMessage($exception)
     {
         $this->assertSame('message', $exception->getMessage());
     }
 
-    /**
-     * @dataProvider provideExceptions
-     */
+    /** @dataProvider provideExceptions */
     public function testGettingCode($exception)
     {
         $this->assertSame(100, $exception->getCode());

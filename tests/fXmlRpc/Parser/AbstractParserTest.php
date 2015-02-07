@@ -30,9 +30,7 @@ use fXmlRpc\Value\Base64;
 
 abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ParserInterface
-     */
+    /** @var ParserInterface */
     protected $parser;
 
     public static function provideSimpleTypes()
@@ -63,9 +61,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @dataProvider provideSimpleTypes
-     */
+    /** @dataProvider provideSimpleTypes */
     public function testParsingSimpleTypes($expectedValue, $serializedType, $serializedValue, $callback = null)
     {
         $xml = sprintf(
@@ -91,9 +87,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($isFault);
     }
 
-    /**
-     * @dataProvider provideSimpleTypes
-     */
+    /** @dataProvider provideSimpleTypes */
     public function testEmptyTags($expectedValue, $serializedType)
     {
         $xml = sprintf(
@@ -113,9 +107,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($isFault);
     }
 
-    /**
-     * @dataProvider provideSimpleTypes
-     */
+    /** @dataProvider provideSimpleTypes */
     public function testEmptyValue($expectedValue, $serializedType)
     {
         $xml = sprintf('<?xml version="1.0" encoding="UTF-8"?>

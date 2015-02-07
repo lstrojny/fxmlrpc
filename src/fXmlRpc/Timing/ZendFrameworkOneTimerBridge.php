@@ -45,9 +45,7 @@ class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
         $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function recordTiming($callTime, $method, array $arguments)
     {
         $this->logger->log(

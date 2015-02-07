@@ -45,6 +45,7 @@ class Psr3TimerBridge extends AbstractTimerBridge
         $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
+    /** {@inheritdoc} */
     public function recordTiming($callTime, $method, array $arguments)
     {
         $this->logger->log(

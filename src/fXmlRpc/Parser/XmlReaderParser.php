@@ -40,10 +40,7 @@ class XmlReaderParser implements ParserInterface
         }
     }
 
-    /**
-     * @throws RuntimeException
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function parse($xmlString, &$isFault)
     {
         $useErrors = libxml_use_internal_errors(true);

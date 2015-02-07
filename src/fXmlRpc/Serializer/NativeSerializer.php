@@ -37,9 +37,7 @@ class NativeSerializer implements SerializerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function serialize($method, array $params = [])
     {
         $toBeVisited = [&$params];

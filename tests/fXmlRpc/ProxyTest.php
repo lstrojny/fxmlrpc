@@ -24,10 +24,14 @@
 
 namespace fXmlRpc;
 
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+
 class ProxyTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var ClientInterface|MockObject */
     private $client;
 
+    /** @var Proxy */
     private $proxy;
 
     public function setUp()

@@ -25,14 +25,10 @@ namespace fXmlRpc\Value;
 
 final class Base64 implements Base64Interface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $encoded;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $decoded;
 
     /**
@@ -53,9 +49,7 @@ final class Base64 implements Base64Interface
      */
     public static function serialize($string)
     {
-        $value = new static(null, $string);
-
-        return $value;
+        return new static(null, $string);
     }
 
     /**
@@ -66,16 +60,10 @@ final class Base64 implements Base64Interface
      */
     public static function deserialize($value)
     {
-        $value = new static(trim($value), null);
-
-        return $value;
+        return new static(trim($value), null);
     }
 
-    /**
-     * Get bas64 value as base64 string
-     *
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getEncoded()
     {
         if ($this->encoded === null) {
@@ -85,11 +73,7 @@ final class Base64 implements Base64Interface
         return $this->encoded;
     }
 
-    /**
-     * Get base64 value as string
-     *
-     * @return string
-     */
+    /** {@inheritdoc} */
     public function getDecoded()
     {
         if ($this->decoded === null) {

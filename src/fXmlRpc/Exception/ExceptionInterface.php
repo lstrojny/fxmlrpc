@@ -23,6 +23,28 @@
  */
 namespace fXmlRpc\Exception;
 
+use Exception;
+
 interface ExceptionInterface
 {
+    /** @return string */
+    public function getMessage();
+
+    /** @return mixed */
+    public function getCode();
+
+    /** @return string */
+    public function getFile();
+
+    /** @return integer */
+    public function getLine();
+
+    /** @return array */
+    public function getTrace();
+
+    /** @return Exception|null */
+    public function getPrevious();
+
+    /** @return string */
+    public function getTraceAsString();
 }

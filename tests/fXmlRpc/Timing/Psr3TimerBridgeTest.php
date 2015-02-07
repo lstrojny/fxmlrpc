@@ -24,10 +24,13 @@
 
 namespace fXmlRpc\Timing;
 
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class Psr3TimerBridgeTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var LoggerInterface|MockObject */
     private $logger;
 
     public function setUp()

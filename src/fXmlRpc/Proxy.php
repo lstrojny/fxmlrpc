@@ -25,24 +25,16 @@ namespace fXmlRpc;
 
 class Proxy
 {
-    /**
-     * @var ClientInterface
-     */
+    /** @var ClientInterface */
     private $client;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $namespace;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $namespaceSeparator = '.';
 
-    /**
-     * @var Proxy[string]
-     */
+    /** @var Proxy[string] */
     private $proxies = [];
 
     /**

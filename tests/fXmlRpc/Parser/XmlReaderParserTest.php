@@ -24,8 +24,6 @@
 
 namespace fXmlRpc\Parser;
 
-use DateTime;
-
 class XmlReaderParserTest extends AbstractParserTest
 {
     public function setUp()

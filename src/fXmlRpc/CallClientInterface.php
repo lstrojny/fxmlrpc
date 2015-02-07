@@ -30,6 +30,7 @@ interface CallClientInterface
      *
      * @param string $method
      * @param array $arguments
+     * @throws Exception\ResponseException
      * @return mixed
      */
     public function call($method, array $arguments);

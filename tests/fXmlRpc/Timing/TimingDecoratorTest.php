@@ -24,14 +24,18 @@
 
 namespace fXmlRpc\Timing;
 
-use fXmlRpc\Timing\TimingDecorator;
+use fXmlRpc\ClientInterface;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class TimingDecoratorTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var ClientInterface|MockObject */
     private $wrapped;
 
+    /** @var TimerInterface|MockObject */
     private $timer;
 
+    /** @var TimingDecorator */
     private $decorator;
 
     public function setUp()
