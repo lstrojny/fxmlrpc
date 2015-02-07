@@ -70,6 +70,17 @@ class MonologTimerBridgeTest extends \PHPUnit_Framework_TestCase
         $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
     }
 
+    public function testSetEmptyLogLevels()
+    {
+        $bridge = new MonologTimerBridge($this->monolog, []);
+        $this->monolog
+            ->expects($this->once())
+            ->method('addRecord')
+            ->with(Logger::DEBUG);
+
+        $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
+    }
+
     public function testSettingCustomMessageTemplate()
     {
         $bridge = new MonologTimerBridge($this->monolog, null, 'Custom template %2.1Fs');

@@ -46,7 +46,11 @@ class ZendFrameworkOneTimerBridgeTest extends \PHPUnit_Framework_TestCase
         $this->log
             ->expects($this->once())
             ->method('log')
-            ->with('fXmlRpc call took 0.1000000000s', Zend_Log::DEBUG, array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
+            ->with(
+                'fXmlRpc call took 0.1000000000s',
+                Zend_Log::DEBUG,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1'))
+            );
 
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
@@ -57,7 +61,22 @@ class ZendFrameworkOneTimerBridgeTest extends \PHPUnit_Framework_TestCase
         $this->log
             ->expects($this->once())
             ->method('log')
-            ->with('fXmlRpc call took 0.1000000000s', Zend_Log::ALERT, array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
+            ->with(
+                'fXmlRpc call took 0.1000000000s',
+                Zend_Log::ALERT,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1'))
+            );
+
+        $bridge->recordTiming(0.1, 'method', array('arg1'));
+    }
+
+    public function testWithEmptyLogLevel()
+    {
+        $bridge = new ZendFrameworkOneTimerBridge($this->log, []);
+        $this->log
+            ->expects($this->once())
+            ->method('log')
+            ->with('fXmlRpc call took 0.1000000000s', Zend_Log::DEBUG);
 
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
@@ -68,14 +87,21 @@ class ZendFrameworkOneTimerBridgeTest extends \PHPUnit_Framework_TestCase
         $this->log
             ->expects($this->once())
             ->method('log')
-            ->with('Custom template 0.1s', Zend_Log::DEBUG, array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1')));
+            ->with(
+                'Custom template 0.1s',
+                Zend_Log::DEBUG,
+                array('xmlrpcMethod' => 'method', 'xmlrpcArguments' => array('arg1'))
+            );
 
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new ZendFrameworkOneTimerBridge($this->log, array(1 => Zend_Log::DEBUG, 2 => Zend_Log::WARN, '3.5' => Zend_Log::ALERT));
+        $bridge = new ZendFrameworkOneTimerBridge(
+            $this->log,
+            array(1 => Zend_Log::DEBUG, 2 => Zend_Log::WARN, '3.5' => Zend_Log::ALERT)
+        );
         $this->log
             ->expects($this->at(0))
             ->method('log')

@@ -67,6 +67,7 @@ abstract class AbstractTimerBridge implements TimerInterface
             return $this->level;
         }
 
+        $level = null;
         foreach ($this->level as $threshold => $level) {
             if ($callTime >= $threshold) {
                 return $level;

@@ -35,7 +35,7 @@ interface ParserInterface
      * @param  string  $xmlString
      * @param  boolean $isFault
      * @throws RuntimeException
-     * @return string
+     * @return mixed
      */
     public function parse($xmlString, &$isFault);
 }

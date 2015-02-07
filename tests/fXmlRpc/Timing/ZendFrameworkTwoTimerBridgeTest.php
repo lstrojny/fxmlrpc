@@ -62,6 +62,16 @@ class ZendFrameworkTwoTimerBridgeTest extends \PHPUnit_Framework_TestCase
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
 
+    public function testWithEmptyLogLevel()
+    {
+        $bridge = new ZendFrameworkTwoTimerBridge($this->log, []);
+        $this->log
+            ->expects($this->once())
+            ->method('debug');
+
+        $bridge->recordTiming(0.1, 'method', array('arg1'));
+    }
+
     public function testWithCustomMessageTemplate()
     {
         $bridge = new ZendFrameworkTwoTimerBridge($this->log, null, 'Custom template %2.1Fs');

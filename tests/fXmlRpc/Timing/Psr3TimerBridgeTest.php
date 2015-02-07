@@ -68,6 +68,17 @@ class Psr3TimerBridgeTest extends \PHPUnit_Framework_TestCase
         $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
     }
 
+    public function testSettingEmptyLogLevel()
+    {
+        $bridge = new Psr3TimerBridge($this->logger, []);
+        $this->logger
+            ->expects($this->once())
+            ->method('log')
+            ->with(LogLevel::DEBUG);
+
+        $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
+    }
+
     public function testSettingCustomMessageTemplate()
     {
         $bridge = new Psr3TimerBridge($this->logger, null, 'Custom template %2.1Fs');
