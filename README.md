@@ -13,7 +13,6 @@
 
 ## Latest improvements
 
-<<<<<<< HEAD
  - `[BC]` Rename `fXmlRpc\Multicall` to `fXmlRpc\MulticallBuilder`
  - `[BC]` Make the surface of the `ClientInterface` signifcantly smaller (see #24 for details)
  - `[BC]` Replaces built-in transports with [Ivory Http Adapter](https://github.com/egeloen/ivory-http-adapter)
