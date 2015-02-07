@@ -23,6 +23,7 @@
  */
 
 namespace fXmlPRC\Integration;
+use fXmlRpc\Client;
 use fXmlRpc\ClientInterface;
 
 /**
@@ -39,4 +40,21 @@ class NodeIntegrationTest extends AbstractIntegrationTest
     protected static $command = 'exec node server.js';
 
     protected static $restartServerInterval = 200;
+
+    /** @dataProvider getClientsOnly */
+    public function testServerNotReachableViaTcpIp(Client $client)
+    {
+        $client->setUri('http://127.0.0.1:12345/');
+
+        try {
+            $client->call('system.failure');
+            $this->fail('Exception expected');
+        } catch (\fXmlRpc\Exception\TcpException $e) {
+            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
+            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
+            $this->assertInstanceOf('RuntimeException', $e);
+            $this->assertStringStartsWith('A transport error occurred', $e->getMessage());
+            $this->assertSame(0, $e->getCode());
+        }
+    }
 }

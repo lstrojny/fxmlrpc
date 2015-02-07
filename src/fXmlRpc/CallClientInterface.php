@@ -23,6 +23,8 @@
  */
 namespace fXmlRpc;
 
+use fXmlRpc\Exception\ExceptionInterface;
+
 interface CallClientInterface
 {
     /**
@@ -30,8 +32,8 @@ interface CallClientInterface
      *
      * @param string $method
      * @param array $arguments
-     * @throws Exception\ResponseException
+     * @throws ExceptionInterface
      * @return mixed
      */
-    public function call($method, array $arguments);
+    public function call($method, array $arguments = []);
 }

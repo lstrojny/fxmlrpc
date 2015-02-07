@@ -21,37 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Timing;
+namespace fXmlRpc\Transport;
 
-use fXmlRpc\ClientInterface;
-use fXmlRpc\AbstractDecorator;
+use fXmlRpc\Exception\HttpException;
+use fXmlRpc\Exception\TcpException;
+use Ivory\HttpAdapter\HttpAdapterException;
+use Ivory\HttpAdapter\HttpAdapterInterface;
 
-class TimingDecorator extends AbstractDecorator
+class HttpAdapterTransport implements TransportInterface
 {
-    /**
-     * @var TimerInterface
-     */
-    private $timer;
+    /** @var HttpAdapterInterface */
+    private $httpAdapter;
 
-    /**
-     * Create new client decorator to record timing information
-     *
-     * @param ClientInterface $wrapped
-     * @param TimerInterface  $timer
-     */
-    public function __construct(ClientInterface $wrapped, TimerInterface $timer)
+    public function __construct(HttpAdapterInterface $httpAdapter)
     {
-        parent::__construct($wrapped);
-        $this->timer = $timer;
+        $this->httpAdapter = $httpAdapter;
     }
 
     /** {@inheritdoc} */
-    public function call($methodName, array $arguments = [])
+    public function send($endpoint, $payload)
     {
-        $startTime = microtime(true);
-        $result = parent::call($methodName, $arguments);
-        $this->timer->recordTiming(microtime(true) - $startTime, $methodName, $arguments);
+        try {
+            $response = $this->httpAdapter->post($endpoint, ['Content-Type' => 'text/xml; charset=UTF-8'], $payload);
+        } catch (HttpAdapterException $e) {
+            throw TcpException::transportError($e);
+        }
 
-        return $result;
+        if ($response->getStatusCode() !== 200) {
+            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
+        }
+
+        return (string) $response->getBody();
     }
 }

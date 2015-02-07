@@ -21,37 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Timing;
+namespace fXmlRpc\Transport;
 
-use fXmlRpc\ClientInterface;
-use fXmlRpc\AbstractDecorator;
+use fXmlRpc\Exception\TransportException;
 
-class TimingDecorator extends AbstractDecorator
+/**
+ * Transport interface
+ *
+ * This interface is implemented by transports to provide means to send
+ * requests over the wire.
+ */
+interface TransportInterface
 {
     /**
-     * @var TimerInterface
-     */
-    private $timer;
-
-    /**
-     * Create new client decorator to record timing information
+     * Send XML/RPC request over the wire and return the payload
      *
-     * @param ClientInterface $wrapped
-     * @param TimerInterface  $timer
+     * @param  string             $endpoint
+     * @param  string             $payload
+     * @throws TransportException If a transport error occurred
+     * @return string
      */
-    public function __construct(ClientInterface $wrapped, TimerInterface $timer)
-    {
-        parent::__construct($wrapped);
-        $this->timer = $timer;
-    }
-
-    /** {@inheritdoc} */
-    public function call($methodName, array $arguments = [])
-    {
-        $startTime = microtime(true);
-        $result = parent::call($methodName, $arguments);
-        $this->timer->recordTiming(microtime(true) - $startTime, $methodName, $arguments);
-
-        return $result;
-    }
+    public function send($endpoint, $payload);
 }

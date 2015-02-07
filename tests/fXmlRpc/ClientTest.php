@@ -26,7 +26,7 @@ namespace fXmlRpc;
 
 use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Serializer\SerializerInterface;
-use Ivory\HttpAdapter\HttpAdapterInterface;
+use fXmlRpc\Transport\TransportInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
@@ -37,22 +37,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /** @var ParserInterface|MockObject */
     private $parser;
 
-    /** @var HttpAdapterInterface|MockObject */
-    private $httpAdapter;
+    /** @var TransportInterface|MockObject */
+    private $transport;
 
     /** @var Client */
     private $client;
 
     public function setUp()
     {
-        $this->serializer = $this->getMockBuilder('fXmlRpc\Serializer\SerializerInterface')
-                                 ->getMock();
-        $this->parser = $this->getMockBuilder('fXmlRpc\Parser\ParserInterface')
-                             ->getMock();
-        $this->httpAdapter = $this->getMockBuilder('Ivory\HttpAdapter\HttpAdapterInterface')
-                             ->getMock();
+        $this->serializer = $this->getMock('fXmlRpc\Serializer\SerializerInterface');
+        $this->parser = $this->getMock('fXmlRpc\Parser\ParserInterface');
+        $this->transport = $this->getMock('fXmlRpc\Transport\TransportInterface');
 
-        $this->client = new Client('http://foo.com', $this->httpAdapter, $this->parser, $this->serializer);
+        $this->client = new Client('http://foo.com', $this->transport, $this->parser, $this->serializer);
     }
 
     public function testSettingAndGettingUri()
@@ -65,27 +62,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->method('serialize')
             ->with('methodName', array('p1', 'p2'))
             ->will($this->returnValue('REQUEST'));
-        $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
-                     ->getMock();
-        $body
-            ->expects($this->once())
-            ->method('__toString')
-            ->will($this->returnValue('RESPONSE'));
-        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
-                         ->getMock();
-        $response
-            ->expects($this->once())
-            ->method('getBody')
-            ->will($this->returnValue($body));
-        $response
-            ->expects($this->once())
-            ->method('getStatusCode')
-            ->will($this->returnValue(200));
-        $this->httpAdapter
-            ->expects($this->once())
-            ->method('post')
-            ->with('http://bar.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
-            ->will($this->returnValue($response));
+        $this->mockTransport('http://bar.com', 'REQUEST', 'RESPONSE');
         $this->parser
             ->expects($this->once())
             ->method('parse')
@@ -101,27 +78,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->method('serialize')
             ->with('methodName', array('p1', 'p2'))
             ->will($this->returnValue('REQUEST'));
-        $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
-                     ->getMock();
-        $body
-            ->expects($this->once())
-            ->method('__toString')
-            ->will($this->returnValue('RESPONSE'));
-        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
-                         ->getMock();
-        $response
-            ->expects($this->once())
-            ->method('getBody')
-            ->will($this->returnValue($body));
-        $response
-            ->expects($this->once())
-            ->method('getStatusCode')
-            ->will($this->returnValue(200));
-        $this->httpAdapter
-            ->expects($this->once())
-            ->method('post')
-            ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
-            ->will($this->returnValue($response));
+        $this->mockTransport('http://foo.com', 'REQUEST', 'RESPONSE');
         $this->parser
             ->expects($this->once())
             ->method('parse')
@@ -138,27 +95,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->method('serialize')
             ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
             ->will($this->returnValue('REQUEST'));
-        $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
-                     ->getMock();
-        $body
-            ->expects($this->once())
-            ->method('__toString')
-            ->will($this->returnValue('RESPONSE'));
-        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
-                         ->getMock();
-        $response
-            ->expects($this->once())
-            ->method('getBody')
-            ->will($this->returnValue($body));
-        $response
-            ->expects($this->once())
-            ->method('getStatusCode')
-            ->will($this->returnValue(200));
-        $this->httpAdapter
-            ->expects($this->once())
-            ->method('post')
-            ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
-            ->will($this->returnValue($response));
+        $this->mockTransport('http://foo.com', 'REQUEST', 'RESPONSE');
         $this->parser
             ->expects($this->once())
             ->method('parse')
@@ -179,27 +116,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ->method('serialize')
             ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
             ->will($this->returnValue('REQUEST'));
-        $body = $this->getMockBuilder('Psr\Http\Message\StreamableInterface')
-                     ->getMock();
-        $body
-            ->expects($this->once())
-            ->method('__toString')
-            ->will($this->returnValue('RESPONSE'));
-        $response = $this->getMockBuilder('Ivory\HttpAdapter\Message\ResponseInterface')
-                         ->getMock();
-        $response
-            ->expects($this->once())
-            ->method('getBody')
-            ->will($this->returnValue($body));
-        $response
-            ->expects($this->once())
-            ->method('getStatusCode')
-            ->will($this->returnValue(200));
-        $this->httpAdapter
-            ->expects($this->once())
-            ->method('post')
-            ->with('http://foo.com', ['Content-Type' => 'text/xml; charset=UTF-8'], 'REQUEST')
-            ->will($this->returnValue($response));
+        $this->mockTransport('http://foo.com', 'REQUEST', 'RESPONSE');
         $this->parser
             ->expects($this->once())
             ->method('parse')
@@ -237,5 +154,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('fXmlRpc\MulticallBuilderInterface', $multicall);
         $this->assertNotSame($multicall, $this->client->multicall());
         $this->assertSame($this->client, $multicall->getClient());
+    }
+
+    private function mockTransport($endpoint, $request, $response)
+    {
+        $this->transport
+            ->expects($this->once())
+            ->method('send')
+            ->with($endpoint, $request)
+            ->willReturn($response);
     }
 }

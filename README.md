@@ -15,7 +15,7 @@
 
  - `[BC]` Rename `fXmlRpc\Multicall` to `fXmlRpc\MulticallBuilder`
  - `[BC]` Make the surface of the `ClientInterface` signifcantly smaller (see #24 for details)
- - `[BC]` Replaces built-in transports with [Ivory Http Adapter](https://github.com/egeloen/ivory-http-adapter)
+ - `[BC]` Replaces built-in transports with [Ivory HTTP Adapter](https://github.com/egeloen/ivory-http-adapter). PECL HTTP is no longer supported. Contribution by [Márk Sági-Kazár](https://github.com/sagikazarmark)
  - `[BUG]` Fix serialization issue with XmlWriterSerializer (see #19 for details)
  - `[FEATURE]` New bridge for [artax](https://github.com/amphp/artax) (with contributions by [Markus Staab](https://github.com/staabm))
  - `[FEATURE]` New bridge for Guzzle 4 (contribution by [Robin van der Vleuten](https://github.com/RobinvdVleuten))
@@ -125,7 +125,7 @@ $result = $client->multicall()
     ->execute();
 ```
 
-#### Integration for various HTTP clients
+#### Integration for various HTTP clients using [Ivory](https://github.com/egeloen/ivory-http-adapter)
 ```php
 <?php
 /** Buzz (https://github.com/kriswallsmith/Buzz) */
@@ -133,7 +133,7 @@ $browser = new Buzz\Browser();
 $browser->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\BuzzBrowserBridge($browser)
+    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\BuzzHttpAdapter($browser))
 );
 
 /** Zend Framework 1 (http://framework.zend.com/) */
@@ -141,7 +141,7 @@ $httpClient = new Zend_Http_Client();
 $httpClient->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\ZF1HttpClientBridge($httpClient)
+    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\Zend1HttpAdapter($httpClient))
 );
 
 /** Zend Framework 2 (http://framework.zend.com/zf2) */
@@ -149,7 +149,7 @@ $httpClient = new Zend\Http\Client();
 $httpClient->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\ZF2HttpClientBridge($httpClient)
+    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\Zend2HttpAdapter($httpClient))
 );
 
 /** Guzzle (http://guzzlephp.org/) */
@@ -157,7 +157,7 @@ $httpClient = new Guzzle\Http\Client();
 $httpClient->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\GuzzleBridge($httpClient)
+    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\GuzzleAdapter($httpClient))
 );
 
 /** Guzzle 4+ (http://guzzlephp.org/) */
@@ -165,15 +165,7 @@ $httpClient = new GuzzleHttp\Client();
 $httpClient->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\Guzzle4Bridge($httpClient)
-);
-
-/** PECL HTTP (http://pecl.php.net/pecl_http) */
-$request = new HttpRequest();
-$request->...();
-$client = new fXmlRpc\Client(
-    'http://endpoint.com',
-    new fXmlRpc\Transport\PeclHttpBridge($request)
+    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\GuzzleHttpAdapter($httpClient))
 );
 ```
 

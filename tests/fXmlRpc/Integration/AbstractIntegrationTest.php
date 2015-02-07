@@ -25,6 +25,7 @@
 namespace fXmlPRC\Integration;
 
 use fXmlRpc;
+use fXmlRpc\Client;
 use fXmlRpc\ClientInterface;
 use hmmmath\Fibonacci\FibonacciFactory;
 use Symfony\Component\Process\Process;
@@ -99,45 +100,35 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
         static::startServer();
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testNil(ClientInterface $client)
     {
         $result = null;
         $this->assertSame($result, $client->call('system.echoNull', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testArray(ClientInterface $client)
     {
         $result = range(0, 10);
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testStruct(ClientInterface $client)
     {
         $result = array('FOO' => 'BAR', 'BAZ' => 'BLA');
         $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testString(ClientInterface $client)
     {
         $result = 'HELLO WORLD <> & ÜÖÄ';
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testBase64(ClientInterface $client)
     {
         $expected = fXmlRpc\Value\Base64::serialize('HELLO WORLD');
@@ -146,54 +137,42 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
         $this->assertSame($expected->getDecoded(), $result->getDecoded());
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testInteger(ClientInterface $client)
     {
         $result = 100;
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testNegativeInteger(ClientInterface $client)
     {
         $result = -100;
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testFloat(ClientInterface $client)
     {
         $result = 100.12;
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testNegativeFloat(ClientInterface $client)
     {
         $result = -100.12;
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testDate(ClientInterface $client)
     {
         $result = new \DateTime('2011-01-12 23:12:10', new \DateTimeZone('UTC'));
         $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testComplexStruct(ClientInterface $client)
     {
         $result = array(
@@ -213,9 +192,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
         $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testFault(ClientInterface $client)
     {
         try {
@@ -226,6 +203,23 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
             $this->assertContains('ERROR', $e->getFaultString());
             $this->assertSame(0, $e->getCode());
             $this->assertSame(123, $e->getFaultCode());
+        }
+    }
+
+    /** @dataProvider getClientsOnly */
+    public function testServerReturnsInvalidResult(Client $client)
+    {
+        $client->setUri(static::$errorEndpoint);
+
+        try {
+            $client->call('system.failure');
+            $this->fail('Exception expected');
+        } catch (\fXmlRpc\Exception\HttpException $e) {
+            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
+            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
+            $this->assertInstanceOf('RuntimeException', $e);
+            $this->assertStringStartsWith('An HTTP error occurred', $e->getMessage());
+            $this->assertSame(500, $e->getCode());
         }
     }
 }

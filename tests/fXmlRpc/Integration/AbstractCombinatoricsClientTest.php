@@ -32,31 +32,39 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
 
     private $pos = 0;
 
-    private $clients = array();
-
-    private $clientDependencies = array();
+    private $dependencyGraph = array();
 
     protected static $endpoint;
 
-    protected $clientsLimit = 0;
-
     public function getClients()
     {
+        $clients = [];
         $this->generateAllPossibleCombinations(
             array(
                 $this->getTransport(),
                 $this->getParsers(),
                 $this->getSerializers(),
-                $this->getTimerBridges()
-            )
+                $this->getTimerBridges(),
+            ),
+            $clients
         );
 
-        if ($this->clientsLimit !== 0) {
-            shuffle($this->clients);
-            $this->clients = array_slice($this->clients, 0, $this->clientsLimit);
-        }
+        return $clients;
+    }
 
-        return $this->clients;
+    public function getClientsOnly()
+    {
+        $clients = [];
+        $this->generateAllPossibleCombinations(
+            array(
+                $this->getTransport(),
+                $this->getParsers(),
+                $this->getSerializers(),
+            ),
+            $clients
+        );
+
+        return $clients;
     }
 
     private function getParsers()
@@ -96,7 +104,7 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
 
     private function getTransport()
     {
-        return [\Ivory\HttpAdapter\HttpAdapterFactory::guess()];
+        return [new \fXmlRpc\Transport\HttpAdapterTransport(\Ivory\HttpAdapter\HttpAdapterFactory::guess())];
     }
 
     private function getTimerBridges()
@@ -117,27 +125,27 @@ abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCa
         );
     }
 
-    private function generateAllPossibleCombinations($combinations)
+    private function generateAllPossibleCombinations(array $combinations, array &$clients)
     {
         if ($combinations) {
             for ($i = 0; $i < count($combinations[0]); ++$i) {
                 $temp = $combinations;
-                $this->clientDependencies[$this->pos] = $combinations[0][$i];
+                $this->dependencyGraph[$this->pos] = $combinations[0][$i];
                 array_shift($temp);
                 $this->pos++;
-                $this->generateAllPossibleCombinations($temp);
+                $this->generateAllPossibleCombinations($temp, $clients);
             }
         } else {
             $client = new fXmlRpc\Client(
                 static::$endpoint,
-                $this->clientDependencies[0],
-                $this->clientDependencies[1],
-                $this->clientDependencies[2]
+                $this->dependencyGraph[0],
+                $this->dependencyGraph[1],
+                $this->dependencyGraph[2]
             );
-            if ($this->clientDependencies[3]) {
-                $client = new \fXmlRpc\Timing\TimingDecorator($client, $this->clientDependencies[3]);
+            if (isset($this->dependencyGraph[3])) {
+                $client = new \fXmlRpc\Timing\TimingDecorator($client, $this->dependencyGraph[3]);
             }
-            $this->clients[] = array($client, $this->clientDependencies[0], $this->clientDependencies[1], $this->clientDependencies[2]);
+            $clients[] = array($client, $this->dependencyGraph[0], $this->dependencyGraph[1], $this->dependencyGraph[2]);
         }
         $this->pos--;
     }
