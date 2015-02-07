@@ -213,7 +213,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testMulticallFactory()
     {
         $multicall = $this->client->multicall();
-        $this->assertInstanceOf('fXmlRpc\Multicall', $multicall);
+        $this->assertInstanceOf('fXmlRpc\MulticallBuilderInterface', $multicall);
         $this->assertNotSame($multicall, $this->client->multicall());
         $this->assertSame($this->client, $multicall->getClient());
     }

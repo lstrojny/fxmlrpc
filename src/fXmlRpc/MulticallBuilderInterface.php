@@ -23,31 +23,43 @@
  */
 namespace fXmlRpc;
 
-/**
- * Abstract base class for client decorators
- *
- * Extend this base class if you want to decorate functionality of the client
- */
-abstract class AbstractDecorator implements ClientInterface
+use fXmlRpc\Exception\InvalidArgumentException;
+
+interface MulticallBuilderInterface
 {
-    /** @var ClientInterface */
-    protected $wrapped;
+    /**
+     * Register a success handler applicable to all multicall responses
+     *
+     * @param callable $handler
+     * @throws InvalidArgumentException
+     * @return MulticallBuilderInterface
+     */
+    public function onSuccess(callable $handler);
 
-    /** {@inheritdoc} */
-    public function __construct(ClientInterface $wrapped)
-    {
-        $this->wrapped = $wrapped;
-    }
+    /**
+     * Register a error handler applicable to all multicall responses
+     *
+     * @param callable $handler
+     * @throws InvalidArgumentException
+     * @return MulticallBuilderInterface
+     */
+    public function onError(callable $handler);
 
-    /** {@inheritdoc} */
-    public function call($methodName, array $arguments = [])
-    {
-        return $this->wrapped->call($methodName, $arguments);
-    }
+    /**
+     * Add a call to the end of the multicall stack
+     *
+     * @param string $methodName
+     * @param array $params
+     * @param callable $onSuccess
+     * @param callable $onError
+     * @return MulticallBuilderInterface
+     */
+    public function addCall($methodName, array $params = [], callable $onSuccess = null, callable $onError = null);
 
-    /** {@inheritdoc} */
-    public function multicall()
-    {
-        return $this->wrapped->multicall();
-    }
+    /**
+     * Send the multicall request to the server
+     *
+     * @return array
+     */
+    public function execute();
 }

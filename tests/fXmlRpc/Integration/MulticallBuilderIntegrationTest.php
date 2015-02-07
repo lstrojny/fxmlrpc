@@ -31,31 +31,21 @@ use fXmlRpc\ClientInterface;
  * @group integration
  * @group external
  */
-class MulticallTest extends AbstractCombinatoricsClientTest
+class MulticallBuilderIntegrationTest extends AbstractCombinatoricsClientTest
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected static $endpoint = 'http://betty.userland.com/RPC2';
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $expected;
 
-    /**
-     * @var int
-     */
+    /** @var integer */
     private $handlerInvoked = 0;
 
-    /**
-     * @var int
-     */
+    /** @var integer */
     protected $clientsLimit = 5;
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testMulticallWithError(ClientInterface $client)
     {
         $this->expected = $expected = array(
@@ -74,9 +64,7 @@ class MulticallTest extends AbstractCombinatoricsClientTest
         $this->assertSame($expected, $result);
     }
 
-    /**
-     * @dataProvider getClients
-     */
+    /** @dataProvider getClients */
     public function testSimpleMulticall(ClientInterface $client)
     {
         $this->expected = $expected = array(
