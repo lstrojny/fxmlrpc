@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         convertErrorsToExceptions="true"
-         convertWarningsToExceptions="true"
-         convertNoticesToExceptions="true"
-         mapTestClassNameToCoveredClassName="true"
-         bootstrap="vendor/autoload.php"
-         verbose="false"
-         colors="true"
-         strict="true">
-
+<phpunit backupGlobals="false" mapTestClassNameToCoveredClassName="true" bootstrap="vendor/autoload.php" strict="true" colors="true">
     <testsuites>
-        <testsuite name="FXMLRPC">
-            <directory>./tests</directory>
+        <testsuite name="fXmlRpc Test Suite">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/</directory>
+        </whitelist>
+    </filter>
     <php>
         <ini name="error_reporting" value="-1"/>
         <ini name="date.timezone" value="Europe/Berlin"/>
