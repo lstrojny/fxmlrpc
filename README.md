@@ -5,7 +5,7 @@
 
  - A convenient, object oriented API (similar to the XML/RPC client in Zend Framework)
  - Very fast serializing and parsing of the XML payloads involved
- - Stick to the HTTP client you already use: Buzz, ZF1/ZF2 HTTP client, Guzzle, PECL HTTP
+ - Stick to the HTTP client you already use provided by [Ivory Http Adapter](https://github.com/egeloen/ivory-http-adapter)
  - Licensed under the terms of the liberal MIT license
  - Supports modern standards: easy installation via composer, fully PSR-0, PSR-1 and PSR-2 compatible
  - Relentlessly unit- and integration tested
@@ -13,6 +13,7 @@
 
 ## Latest improvements
 
+ - `[BC]` Replaces built-in transports with [Ivory Http Adapter](https://github.com/egeloen/ivory-http-adapter)
  - `[BUG]` Fix serialization issue with XmlWriterSerializer (see #19 for details)
  - `[FEATURE]` New bridge for [artax](https://github.com/amphp/artax) (with contributions by [Markus Staab](https://github.com/staabm))
  - `[FEATURE]` New bridge for Guzzle 4 (contribution by [Robin van der Vleuten](https://github.com/RobinvdVleuten))
