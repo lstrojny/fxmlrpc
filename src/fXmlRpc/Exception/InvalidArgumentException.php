@@ -25,7 +25,7 @@ namespace fXmlRpc\Exception;
 
 use InvalidArgumentException as BaseInvalidArgumentException;
 
-class InvalidArgumentException extends BaseInvalidArgumentException implements ExceptionInterface
+final class InvalidArgumentException extends BaseInvalidArgumentException implements ExceptionInterface
 {
     public static function expectedParameter($position, $expected, $actualValue)
     {

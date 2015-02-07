@@ -26,7 +26,7 @@ namespace fXmlRpc\Timing;
 use fXmlRpc\ClientInterface;
 use fXmlRpc\AbstractDecorator;
 
-class TimingDecorator extends AbstractDecorator
+final class TimingDecorator extends AbstractDecorator
 {
     /**
      * @var TimerInterface

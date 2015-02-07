@@ -21,37 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Timing;
+namespace fXmlRpc\Exception;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
-
-final class Psr3TimerBridge extends AbstractTimerBridge
+final class ParserException extends RuntimeException
 {
-    /**
-     * Create new bridge or a PSR-3 compatible logger
-     *
-     * Allows passing custom log level and message template (with sprintf() control characters) for log message
-     * customization
-     *
-     * @param LoggerInterface $logger
-     * @param integer         $level
-     * @param string          $messageTemplate
-     */
-    public function __construct(LoggerInterface $logger, $level = null, $messageTemplate = null)
+    public static function unexpectedTag($tagName, $elements, array $definedVariables, $depth, $xml)
     {
-        $this->logger = $logger;
-        $this->setLevel($level, LogLevel::DEBUG);
-        $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
-    }
+        $expectedElements = [];
+        foreach ($definedVariables as $variableName => $variable) {
+            if (substr($variableName, 0, 4) !== 'flag') {
+                continue;
+            }
 
-    /** {@inheritdoc} */
-    public function recordTiming($callTime, $method, array $arguments)
-    {
-        $this->logger->log(
-            $this->getLevel($callTime),
-            sprintf($this->messageTemplate, $callTime),
-            ['xmlrpcMethod' => $method, 'xmlrpcArguments' => $arguments]
+            if (($elements & $variable) === $variable) {
+                $expectedElements[] = substr($variableName, 4);
+            }
+        }
+
+        return new static(
+            sprintf(
+                'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
+                implode('", "', $expectedElements),
+                $tagName,
+                $depth,
+                $xml
+            )
         );
     }
 }

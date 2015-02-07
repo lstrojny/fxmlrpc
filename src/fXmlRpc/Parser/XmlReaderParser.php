@@ -23,15 +23,15 @@
  */
 namespace fXmlRpc\Parser;
 
+use fXmlRpc\Exception\ParserException;
 use fXmlRpc\Value\Base64;
 use XMLReader;
 use fXmlRpc\Exception\MissingExtensionException;
-use fXmlRpc\Exception\RuntimeException;
 use DateTime;
 use DateTimeZone;
 use DOMDocument;
 
-class XmlReaderParser implements ParserInterface
+final class XmlReaderParser implements ParserInterface
 {
     public function __construct()
     {
@@ -105,7 +105,7 @@ class XmlReaderParser implements ParserInterface
             if ($nextExpectedElements !== null &&
                 ($flag = isset(${'flag' . $tagName}) ? ${'flag' . $tagName} : -1) &&
                 ($nextExpectedElements & $flag) !== $flag) {
-                throw RuntimeException::unexpectedTag(
+                throw ParserException::unexpectedTag(
                     $tagName,
                     $nextExpectedElements,
                     get_defined_vars(),

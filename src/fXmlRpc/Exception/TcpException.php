@@ -25,7 +25,7 @@ namespace fXmlRpc\Exception;
 
 use Exception;
 
-class TcpException extends TransportException
+final class TcpException extends TransportException
 {
     public static function transportError($error)
     {

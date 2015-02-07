@@ -23,7 +23,7 @@
  */
 namespace fXmlRpc\Exception;
 
-class SerializationException extends InvalidArgumentException
+final class SerializationException extends RuntimeException
 {
     public static function invalidType($value)
     {

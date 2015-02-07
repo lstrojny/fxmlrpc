@@ -31,7 +31,7 @@ use fXmlRpc\ExtensionSupportInterface;
 use fXmlRpc\Exception\SerializationException;
 use fXmlRpc\Exception\MissingExtensionException;
 
-class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterface
+final class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterface
 {
     /** @var XMLWriter */
     private $writer;

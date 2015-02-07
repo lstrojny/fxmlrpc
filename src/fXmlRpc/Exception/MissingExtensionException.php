@@ -23,7 +23,7 @@
  */
 namespace fXmlRpc\Exception;
 
-class MissingExtensionException extends RuntimeException
+final class MissingExtensionException extends RuntimeException
 {
     public static function extensionMissing($extension)
     {

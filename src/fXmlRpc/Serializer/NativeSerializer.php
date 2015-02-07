@@ -28,7 +28,7 @@ use fXmlRpc\Value\Base64Interface;
 use fXmlRpc\Exception\SerializationException;
 use fXmlRpc\Exception\MissingExtensionException;
 
-class NativeSerializer implements SerializerInterface
+final class NativeSerializer implements SerializerInterface
 {
     public function __construct()
     {

@@ -25,7 +25,7 @@ namespace fXmlRpc\Timing;
 
 use Monolog\Logger;
 
-class MonologTimerBridge extends AbstractTimerBridge
+final class MonologTimerBridge extends AbstractTimerBridge
 {
     /**
      * Create new monolog bridge

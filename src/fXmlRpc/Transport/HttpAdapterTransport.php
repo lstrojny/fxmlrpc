@@ -28,7 +28,7 @@ use fXmlRpc\Exception\TcpException;
 use Ivory\HttpAdapter\HttpAdapterException;
 use Ivory\HttpAdapter\HttpAdapterInterface;
 
-class HttpAdapterTransport implements TransportInterface
+final class HttpAdapterTransport implements TransportInterface
 {
     /** @var HttpAdapterInterface */
     private $httpAdapter;

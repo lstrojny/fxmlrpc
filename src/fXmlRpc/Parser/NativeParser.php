@@ -29,7 +29,7 @@ use DateTimeZone;
 use fXmlRpc\Exception\MissingExtensionException;
 use fXmlRpc\Value\Base64;
 
-class NativeParser implements ParserInterface
+final class NativeParser implements ParserInterface
 {
     public function __construct()
     {

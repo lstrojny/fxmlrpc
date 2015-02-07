@@ -26,7 +26,7 @@ namespace fXmlRpc\Timing;
 
 use Zend_Log as Log;
 
-class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
+final class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
 {
     /**
      * Create new Zend_Log bridge
