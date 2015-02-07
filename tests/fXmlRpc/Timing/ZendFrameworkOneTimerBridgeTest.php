@@ -75,7 +75,7 @@ class ZendFrameworkOneTimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new ZendFrameworkOneTimerBridge($this->log, array(1 => Zend_Log::DEBUG, 2 => Zend_Log::WARN, 3.5 => Zend_Log::ALERT));
+        $bridge = new ZendFrameworkOneTimerBridge($this->log, array(1 => Zend_Log::DEBUG, 2 => Zend_Log::WARN, '3.5' => Zend_Log::ALERT));
         $this->log
             ->expects($this->at(0))
             ->method('log')

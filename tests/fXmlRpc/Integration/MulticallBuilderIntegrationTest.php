@@ -21,8 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-namespace fXmlPRC\Integration;
+namespace fXmlRpc\Integration;
 
 use fXmlRpc\ClientInterface;
 
@@ -31,7 +30,7 @@ use fXmlRpc\ClientInterface;
  * @group integration
  * @group external
  */
-class MulticallBuilderIntegrationTest extends AbstractCombinatoricsClientTest
+class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractClientBasedIntegrationTest
 {
     /** @var string */
     protected static $endpoint = 'http://betty.userland.com/RPC2';

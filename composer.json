@@ -31,5 +31,8 @@
     },
     "autoload": {
         "psr-0": {"fXmlRpc": "src/"}
+    },
+    "autoload-dev": {
+        "psr-0": {"fXmlRpc": "tests/"}
     }
 }

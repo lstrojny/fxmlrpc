@@ -21,23 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-namespace fXmlPRC\Integration;
+namespace fXmlRpc\Integration;
 
 /**
  * @large
  * @group integration
  * @group python
  */
-class PythonIntegrationTest extends AbstractIntegrationTest
+class PythonIntegrationTestCall extends AbstractCallClientIntegrationTest
 {
     protected static $endpoint = 'http://127.0.0.1:28000';
 
     protected static $errorEndpoint = 'http://127.0.0.1:28001';
 
     protected static $command = 'exec python server.py';
-
-    protected static $restartServerInterval = 500;
 
     protected $disabledExtensions = array('php_curl');
 }

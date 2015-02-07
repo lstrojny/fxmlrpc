@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-namespace fXmlPRC\Integration;
+namespace fXmlRpc\Integration;
 
 use fXmlRpc;
 
-abstract class AbstractCombinatoricsClientTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractClientBasedIntegrationTest extends \PHPUnit_Framework_TestCase
 {
     protected $disabledExtensions = array();
 

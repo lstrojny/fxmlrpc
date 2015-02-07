@@ -75,7 +75,7 @@ class ZendFrameworkTwoTimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new ZendFrameworkTwoTimerBridge($this->log, array(1 => 'debug', 2 => 'warn', 3.5 => 'alert'));
+        $bridge = new ZendFrameworkTwoTimerBridge($this->log, array(1 => 'debug', 2 => 'warn', '3.5' => 'alert'));
         $this->log
             ->expects($this->at(0))
             ->method('debug')

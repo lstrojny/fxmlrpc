@@ -21,25 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+namespace fXmlRpc\Integration;
 
-namespace fXmlPRC\Integration;
 use fXmlRpc\Client;
-use fXmlRpc\ClientInterface;
 
 /**
  * @large
  * @group integration
  * @group node
  */
-class NodeIntegrationTest extends AbstractIntegrationTest
+class NodeIntegrationTestCall extends AbstractCallClientIntegrationTest
 {
     protected static $endpoint = 'http://127.0.0.1:9090/';
 
     protected static $errorEndpoint = 'http://127.0.0.1:9091/';
 
     protected static $command = 'exec node server.js';
-
-    protected static $restartServerInterval = 200;
 
     /** @dataProvider getClientsOnly */
     public function testServerNotReachableViaTcpIp(Client $client)

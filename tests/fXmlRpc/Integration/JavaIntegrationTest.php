@@ -21,23 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-namespace fXmlPRC\Integration;
+namespace fXmlRpc\Integration;
 
 /**
  * @large
  * @group integration
  * @group java
  */
-class JavaIntegrationTest extends AbstractIntegrationTest
+class JavaIntegrationTestCall extends AbstractCallClientIntegrationTest
 {
     protected static $endpoint = 'http://127.0.0.1:28080';
 
     protected static $errorEndpoint = 'http://127.0.0.1:28081/';
 
     protected static $command = 'exec java -jar server.jar 28080 28081';
-
-    protected static $restartServerInterval = 100;
 
     protected $disabledExtensions = array('nil', 'php_curl', 'xmlrpc_header');
 }

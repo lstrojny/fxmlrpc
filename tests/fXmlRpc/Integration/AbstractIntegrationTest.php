@@ -22,15 +22,13 @@
  * SOFTWARE.
  */
 
-namespace fXmlPRC\Integration;
+namespace fXmlRpc\Integration;
 
 use fXmlRpc;
-use fXmlRpc\Client;
-use fXmlRpc\ClientInterface;
 use hmmmath\Fibonacci\FibonacciFactory;
 use Symfony\Component\Process\Process;
 
-abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
+abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTest
 {
     /** @var string */
     protected static $command;
@@ -38,15 +36,13 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
     /** @var Process */
     protected static $server;
 
-    protected static $restartServerInterval = 0;
-
     protected static $errorEndpoint;
 
     private static $runCount = 0;
 
     protected static function startServer()
     {
-        self::$server = new Process(static::$command, __DIR__ . '/Fixtures');
+        self::$server = new Process(static::$command . '&>/dev/null', __DIR__ . '/Fixtures');
         self::$server->start();
         static::pollWait();
     }
@@ -87,11 +83,7 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
 
     public function setUp()
     {
-        if (static::$restartServerInterval === 0) {
-            return;
-        }
-
-        if (++self::$runCount !== static::$restartServerInterval) {
+        if (++self::$runCount !== 200) {
             return;
         }
 
@@ -100,126 +92,130 @@ abstract class AbstractIntegrationTest extends AbstractCombinatoricsClientTest
         static::startServer();
     }
 
-    /** @dataProvider getClients */
-    public function testNil(ClientInterface $client)
-    {
-        $result = null;
-        $this->assertSame($result, $client->call('system.echoNull', array($result)));
-    }
+    protected $disabledExtensions = array();
 
-    /** @dataProvider getClients */
-    public function testArray(ClientInterface $client)
-    {
-        $result = range(0, 10);
-        $this->assertSame($result, $client->call('system.echo', array($result)));
-    }
+    private $pos = 0;
 
-    /** @dataProvider getClients */
-    public function testStruct(ClientInterface $client)
-    {
-        $result = array('FOO' => 'BAR', 'BAZ' => 'BLA');
-        $this->assertEquals($result, $client->call('system.echo', array($result)));
-    }
+    private $dependencyGraph = array();
 
-    /** @dataProvider getClients */
-    public function testString(ClientInterface $client)
-    {
-        $result = 'HELLO WORLD <> & ÜÖÄ';
-        $this->assertSame($result, $client->call('system.echo', array($result)));
-    }
+    protected static $endpoint;
 
-    /** @dataProvider getClients */
-    public function testBase64(ClientInterface $client)
+    public function getClients()
     {
-        $expected = fXmlRpc\Value\Base64::serialize('HELLO WORLD');
-        $result = $client->call('system.echo', array($expected));
-        $this->assertSame($expected->getEncoded(), $result->getEncoded());
-        $this->assertSame($expected->getDecoded(), $result->getDecoded());
-    }
-
-    /** @dataProvider getClients */
-    public function testInteger(ClientInterface $client)
-    {
-        $result = 100;
-        $this->assertSame($result, $client->call('system.echo', array($result)));
-    }
-
-    /** @dataProvider getClients */
-    public function testNegativeInteger(ClientInterface $client)
-    {
-        $result = -100;
-        $this->assertSame($result, $client->call('system.echo', array($result)));
-    }
-
-    /** @dataProvider getClients */
-    public function testFloat(ClientInterface $client)
-    {
-        $result = 100.12;
-        $this->assertSame($result, $client->call('system.echo', array($result)));
-    }
-
-    /** @dataProvider getClients */
-    public function testNegativeFloat(ClientInterface $client)
-    {
-        $result = -100.12;
-        $this->assertSame($result, $client->call('system.echo', array($result)));
-    }
-
-    /** @dataProvider getClients */
-    public function testDate(ClientInterface $client)
-    {
-        $result = new \DateTime('2011-01-12 23:12:10', new \DateTimeZone('UTC'));
-        $this->assertEquals($result, $client->call('system.echo', array($result)));
-    }
-
-    /** @dataProvider getClients */
-    public function testComplexStruct(ClientInterface $client)
-    {
-        $result = array(
-            'el1' => array('one', 'two', 'three'),
-            'el2' => array('first' => 'one', 'second' => 'two', 'third' => 'three'),
-            'el3' => range(1, 100),
-            'el4' => array(
-                new \DateTime('2011-02-03 20:11:15', new \DateTimeZone('UTC')),
-                new \DateTime('2011-02-03 20:11:15', new \DateTimeZone('UTC')),
+        $clients = [];
+        $this->generateAllPossibleCombinations(
+            array(
+                $this->getTransport(),
+                $this->getParsers(),
+                $this->getSerializers(),
+                $this->getTimerBridges(),
             ),
-            'el5' => 'str',
-            'el6' => 1234,
-            'el7' => -1234,
-            'el8' => 1234.12434,
-            'el9' => -1234.3245023,
+            $clients
         );
-        $this->assertEquals($result, $client->call('system.echo', array($result)));
+
+        return $clients;
     }
 
-    /** @dataProvider getClients */
-    public function testFault(ClientInterface $client)
+    public function getClientsOnly()
     {
-        try {
-            $client->call('system.fault');
-            $this->fail('Expected exception');
-        } catch (fXmlRpc\Exception\ResponseException $e) {
-            $this->assertContains('ERROR', $e->getMessage());
-            $this->assertContains('ERROR', $e->getFaultString());
-            $this->assertSame(0, $e->getCode());
-            $this->assertSame(123, $e->getFaultCode());
-        }
+        $clients = [];
+        $this->generateAllPossibleCombinations(
+            array(
+                $this->getTransport(),
+                $this->getParsers(),
+                $this->getSerializers(),
+            ),
+            $clients
+        );
+
+        return $clients;
     }
 
-    /** @dataProvider getClientsOnly */
-    public function testServerReturnsInvalidResult(Client $client)
+    private function getParsers()
     {
-        $client->setUri(static::$errorEndpoint);
+        $parser = array();
 
-        try {
-            $client->call('system.failure');
-            $this->fail('Exception expected');
-        } catch (\fXmlRpc\Exception\HttpException $e) {
-            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
-            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
-            $this->assertInstanceOf('RuntimeException', $e);
-            $this->assertStringStartsWith('An HTTP error occurred', $e->getMessage());
-            $this->assertSame(500, $e->getCode());
+        if (extension_loaded('xmlrpc')) {
+            $parser[] = new fXmlRpc\Parser\NativeParser();
         }
+
+        $parser[] = new fXmlRpc\Parser\XmlReaderParser();
+
+        return $parser;
+    }
+
+    private function getSerializers()
+    {
+        $serializer = array();
+
+        if (extension_loaded('xmlrpc')) {
+            $serializer[] = new fXmlRpc\Serializer\NativeSerializer();
+        }
+
+
+        if ($this->extensionEnabled('nil')) {
+            $xmlWriterSerializer = new fXmlRpc\Serializer\XmlWriterSerializer();
+            $xmlWriterSerializer->enableExtension('nil');
+            $serializer[] = $xmlWriterSerializer;
+        }
+
+        $xmlWriterNilExtensionDisabled = new fXmlRpc\Serializer\XmlWriterSerializer();
+        $xmlWriterNilExtensionDisabled->disableExtension('nil');
+        $serializer[] = $xmlWriterNilExtensionDisabled;
+
+        return $serializer;
+    }
+
+    private function getTransport()
+    {
+        return [new \fXmlRpc\Transport\HttpAdapterTransport(\Ivory\HttpAdapter\HttpAdapterFactory::guess())];
+    }
+
+    private function getTimerBridges()
+    {
+        $zendFrameworkOneLogger = new \Zend_Log(new \Zend_Log_Writer_Null());
+
+        $zendFrameworkTwoLogger = new \Zend\Log\Logger();
+        $zendFrameworkTwoLogger->addWriter(new \Zend\Log\Writer\Null());
+
+        $monolog = new \Monolog\Logger('test');
+        $monolog->pushHandler(new \Monolog\Handler\NullHandler());
+
+        return array(
+            new \fXmlRpc\Timing\ZendFrameworkOneTimerBridge($zendFrameworkOneLogger),
+            new \fXmlRpc\Timing\ZendFrameworkTwoTimerBridge($zendFrameworkTwoLogger),
+            new \fXmlRpc\Timing\MonologTimerBridge($monolog),
+            null
+        );
+    }
+
+    private function generateAllPossibleCombinations(array $combinations, array &$clients)
+    {
+        if ($combinations) {
+            for ($i = 0; $i < count($combinations[0]); ++$i) {
+                $temp = $combinations;
+                $this->dependencyGraph[$this->pos] = $combinations[0][$i];
+                array_shift($temp);
+                $this->pos++;
+                $this->generateAllPossibleCombinations($temp, $clients);
+            }
+        } else {
+            $client = new fXmlRpc\Client(
+                static::$endpoint,
+                $this->dependencyGraph[0],
+                $this->dependencyGraph[1],
+                $this->dependencyGraph[2]
+            );
+            if (isset($this->dependencyGraph[3])) {
+                $client = new \fXmlRpc\Timing\TimingDecorator($client, $this->dependencyGraph[3]);
+            }
+            $clients[] = array($client, $this->dependencyGraph[0], $this->dependencyGraph[1], $this->dependencyGraph[2]);
+        }
+        $this->pos--;
+    }
+
+    protected function extensionEnabled($extension)
+    {
+        return !in_array($extension, $this->disabledExtensions, true);
     }
 }

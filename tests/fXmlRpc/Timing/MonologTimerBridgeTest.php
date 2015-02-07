@@ -87,7 +87,7 @@ class MonologTimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new MonologTimerBridge($this->monolog, array(1 => Logger::DEBUG, 2 => Logger::WARNING, 3.5 => Logger::ALERT));
+        $bridge = new MonologTimerBridge($this->monolog, array(1 => Logger::DEBUG, 2 => Logger::WARNING, '3.5' => Logger::ALERT));
         $this->monolog
             ->expects($this->at(0))
             ->method('addRecord')

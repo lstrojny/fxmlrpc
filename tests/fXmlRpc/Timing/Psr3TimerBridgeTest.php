@@ -85,7 +85,7 @@ class Psr3TimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new Psr3TimerBridge($this->logger, array(1 => LogLevel::DEBUG, 2 => LogLevel::WARNING, 3.5 => LogLevel::ALERT));
+        $bridge = new Psr3TimerBridge($this->logger, array(1 => LogLevel::DEBUG, 2 => LogLevel::WARNING, '3.5' => LogLevel::ALERT));
         $this->logger
             ->expects($this->at(0))
             ->method('log')
