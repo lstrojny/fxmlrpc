@@ -42,7 +42,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
 
     protected static function startServer()
     {
-        self::$server = new Process(static::$command . '&>/dev/null', __DIR__ . '/Fixtures');
+        self::$server = new Process(static::$command . ' &>/dev/null', __DIR__ . '/Fixtures');
         self::$server->start();
         static::pollWait();
     }
@@ -63,15 +63,12 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         foreach (FibonacciFactory::sequence(50000, 10000, 10) as $offset => $sleepTime) {
             usleep($sleepTime);
 
-            $socket = @fsockopen($parts['host'], $parts['port'], $errorNumber, $errorString, 0.5);
+            $socket = @fsockopen($parts['host'], $parts['port'], $errorNumber, $errorString, 1);
             if ($socket !== false) {
                 fclose($socket);
                 return;
             }
         }
-        static::stopServer();
-        static::startServer();
-        static::pollWait();
     }
 
     public static function tearDownAfterClass()
@@ -88,6 +85,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         self::$runCount = 0;
         static::stopServer();
         static::startServer();
+        static::pollWait();
     }
 
     protected $disabledExtensions = array();

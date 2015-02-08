@@ -47,6 +47,7 @@ class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractIntegratio
     /** @dataProvider getClients */
     public function testMulticallWithError(MulticallClientInterface $client)
     {
+        $this->handlerInvoked = 0;
         $this->expected = array(
             array(
                 'faultCode'   => 1,
@@ -66,6 +67,7 @@ class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractIntegratio
     /** @dataProvider getClients */
     public function testSimpleMulticall(MulticallClientInterface $client)
     {
+        $this->handlerInvoked = 0;
         $this->expected = array(
             array(0),
             array(1),
