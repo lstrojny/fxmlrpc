@@ -24,7 +24,7 @@
 namespace fXmlRpc\Transport;
 
 use fXmlRpc\Exception\HttpException;
-use fXmlRpc\Exception\TcpException;
+use fXmlRpc\Exception\TransportException;
 use Ivory\HttpAdapter\HttpAdapterException;
 use Ivory\HttpAdapter\HttpAdapterInterface;
 
@@ -44,7 +44,7 @@ final class HttpAdapterTransport implements TransportInterface
         try {
             $response = $this->httpAdapter->post($endpoint, ['Content-Type' => 'text/xml; charset=UTF-8'], $payload);
         } catch (HttpAdapterException $e) {
-            throw TcpException::transportError($e);
+            throw TransportException::transportError($e);
         }
 
         if ($response->getStatusCode() !== 200) {
