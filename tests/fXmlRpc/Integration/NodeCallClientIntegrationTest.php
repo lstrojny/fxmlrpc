@@ -30,7 +30,7 @@ use fXmlRpc\Client;
  * @group integration
  * @group node
  */
-class NodeIntegrationTestCall extends AbstractCallClientIntegrationTest
+class NodeCallClientIntegrationTest extends AbstractCallClientIntegrationTest
 {
     protected static $endpoint = 'http://127.0.0.1:9090/';
 

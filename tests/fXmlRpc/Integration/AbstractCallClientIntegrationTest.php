@@ -25,40 +25,40 @@ namespace fXmlRpc\Integration;
 
 use fXmlRpc;
 use fXmlRpc\Client;
-use fXmlRpc\ClientInterface;
+use fXmlRpc\CallClientInterface;
 
 abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
 {
     /** @dataProvider getClients */
-    public function testNil(ClientInterface $client)
+    public function testNil(CallClientInterface $client)
     {
         $result = null;
         $this->assertSame($result, $client->call('system.echoNull', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testArray(ClientInterface $client)
+    public function testArray(CallClientInterface $client)
     {
         $result = range(0, 10);
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testStruct(ClientInterface $client)
+    public function testStruct(CallClientInterface $client)
     {
         $result = array('FOO' => 'BAR', 'BAZ' => 'BLA');
         $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testString(ClientInterface $client)
+    public function testString(CallClientInterface $client)
     {
         $result = 'HELLO WORLD <> & ÜÖÄ';
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testBase64(ClientInterface $client)
+    public function testBase64(CallClientInterface $client)
     {
         $expected = fXmlRpc\Value\Base64::serialize('HELLO WORLD');
         $result = $client->call('system.echo', array($expected));
@@ -67,42 +67,42 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
     }
 
     /** @dataProvider getClients */
-    public function testInteger(ClientInterface $client)
+    public function testInteger(CallClientInterface $client)
     {
         $result = 100;
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testNegativeInteger(ClientInterface $client)
+    public function testNegativeInteger(CallClientInterface $client)
     {
         $result = -100;
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testFloat(ClientInterface $client)
+    public function testFloat(CallClientInterface $client)
     {
         $result = 100.12;
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testNegativeFloat(ClientInterface $client)
+    public function testNegativeFloat(CallClientInterface $client)
     {
         $result = -100.12;
         $this->assertSame($result, $client->call('system.echo', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testDate(ClientInterface $client)
+    public function testDate(CallClientInterface $client)
     {
         $result = new \DateTime('2011-01-12 23:12:10', new \DateTimeZone('UTC'));
         $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
 
     /** @dataProvider getClients */
-    public function testComplexStruct(ClientInterface $client)
+    public function testComplexStruct(CallClientInterface $client)
     {
         $result = array(
             'el1' => array('one', 'two', 'three'),
@@ -122,7 +122,7 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
     }
 
     /** @dataProvider getClients */
-    public function testFault(ClientInterface $client)
+    public function testFault(CallClientInterface $client)
     {
         try {
             $client->call('system.fault');

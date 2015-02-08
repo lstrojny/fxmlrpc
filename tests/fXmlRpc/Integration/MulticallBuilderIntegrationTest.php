@@ -23,7 +23,7 @@
  */
 namespace fXmlRpc\Integration;
 
-use fXmlRpc\ClientInterface;
+use fXmlRpc\MulticallClientInterface;
 
 /**
  * @large
@@ -45,7 +45,7 @@ class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractIntegratio
     private $handlerInvoked = 0;
 
     /** @dataProvider getClients */
-    public function testMulticallWithError(ClientInterface $client)
+    public function testMulticallWithError(MulticallClientInterface $client)
     {
         $this->expected = array(
             array(
@@ -64,7 +64,7 @@ class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractIntegratio
     }
 
     /** @dataProvider getClients */
-    public function testSimpleMulticall(ClientInterface $client)
+    public function testSimpleMulticall(MulticallClientInterface $client)
     {
         $this->expected = array(
             array(0),

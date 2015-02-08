@@ -28,7 +28,7 @@ namespace fXmlRpc\Integration;
  * @group integration
  * @group java
  */
-class JavaIntegrationTestCall extends AbstractCallClientIntegrationTest
+class JavaCallClientIntegrationTest extends AbstractCallClientIntegrationTest
 {
     protected static $endpoint = 'http://127.0.0.1:28080';
 

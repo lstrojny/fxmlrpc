@@ -28,7 +28,7 @@ namespace fXmlRpc\Integration;
  * @group integration
  * @group python
  */
-class PythonIntegrationTestCall extends AbstractCallClientIntegrationTest
+class PythonCallClientIntegrationTest extends AbstractCallClientIntegrationTest
 {
     protected static $endpoint = 'http://127.0.0.1:28000';
 
