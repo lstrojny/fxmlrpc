@@ -69,9 +69,10 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
                 break;
             }
 
-            if ($offset > 5) {
+            if ($offset > 3) {
+                static::stopServer();
                 static::startServer();
-                break;
+                static::pollWait();
             }
         }
     }
