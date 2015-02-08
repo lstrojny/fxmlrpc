@@ -54,4 +54,21 @@ class NodeCallClientIntegrationTest extends AbstractCallClientIntegrationTest
             $this->assertSame(0, $e->getCode());
         }
     }
+
+    /** @dataProvider getClientsOnly */
+    public function testServerReturnsInvalidResult(Client $client)
+    {
+        $client->setUri(static::$errorEndpoint);
+
+        try {
+            $client->call('system.failure');
+            $this->fail('Exception expected');
+        } catch (\fXmlRpc\Exception\HttpException $e) {
+            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
+            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
+            $this->assertInstanceOf('RuntimeException', $e);
+            $this->assertStringStartsWith('An HTTP error occurred', $e->getMessage());
+            $this->assertSame(500, $e->getCode());
+        }
+    }
 }
