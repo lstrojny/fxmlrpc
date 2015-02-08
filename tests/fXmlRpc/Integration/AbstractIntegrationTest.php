@@ -60,21 +60,18 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
     private static function pollWait()
     {
         $parts = parse_url(static::$endpoint);
-        foreach (FibonacciFactory::sequence(50000, 10000) as $offset => $sleepTime) {
+        foreach (FibonacciFactory::sequence(50000, 10000, 10) as $offset => $sleepTime) {
             usleep($sleepTime);
 
             $socket = @fsockopen($parts['host'], $parts['port'], $errorNumber, $errorString, 0.5);
             if ($socket !== false) {
                 fclose($socket);
-                break;
-            }
-
-            if ($offset > 3) {
-                static::stopServer();
-                static::startServer();
-                static::pollWait();
+                return;
             }
         }
+        static::stopServer();
+        static::startServer();
+        static::pollWait();
     }
 
     public static function tearDownAfterClass()
