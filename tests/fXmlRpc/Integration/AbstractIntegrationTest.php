@@ -83,7 +83,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
 
     public function setUp()
     {
-        if (++self::$runCount !== 200) {
+        if (++self::$runCount !== 100) {
             return;
         }
 
