@@ -46,11 +46,11 @@ class NodeCallClientIntegrationTest extends AbstractCallClientIntegrationTest
         try {
             $client->call('system.failure');
             $this->fail('Exception expected');
-        } catch (\fXmlRpc\Exception\TcpException $e) {
+        } catch (\fXmlRpc\Exception\TransportException $e) {
             $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
             $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
             $this->assertInstanceOf('RuntimeException', $e);
-            $this->assertStringStartsWith('A transport error occurred', $e->getMessage());
+            $this->assertStringStartsWith('Transport error occurred:', $e->getMessage());
             $this->assertSame(0, $e->getCode());
         }
     }

@@ -37,6 +37,8 @@ class PythonCallClientIntegrationTest extends AbstractCallClientIntegrationTest
 
     protected static $command = 'exec python server.py';
 
+    protected static $restartThreshold = 0;
+
     protected $disabledExtensions = array('php_curl');
 
     /** @dataProvider getClientsOnly */

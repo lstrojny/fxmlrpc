@@ -36,7 +36,11 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
     /** @var Process */
     protected static $server;
 
+    /** @var string */
     protected static $errorEndpoint;
+
+    /** @var integer */
+    protected static $restartThreshold = 100;
 
     private static $runCount = 0;
 
@@ -78,7 +82,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
 
     public function setUp()
     {
-        if (++self::$runCount !== 100) {
+        if (static::$restartThreshold > 0 && ++self::$runCount !== static::$restartThreshold) {
             return;
         }
 

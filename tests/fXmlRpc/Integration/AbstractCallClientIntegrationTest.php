@@ -143,7 +143,7 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
             $client->call('system.failure');
             $this->fail('Exception expected');
         } catch (\fXmlRpc\Exception\HttpException $e) {
-            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
+            $this->assertInstanceOf('fXmlRpc\Exception\AbstractTransportException', $e);
             $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
             $this->assertInstanceOf('RuntimeException', $e);
             $this->assertStringStartsWith('An HTTP error occurred', $e->getMessage());

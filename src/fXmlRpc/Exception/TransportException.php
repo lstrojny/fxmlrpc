@@ -23,6 +23,15 @@
  */
 namespace fXmlRpc\Exception;
 
-abstract class TransportException extends RuntimeException
+use Exception;
+
+final class TransportException extends RuntimeException
 {
+    public static function transportError($error)
+    {
+        $message = $error instanceof Exception ? $error->getMessage() : $error;
+        $previous = $error instanceof Exception ? $error : null;
+
+        return new static('Transport error occurred: ' . $message, null, $previous);
+    }
 }
