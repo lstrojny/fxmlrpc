@@ -10,45 +10,47 @@ import sys
 class Server(SimpleXMLRPCServer):
     def __init__(self, *args, **kargs):
         class RequestHandler(SimpleXMLRPCRequestHandler):
-                def _dispatch(self, method, params):
-                    """
-                    Overridden to pass request handler to the handling function so that the function can play around
-                    with HTTP headers and stuff
-                    """
+            def _dispatch(self, method, params):
+                """
+                Overridden to pass request handler to the handling function so that the function can play around
+                with HTTP headers and stuff
+                """
+                if method == 'system.header':
                     params = (self, ) + params
-                    func = None
-                    try:
-                        func = self.server.funcs[method]
-                    except KeyError:
-                        if self.server.instance is not None:
-                            if hasattr(self.server.instance, '_dispatch'):
-                                return self.server.instance._dispatch(method, params)
-                            else:
-                                try:
-                                    func = _resolve_dotted_attribute(self.server.instance, method)
-                                except AttributeError:
-                                    pass
+                func = None
+                try:
+                    func = self.server.funcs[method]
+                except KeyError:
+                    if self.server.instance is not None:
+                        if hasattr(self.server.instance, '_dispatch'):
+                            return self.server.instance._dispatch(method, params)
+                        else:
+                            try:
+                                func = _resolve_dotted_attribute(self.server.instance, method)
+                            except AttributeError:
+                                pass
 
-                    if func is not None:
-                        return apply(func, params)
-                    else:
-                        raise Exception('method "%s" is not supported' % method)
+                if func is not None:
+                    return apply(func, params)
+                else:
+                    raise Exception('method "%s" is not supported' % method)
 
         SimpleXMLRPCServer.__init__(self, requestHandler=RequestHandler, *args, **kargs)
 
 server = Server(("", 28000), allow_none = True)
 server.register_introspection_functions()
+server.register_multicall_functions()
 
-def echo(handler, v):
+def echo(v):
     return v
 
-def echoNull(handler, v):
+def echoNull(v):
     return None
 
 def echoHeader(handler, header):
     return handler.headers.get(header, None)
 
-def fault(handler):
+def fault():
     raise Fault(123, "ERROR")
 
 server.register_function(echo, 'system.echo')
