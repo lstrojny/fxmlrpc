@@ -34,5 +34,8 @@
     },
     "autoload-dev": {
         "psr-0": {"fXmlRpc": "tests/"}
+    },
+    "extra": {
+        "branch-alias": {"dev-develop": "1.0-dev"}
     }
 }
