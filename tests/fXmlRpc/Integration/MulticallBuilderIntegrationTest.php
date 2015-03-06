@@ -32,6 +32,8 @@ use fXmlRpc\MulticallClientInterface;
  */
 class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractIntegrationTest
 {
+    protected static $enabled = false;
+
     protected static $endpoint = 'http://127.0.0.1:28000';
 
     protected static $errorEndpoint = 'http://127.0.0.1:28001';
@@ -43,6 +45,11 @@ class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractIntegratio
 
     /** @var integer */
     private $handlerInvoked = 0;
+
+    public function setUp()
+    {
+        $this->markTestSkipped('Multicall integration tests need to be ported to node.js');
+    }
 
     /** @dataProvider getClients */
     public function testMulticallWithError(MulticallClientInterface $client)

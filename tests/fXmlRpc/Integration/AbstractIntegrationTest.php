@@ -30,6 +30,9 @@ use Symfony\Component\Process\Process;
 
 abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTest
 {
+    /** @var boolean */
+    protected static $enabled = true;
+
     /** @var string */
     protected static $command;
 
@@ -46,6 +49,9 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
 
     protected static function startServer()
     {
+        if (!static::$enabled) {
+            return;
+        }
         self::$server = new Process(static::$command . ' &>/dev/null', __DIR__ . '/Fixtures');
         self::$server->start();
         static::pollWait();
@@ -53,6 +59,9 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
 
     protected static function stopServer()
     {
+        if (!static::$enabled) {
+            return;
+        }
         self::$server->stop();
     }
 
