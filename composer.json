@@ -29,10 +29,10 @@
         "monolog/monolog": "To integrate monolog as logger"
     },
     "autoload": {
-        "psr-0": {"fXmlRpc": "src/"}
+        "psr-4": {"fXmlRpc\\": "src/fXmlRpc"}
     },
     "autoload-dev": {
-        "psr-0": {"fXmlRpc": "tests/"}
+        "psr-4": {"fXmlRpc\\": "tests/fXmlRpc"}
     },
     "extra": {
         "branch-alias": {"dev-develop": "1.0-dev"}
