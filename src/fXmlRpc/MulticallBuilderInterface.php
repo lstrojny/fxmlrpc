@@ -21,23 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+namespace fXmlRpc;
 
-namespace fXmlPRC\Integration;
+use fXmlRpc\Exception\InvalidArgumentException;
 
-/**
- * @large
- * @group integration
- * @group python
- */
-class PythonIntegrationTest extends AbstractIntegrationTest
+interface MulticallBuilderInterface
 {
-    protected static $endpoint = 'http://127.0.0.1:28000';
+    /**
+     * Register a success handler applicable to all multicall responses
+     *
+     * @param callable $handler
+     * @throws InvalidArgumentException
+     * @return MulticallBuilderInterface
+     */
+    public function onSuccess(callable $handler);
 
-    protected static $errorEndpoint = 'http://127.0.0.1:28001';
+    /**
+     * Register a error handler applicable to all multicall responses
+     *
+     * @param callable $handler
+     * @throws InvalidArgumentException
+     * @return MulticallBuilderInterface
+     */
+    public function onError(callable $handler);
 
-    protected static $command = 'exec python server.py';
+    /**
+     * Add a call to the end of the multicall stack
+     *
+     * @param string $methodName
+     * @param array $params
+     * @param callable $onSuccess
+     * @param callable $onError
+     * @return MulticallBuilderInterface
+     */
+    public function addCall($methodName, array $params = [], callable $onSuccess = null, callable $onError = null);
 
-    protected static $restartServerInterval = 500;
-
-    protected $disabledExtensions = array('php_curl');
+    /**
+     * Send the multicall request to the server
+     *
+     * @return array
+     */
+    public function execute();
 }

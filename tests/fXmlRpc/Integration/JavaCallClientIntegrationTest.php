@@ -21,17 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Exception;
+namespace fXmlRpc\Integration;
 
-use Exception;
-
-class TcpException extends TransportException
+/**
+ * @large
+ * @group integration
+ * @group java
+ */
+class JavaCallClientIntegrationTest extends AbstractCallClientIntegrationTest
 {
-    public static function transportError($error)
-    {
-        $message = $error instanceof Exception ? $error->getMessage() : $error;
-        $previous = $error instanceof Exception ? $error : null;
+    protected static $endpoint = 'http://127.0.0.1:28080';
 
-        return new static('A transport error occurred: ' . $message, null, $previous);
-    }
+    protected static $errorEndpoint = 'http://127.0.0.1:28081/';
+
+    protected static $command = 'exec java -jar server.jar 28080 28081';
+
+    protected $disabledExtensions = array('nil', 'php_curl', 'xmlrpc_header');
 }

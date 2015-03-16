@@ -24,20 +24,18 @@
 
 namespace fXmlRpc;
 
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+
 class NullDecorator extends AbstractDecorator
 {
 }
 
 class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \fXmlRpc\ClientInterface
-     */
+    /** @var ClientInterface|MockObject */
     private $wrapped;
 
-    /**
-     * @var AbstractDecorator
-     */
+    /** @var AbstractDecorator */
     private $decorator;
 
     public function setUp()
@@ -46,26 +44,6 @@ class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
             ->getMockBuilder('fXmlRpc\ClientInterface')
             ->getMock();
         $this->decorator = new NullDecorator($this->wrapped);
-    }
-
-    public function testSetUriInvokesWrappedInstance()
-    {
-        $this->wrapped
-            ->expects($this->once())
-            ->method('setUri')
-            ->with('uri')
-            ->will($this->returnValue('return'));
-        $this->assertSame('return', $this->decorator->setUri('uri'));
-    }
-
-    public function testGetUriInvokesWrappedInstance()
-    {
-        $this->wrapped
-            ->expects($this->once())
-            ->method('getUri')
-            ->with()
-            ->will($this->returnValue('uri'));
-        $this->assertSame('uri', $this->decorator->getUri());
     }
 
     public function testCallInvokesWrappedInstance()
@@ -77,35 +55,6 @@ class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('response'));
         $this->assertSame('response', $this->decorator->call('method', array('arg1', 'arg2')));
     }
-
-    public function testParamManagementMethodsCallWrappedMethods()
-    {
-       $this->wrapped
-           ->expects($this->at(0))
-           ->method('prependParams')
-           ->with(array('p'))
-           ->will($this->returnValue('prep'));
-       $this->wrapped
-           ->expects($this->at(1))
-           ->method('appendParams')
-           ->with(array('a'))
-           ->will($this->returnValue('appe'));
-       $this->wrapped
-           ->expects($this->at(2))
-           ->method('getPrependParams')
-           ->with()
-           ->will($this->returnValue(array('p')));
-       $this->wrapped
-           ->expects($this->at(3))
-           ->method('getAppendParams')
-           ->with()
-           ->will($this->returnValue(array('a')));
-        $this->assertSame('prep', $this->decorator->prependParams(array('p')));
-        $this->assertSame('appe', $this->decorator->appendParams(array('a')));
-        $this->assertSame(array('p'), $this->decorator->getPrependParams());
-        $this->assertSame(array('a'), $this->decorator->getAppendParams());
-    }
-
     public function testMulticallMethodWrapped()
     {
         $this->wrapped

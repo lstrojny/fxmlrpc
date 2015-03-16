@@ -25,9 +25,8 @@ namespace fXmlRpc\Timing;
 
 use fXmlRpc\ClientInterface;
 use fXmlRpc\AbstractDecorator;
-use fXmlRpc\Timing\TimerInterface;
 
-class TimingDecorator extends AbstractDecorator
+final class TimingDecorator extends AbstractDecorator
 {
     /**
      * @var TimerInterface
@@ -46,9 +45,7 @@ class TimingDecorator extends AbstractDecorator
         $this->timer = $timer;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function call($methodName, array $arguments = [])
     {
         $startTime = microtime(true);

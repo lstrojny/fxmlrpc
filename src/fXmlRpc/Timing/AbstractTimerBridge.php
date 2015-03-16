@@ -31,19 +31,13 @@ namespace fXmlRpc\Timing;
  */
 abstract class AbstractTimerBridge implements TimerInterface
 {
-    /**
-     * @var object
-     */
+    /** @var object */
     protected $logger;
 
-    /**
-     * @var array|integer
-     */
+    /** @var array|integer */
     protected $level;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $messageTemplate = 'fXmlRpc call took %01.10Fs';
 
     /**
@@ -73,6 +67,7 @@ abstract class AbstractTimerBridge implements TimerInterface
             return $this->level;
         }
 
+        $level = null;
         foreach ($this->level as $threshold => $level) {
             if ($callTime >= $threshold) {
                 return $level;

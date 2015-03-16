@@ -25,7 +25,17 @@ namespace fXmlRpc\Value;
 
 interface Base64Interface
 {
+    /**
+     * Get base64 value as base64 encoded string
+     *
+     * @return string
+     */
     public function getEncoded();
 
+    /**
+     * Get base64 value as binary string
+     *
+     * @return string
+     */
     public function getDecoded();
 }

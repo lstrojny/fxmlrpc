@@ -25,9 +25,11 @@
 namespace fXmlRpc\Timing;
 
 use Monolog\Logger;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class MonologTimerBridgeTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var Logger|MockObject */
     private $monolog;
 
     public function setUp()
@@ -68,6 +70,17 @@ class MonologTimerBridgeTest extends \PHPUnit_Framework_TestCase
         $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
     }
 
+    public function testSetEmptyLogLevels()
+    {
+        $bridge = new MonologTimerBridge($this->monolog, []);
+        $this->monolog
+            ->expects($this->once())
+            ->method('addRecord')
+            ->with(Logger::DEBUG);
+
+        $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
+    }
+
     public function testSettingCustomMessageTemplate()
     {
         $bridge = new MonologTimerBridge($this->monolog, null, 'Custom template %2.1Fs');
@@ -85,7 +98,7 @@ class MonologTimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new MonologTimerBridge($this->monolog, array(1 => Logger::DEBUG, 2 => Logger::WARNING, 3.5 => Logger::ALERT));
+        $bridge = new MonologTimerBridge($this->monolog, array(1 => Logger::DEBUG, 2 => Logger::WARNING, '3.5' => Logger::ALERT));
         $this->monolog
             ->expects($this->at(0))
             ->method('addRecord')

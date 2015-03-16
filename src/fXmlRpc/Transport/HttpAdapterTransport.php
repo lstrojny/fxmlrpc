@@ -21,23 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+namespace fXmlRpc\Transport;
 
-namespace fXmlPRC\Integration;
+use fXmlRpc\Exception\HttpException;
+use fXmlRpc\Exception\TransportException;
+use Ivory\HttpAdapter\HttpAdapterException;
+use Ivory\HttpAdapter\HttpAdapterInterface;
 
-/**
- * @large
- * @group integration
- * @group java
- */
-class JavaIntegrationTest extends AbstractIntegrationTest
+final class HttpAdapterTransport implements TransportInterface
 {
-    protected static $endpoint = 'http://127.0.0.1:28080';
+    /** @var HttpAdapterInterface */
+    private $httpAdapter;
 
-    protected static $errorEndpoint = 'http://127.0.0.1:28081/';
+    public function __construct(HttpAdapterInterface $httpAdapter)
+    {
+        $this->httpAdapter = $httpAdapter;
+    }
 
-    protected static $command = 'exec java -jar server.jar 28080 28081';
+    /** {@inheritdoc} */
+    public function send($endpoint, $payload)
+    {
+        try {
+            $response = $this->httpAdapter->post($endpoint, ['Content-Type' => 'text/xml; charset=UTF-8'], $payload);
+        } catch (HttpAdapterException $e) {
+            throw TransportException::transportError($e);
+        }
 
-    protected static $restartServerInterval = 100;
+        if ($response->getStatusCode() !== 200) {
+            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
+        }
 
-    protected $disabledExtensions = array('nil', 'php_curl', 'xmlrpc_header');
+        return (string) $response->getBody();
+    }
 }

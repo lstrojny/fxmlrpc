@@ -26,7 +26,7 @@ namespace fXmlRpc\Timing;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class Psr3TimerBridge extends AbstractTimerBridge
+final class Psr3TimerBridge extends AbstractTimerBridge
 {
     /**
      * Create new bridge or a PSR-3 compatible logger
@@ -45,6 +45,7 @@ class Psr3TimerBridge extends AbstractTimerBridge
         $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
+    /** {@inheritdoc} */
     public function recordTiming($callTime, $method, array $arguments)
     {
         $this->logger->log(

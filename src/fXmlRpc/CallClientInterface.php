@@ -21,41 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+namespace fXmlRpc;
 
-namespace fXmlPRC\Integration;
-use fXmlRpc\ClientInterface;
+use fXmlRpc\Exception\ExceptionInterface;
 
-/**
- * @large
- * @group integration
- * @group node
- */
-class NodeIntegrationTest extends AbstractIntegrationTest
+interface CallClientInterface
 {
-    protected static $endpoint = 'http://127.0.0.1:9090/';
-
-    protected static $errorEndpoint = 'http://127.0.0.1:9091/';
-
-    protected static $command = 'exec node server.js';
-
-    protected static $restartServerInterval = 200;
-
     /**
-     * @dataProvider getClients
+     * Execute remote call
+     *
+     * @param string $method
+     * @param array $arguments
+     * @throws ExceptionInterface
+     * @return mixed
      */
-    public function testServerNotReachableViaTcpIp(ClientInterface $client)
-    {
-        $client->setUri('http://127.0.0.1:12345/');
-
-        try {
-            $client->call('system.failure');
-            $this->fail('Exception expected');
-        } catch (\fXmlRpc\Exception\TcpException $e) {
-            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
-            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
-            $this->assertInstanceOf('RuntimeException', $e);
-            $this->assertStringStartsWith('A transport error occurred', $e->getMessage());
-            $this->assertSame(0, $e->getCode());
-        }
-    }
+    public function call($method, array $arguments = []);
 }

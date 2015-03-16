@@ -21,50 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Transport;
+namespace fXmlRpc\Exception;
 
-use Zend_Http_Client as HttpClient;
-use Zend_Http_Client_Adapter_Exception as HttpClientAdapterException;
-use Zend_Http_Client_Exception as HttpClientException;
-use fXmlRpc\Exception\HttpException;
-use fXmlRpc\Exception\TcpException;
-
-class ZendFrameworkOneHttpClientBridge extends AbstractHttpTransport
+final class ParserException extends RuntimeException
 {
-    /**
-     * @var HttpClient
-     */
-    private $client;
-
-    /**
-     * @param HttpClient $client
-     */
-    public function __construct(HttpClient $client)
+    public static function unexpectedTag($tagName, $elements, array $definedVariables, $depth, $xml)
     {
-        $this->client = $client;
-    }
+        $expectedElements = [];
+        foreach ($definedVariables as $variableName => $variable) {
+            if (substr($variableName, 0, 4) !== 'flag') {
+                continue;
+            }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function send($url, $payload)
-    {
-        try {
-            $response = $this->client
-                ->setUri($url)
-                ->setHeaders($this->getHeaders())
-                ->setRawData($payload)
-                ->request('POST');
-        } catch (HttpClientAdapterException $e) {
-            throw TcpException::transportError($e);
-        } catch (HttpClientException $e) {
-            throw TcpException::transportError($e);
+            if (($elements & $variable) === $variable) {
+                $expectedElements[] = substr($variableName, 4);
+            }
         }
 
-        if ($response->getStatus() !== 200) {
-            throw HttpException::httpError($response->getMessage(), $response->getStatus());
-        }
-
-        return $response->getBody();
+        return new static(
+            sprintf(
+                'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
+                implode('", "', $expectedElements),
+                $tagName,
+                $depth,
+                $xml
+            )
+        );
     }
 }

@@ -30,9 +30,7 @@ use fXmlRpc\Value\Base64;
 
 abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var SerializerInterface
-     */
+    /** @var SerializerInterface */
     protected $serializer;
 
     public function provideTypes()

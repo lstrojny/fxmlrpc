@@ -25,68 +25,37 @@ namespace fXmlRpc;
 
 use fXmlRpc\Exception\InvalidArgumentException;
 
-final class Multicall
+final class MulticallBuilder implements MulticallBuilderInterface
 {
-    /**
-     * @var ClientInterface
-     */
+    /** @var ClientInterface */
     private $client;
 
-    /**
-     * @var integer
-     */
+    /** @var integer */
     private $index = 0;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $calls = [];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $handlers = [];
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $onSuccess;
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $onError;
 
-    /**
-     * @param ClientInterface $client
-     */
+    /** @param ClientInterface $client */
     public function __construct(ClientInterface $client)
     {
         $this->client = $client;
     }
 
-    /**
-     * Add a call to the sequence
-     *
-     * @param  string                   $methodName
-     * @param  array                    $params
-     * @param  callable                 $onSuccess
-     * @param  callable                 $onError
-     * @throws InvalidArgumentException
-     * @return self
-     */
-    public function addCall($methodName, array $params = [], $onSuccess = null, $onError = null)
+    /** {@inheritdoc} */
+    public function addCall($methodName, array $params = [], callable $onSuccess = null, callable $onError = null)
     {
         if (!is_string($methodName)) {
             throw InvalidArgumentException::expectedParameter(1, 'string', $methodName);
-        }
-
-        if ($onSuccess !== null && !is_callable($onSuccess)) {
-            throw InvalidArgumentException::expectedParameter(3, 'callable', $onSuccess);
-        }
-
-        if ($onError !== null && !is_callable($onError)) {
-            throw InvalidArgumentException::expectedParameter(4, 'callable', $onError);
         }
 
         $this->calls[$this->index] = compact('methodName', 'params');
@@ -96,43 +65,23 @@ final class Multicall
         return $this;
     }
 
-    /**
-     * @param  callable                 $onSuccess
-     * @throws InvalidArgumentException
-     * @return self
-     */
-    public function onSuccess($onSuccess)
+    /** {@inheritdoc} */
+    public function onSuccess(callable $onSuccess)
     {
-        if (!is_callable($onSuccess)) {
-            throw InvalidArgumentException::expectedParameter(1, 'callable', $onSuccess);
-        }
-
         $this->onSuccess = $onSuccess;
 
         return $this;
     }
 
-    /**
-     * @param  callable                 $onError
-     * @throws InvalidArgumentException
-     * @return self
-     */
-    public function onError($onError)
+    /** {@inheritdoc} */
+    public function onError(callable $onError)
     {
-        if (!is_callable($onError)) {
-            throw InvalidArgumentException::expectedParameter(1, 'callable', $onError);
-        }
-
         $this->onError = $onError;
 
         return $this;
     }
 
-    /**
-     * Execute multicall request
-     *
-     * @return array
-     */
+    /** {@inheritdoc} */
     public function execute()
     {
         $results = $this->client->call('system.multicall', [$this->calls]);
@@ -171,9 +120,7 @@ final class Multicall
         }
     }
 
-    /**
-     * @return ClientInterface
-     */
+    /** @return ClientInterface */
     public function getClient()
     {
         return $this->client;

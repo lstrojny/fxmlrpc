@@ -26,7 +26,7 @@ namespace fXmlRpc\Timing;
 
 use Zend_Log as Log;
 
-class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
+final class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
 {
     /**
      * Create new Zend_Log bridge
@@ -45,9 +45,7 @@ class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
         $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function recordTiming($callTime, $method, array $arguments)
     {
         $this->logger->log(

@@ -23,45 +23,34 @@
  */
 namespace fXmlRpc;
 
-use fXmlRpc\Transport\TransportInterface;
-use fXmlRpc\Transport\StreamSocketTransport;
 use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Parser\XmlReaderParser;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Serializer\XmlWriterSerializer;
 use fXmlRpc\Exception\ResponseException;
 use fXmlRpc\Exception\InvalidArgumentException;
+use fXmlRpc\Transport\HttpAdapterTransport;
+use fXmlRpc\Transport\TransportInterface;
+use Ivory\HttpAdapter\HttpAdapterFactory;
 
 final class Client implements ClientInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $uri;
 
-    /**
-     * @var Transport\TransportInterface
-     */
+    /** @var TransportInterface */
     private $transport;
 
-    /**
-     * @var Parser\ParserInterface
-     */
+    /** @var Parser\ParserInterface */
     private $parser;
 
-    /**
-     * @var Serializer\SerializerInterface
-     */
+    /** @var Serializer\SerializerInterface */
     private $serializer;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $prependParams = [];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $appendParams = [];
 
     /**
@@ -71,7 +60,7 @@ final class Client implements ClientInterface
      * are used.
      *
      * @param string                         $uri
-     * @param Transport\TransportInterface   $transport
+     * @param TransportInterface             $transport
      * @param Parser\ParserInterface         $parser
      * @param Serializer\SerializerInterface $serializer
      */
@@ -83,13 +72,15 @@ final class Client implements ClientInterface
     )
     {
         $this->uri = $uri;
-        $this->transport = $transport ?: new StreamSocketTransport();
+        $this->transport = $transport ?: new HttpAdapterTransport(HttpAdapterFactory::guess());
         $this->parser = $parser ?: new XmlReaderParser();
         $this->serializer = $serializer ?: new XmlWriterSerializer();
     }
 
     /**
-     * {@inheritdoc}
+     * Set the endpoint URI
+     *
+     * @param string $uri
      */
     public function setUri($uri)
     {
@@ -101,7 +92,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Return endpoint URI
+     *
+     * @return string
      */
     public function getUri()
     {
@@ -109,7 +102,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Prepend default parameters that should always be prepended
+     *
+     * @param array $params
      */
     public function prependParams(array $params)
     {
@@ -117,7 +112,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get default parameters that are always prepended
+     *
+     * @return array
      */
     public function getPrependParams()
     {
@@ -125,7 +122,9 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Append default parameters that should always be prepended
+     *
+     * @param array $params
      */
     public function appendParams(array $params)
     {
@@ -133,17 +132,16 @@ final class Client implements ClientInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Get default parameters that are always appended
+     *
+     * @return array
      */
     public function getAppendParams()
     {
         return $this->appendParams;
     }
 
-    /**
-     * {@inheritdoc}
-     * @throws Exception\ResponseException
-     */
+    /** {@inheritdoc} */
     public function call($methodName, array $params = [])
     {
         if (!is_string($methodName)) {
@@ -151,24 +149,20 @@ final class Client implements ClientInterface
         }
 
         $params = array_merge($this->prependParams, $params, $this->appendParams);
-
-        $response = $this->parser->parse(
-            $this->transport->send($this->uri, $this->serializer->serialize($methodName, $params)),
-            $isFault
-        );
+        $payload = $this->serializer->serialize($methodName, $params);
+        $response = $this->transport->send($this->uri, $payload);
+        $result = $this->parser->parse($response, $isFault);
 
         if ($isFault) {
-            throw ResponseException::fault($response);
+            throw ResponseException::fault($result);
         }
 
-        return $response;
+        return $result;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function multicall()
     {
-        return new Multicall($this);
+        return new MulticallBuilder($this);
     }
 }

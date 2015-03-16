@@ -24,10 +24,12 @@
 
 namespace fXmlRpc\Timing;
 
-use fXmlRpc\Timing\ZendFrameworkTwoTimerBridge;
+use Zend\Log\LoggerInterface;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class ZendFrameworkTwoTimerBridgeTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var LoggerInterface|MockObject */
     private $log;
 
     public function setUp()
@@ -60,6 +62,16 @@ class ZendFrameworkTwoTimerBridgeTest extends \PHPUnit_Framework_TestCase
         $bridge->recordTiming(0.1, 'method', array('arg1'));
     }
 
+    public function testWithEmptyLogLevel()
+    {
+        $bridge = new ZendFrameworkTwoTimerBridge($this->log, []);
+        $this->log
+            ->expects($this->once())
+            ->method('debug');
+
+        $bridge->recordTiming(0.1, 'method', array('arg1'));
+    }
+
     public function testWithCustomMessageTemplate()
     {
         $bridge = new ZendFrameworkTwoTimerBridge($this->log, null, 'Custom template %2.1Fs');
@@ -73,7 +85,7 @@ class ZendFrameworkTwoTimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new ZendFrameworkTwoTimerBridge($this->log, array(1 => 'debug', 2 => 'warn', 3.5 => 'alert'));
+        $bridge = new ZendFrameworkTwoTimerBridge($this->log, array(1 => 'debug', 2 => 'warn', '3.5' => 'alert'));
         $this->log
             ->expects($this->at(0))
             ->method('debug')

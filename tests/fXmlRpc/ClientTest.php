@@ -24,36 +24,30 @@
 
 namespace fXmlRpc;
 
+use fXmlRpc\Parser\ParserInterface;
+use fXmlRpc\Serializer\SerializerInterface;
+use fXmlRpc\Transport\TransportInterface;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \fXmlRpc\Serializer\SerializerInterface
-     */
+    /** @var SerializerInterface|MockObject */
     private $serializer;
 
-    /**
-     * @var \fXmlRpc\Parser\ParserInterface
-     */
+    /** @var ParserInterface|MockObject */
     private $parser;
 
-    /**
-     * @var \fXmlRpc\Transport\TransportInterface
-     */
+    /** @var TransportInterface|MockObject */
     private $transport;
 
-    /**
-     * @var Client
-     */
+    /** @var Client */
     private $client;
 
     public function setUp()
     {
-        $this->serializer = $this->getMockBuilder('fXmlRpc\Serializer\SerializerInterface')
-                                 ->getMock();
-        $this->parser = $this->getMockBuilder('fXmlRpc\Parser\ParserInterface')
-                             ->getMock();
-        $this->transport = $this->getMockBuilder('fXmlRpc\Transport\TransportInterface')
-                             ->getMock();
+        $this->serializer = $this->getMock('fXmlRpc\Serializer\SerializerInterface');
+        $this->parser = $this->getMock('fXmlRpc\Parser\ParserInterface');
+        $this->transport = $this->getMock('fXmlRpc\Transport\TransportInterface');
 
         $this->client = new Client('http://foo.com', $this->transport, $this->parser, $this->serializer);
     }
@@ -63,53 +57,50 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('http://foo.com', $this->client->getUri());
         $this->client->setUri('http://bar.com');
         $this->assertSame('http://bar.com', $this->client->getUri());
-        $this->serializer->expects($this->once())
-                         ->method('serialize')
-                         ->with('methodName', array('p1', 'p2'))
-                         ->will($this->returnValue('REQUEST'));
-        $this->transport->expects($this->once())
-                        ->method('send')
-                        ->with('http://bar.com', 'REQUEST')
-                        ->will($this->returnValue('RESPONSE'));
-        $this->parser->expects($this->once())
-                     ->method('parse')
-                     ->with('RESPONSE')
-                     ->will($this->returnValue('NATIVE VALUE'));
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('methodName', array('p1', 'p2'))
+            ->will($this->returnValue('REQUEST'));
+        $this->mockTransport('http://bar.com', 'REQUEST', 'RESPONSE');
+        $this->parser
+            ->expects($this->once())
+            ->method('parse')
+            ->with('RESPONSE')
+            ->will($this->returnValue('NATIVE VALUE'));
 
         $this->assertSame('NATIVE VALUE', $this->client->call('methodName', array('p1', 'p2')));    }
 
     public function testCallSerializer()
     {
-        $this->serializer->expects($this->once())
-                         ->method('serialize')
-                         ->with('methodName', array('p1', 'p2'))
-                         ->will($this->returnValue('REQUEST'));
-        $this->transport->expects($this->once())
-                        ->method('send')
-                        ->with('http://foo.com', 'REQUEST')
-                        ->will($this->returnValue('RESPONSE'));
-        $this->parser->expects($this->once())
-                     ->method('parse')
-                     ->with('RESPONSE')
-                     ->will($this->returnValue('NATIVE VALUE'));
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('methodName', array('p1', 'p2'))
+            ->will($this->returnValue('REQUEST'));
+        $this->mockTransport('http://foo.com', 'REQUEST', 'RESPONSE');
+        $this->parser
+            ->expects($this->once())
+            ->method('parse')
+            ->with('RESPONSE')
+            ->will($this->returnValue('NATIVE VALUE'));
 
         $this->assertSame('NATIVE VALUE', $this->client->call('methodName', array('p1', 'p2')));
     }
 
     public function testPrependingDetaultParams()
     {
-        $this->serializer->expects($this->once())
-                         ->method('serialize')
-                         ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
-                         ->will($this->returnValue('REQUEST'));
-        $this->transport->expects($this->once())
-                        ->method('send')
-                        ->with('http://foo.com', 'REQUEST')
-                        ->will($this->returnValue('RESPONSE'));
-        $this->parser->expects($this->once())
-                     ->method('parse')
-                     ->with('RESPONSE')
-                     ->will($this->returnValue('NATIVE VALUE'));
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
+            ->will($this->returnValue('REQUEST'));
+        $this->mockTransport('http://foo.com', 'REQUEST', 'RESPONSE');
+        $this->parser
+            ->expects($this->once())
+            ->method('parse')
+            ->with('RESPONSE')
+            ->will($this->returnValue('NATIVE VALUE'));
 
         $this->assertSame(array(), $this->client->getPrependParams());
         $this->client->prependParams(array('p0', 'p1'));
@@ -120,18 +111,17 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testAppendingParams()
     {
-        $this->serializer->expects($this->once())
-                         ->method('serialize')
-                         ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
-                         ->will($this->returnValue('REQUEST'));
-        $this->transport->expects($this->once())
-                        ->method('send')
-                        ->with('http://foo.com', 'REQUEST')
-                        ->will($this->returnValue('RESPONSE'));
-        $this->parser->expects($this->once())
-                     ->method('parse')
-                     ->with('RESPONSE')
-                     ->will($this->returnValue('NATIVE VALUE'));
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('methodName', array('p0', 'p1', 'p2', 'p3'))
+            ->will($this->returnValue('REQUEST'));
+        $this->mockTransport('http://foo.com', 'REQUEST', 'RESPONSE');
+        $this->parser
+            ->expects($this->once())
+            ->method('parse')
+            ->with('RESPONSE')
+            ->will($this->returnValue('NATIVE VALUE'));
 
         $this->assertSame(array(), $this->client->getAppendParams());
         $this->client->appendParams(array('p2', 'p3'));
@@ -161,8 +151,17 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testMulticallFactory()
     {
         $multicall = $this->client->multicall();
-        $this->assertInstanceOf('fXmlRpc\Multicall', $multicall);
+        $this->assertInstanceOf('fXmlRpc\MulticallBuilderInterface', $multicall);
         $this->assertNotSame($multicall, $this->client->multicall());
         $this->assertSame($this->client, $multicall->getClient());
+    }
+
+    private function mockTransport($endpoint, $request, $response)
+    {
+        $this->transport
+            ->expects($this->once())
+            ->method('send')
+            ->with($endpoint, $request)
+            ->willReturn($response);
     }
 }

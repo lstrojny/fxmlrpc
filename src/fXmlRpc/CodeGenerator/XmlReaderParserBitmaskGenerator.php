@@ -24,7 +24,7 @@
 
 namespace fXmlRpc\CodeGenerator;
 
-class XmlReaderParserBitmaskGenerator
+final class XmlReaderParserBitmaskGenerator
 {
     private $basicTypes = [
         'methodResponse',

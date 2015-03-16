@@ -28,6 +28,10 @@ class NativeSerializerTest extends AbstractSerializerTest
 {
     public function setUp()
     {
+        if (!extension_loaded('xmlrpc')) {
+            $this->markTestSkipped('ext/xmlrpc not available');
+        }
+
         $this->serializer = new NativeSerializer();
     }
 }

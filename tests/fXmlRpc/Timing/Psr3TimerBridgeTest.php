@@ -24,10 +24,13 @@
 
 namespace fXmlRpc\Timing;
 
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class Psr3TimerBridgeTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var LoggerInterface|MockObject */
     private $logger;
 
     public function setUp()
@@ -65,6 +68,17 @@ class Psr3TimerBridgeTest extends \PHPUnit_Framework_TestCase
         $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
     }
 
+    public function testSettingEmptyLogLevel()
+    {
+        $bridge = new Psr3TimerBridge($this->logger, []);
+        $this->logger
+            ->expects($this->once())
+            ->method('log')
+            ->with(LogLevel::DEBUG);
+
+        $bridge->recordTiming(1.1, 'method', array('arg1', 'arg2'));
+    }
+
     public function testSettingCustomMessageTemplate()
     {
         $bridge = new Psr3TimerBridge($this->logger, null, 'Custom template %2.1Fs');
@@ -82,7 +96,7 @@ class Psr3TimerBridgeTest extends \PHPUnit_Framework_TestCase
 
     public function testSpecifyingLoggingThresholds()
     {
-        $bridge = new Psr3TimerBridge($this->logger, array(1 => LogLevel::DEBUG, 2 => LogLevel::WARNING, 3.5 => LogLevel::ALERT));
+        $bridge = new Psr3TimerBridge($this->logger, array(1 => LogLevel::DEBUG, 2 => LogLevel::WARNING, '3.5' => LogLevel::ALERT));
         $this->logger
             ->expects($this->at(0))
             ->method('log')

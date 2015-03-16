@@ -24,22 +24,20 @@
 
 namespace fXmlRpc;
 
-class MulticallTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+
+class MulticallBuilderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ClientInterface
-     */
+    /** @var ClientInterface|MockObject */
     private $client;
 
-    /**
-     * @var Multicall
-     */
-    private $multicall;
+    /** @var MulticallBuilderInterface */
+    private $multicallBuilder;
 
     public function setUp()
     {
         $this->client = $this->getMock('fXmlRpc\ClientInterface');
-        $this->multicall = new Multicall($this->client);
+        $this->multicallBuilder = new MulticallBuilder($this->client);
     }
 
     public function testRetrievingMulticallResult()
@@ -58,7 +56,7 @@ class MulticallTest extends \PHPUnit_Framework_TestCase
             )
             ->will($this->returnValue(array('return1', 'return2')));
 
-        $result = $this->multicall
+        $result = $this->multicallBuilder
             ->addCall('method1', array('arg11', 'arg12'))
             ->addCall('method2', array('arg21', 'arg22'))
             ->execute();
@@ -87,7 +85,7 @@ class MulticallTest extends \PHPUnit_Framework_TestCase
         $handler = function ($result) use (&$handlerResults) {
             $handlerResults[] = $result;
         };
-        $results = $this->multicall
+        $results = $this->multicallBuilder
             ->addCall('method1', array('arg11', 'arg12'))
             ->addCall('method2', array('arg21', 'arg22'), $handler)
             ->addCall('method3', array('arg31', 'arg32'), $handler)
@@ -120,7 +118,7 @@ class MulticallTest extends \PHPUnit_Framework_TestCase
         $errorHandler = function ($result) use (&$handlerResults) {
             $handlerResults[] = $result;
         };
-        $results = $this->multicall
+        $results = $this->multicallBuilder
             ->addCall('method1', array('arg11', 'arg12'), $successHandler, $errorHandler)
             ->addCall('method2', array('arg21', 'arg22'), null, $errorHandler)
             ->execute();
@@ -153,7 +151,7 @@ class MulticallTest extends \PHPUnit_Framework_TestCase
         $globalHandler = function ($result) use (&$globalHandlerResults) {
             $globalHandlerResults[] = $result;
         };
-        $results = $this->multicall
+        $results = $this->multicallBuilder
             ->addCall('method1', array('arg11', 'arg12'), $individualHandler)
             ->addCall('method2', array('arg21', 'arg22'), $individualHandler)
             ->onSuccess($globalHandler)
@@ -192,7 +190,7 @@ class MulticallTest extends \PHPUnit_Framework_TestCase
         $globalErrorHandler = function ($result) use (&$globalErrorHandlerResults) {
             $globalErrorHandlerResults[] = $result;
         };
-        $results = $this->multicall
+        $results = $this->multicallBuilder
             ->addCall('method1', array('arg11', 'arg12'), $individualSuccessHandler)
             ->addCall('method2', array('arg21', 'arg22'), $individualSuccessHandler)
             ->onSuccess($globalSuccessHandler)
@@ -205,46 +203,6 @@ class MulticallTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(array('faultCode' => 200)), $globalErrorHandlerResults);
     }
 
-    public function testAddInvalidSuccessHandler()
-    {
-        $this->setExpectedException(
-            'fXmlRpc\Exception\InvalidArgumentException',
-            'Expected parameter 3 to be of type "callable", "string" given'
-        );
-
-        $this->multicall->addCall('testMethod', array(), 'foo');
-    }
-
-    public function testAddInvalidErrorHandler()
-    {
-        $this->setExpectedException(
-            'fXmlRpc\Exception\InvalidArgumentException',
-            'Expected parameter 4 to be of type "callable", "string" given'
-        );
-
-        $this->multicall->addCall('testMethod', array(), null, 'foo');
-    }
-
-    public function testAddInvalidGlobalSuccessHandler()
-    {
-        $this->setExpectedException(
-            'fXmlRpc\Exception\InvalidArgumentException',
-            'Expected parameter 1 to be of type "callable", "NULL" given'
-        );
-
-        $this->multicall->onSuccess(null);
-    }
-
-    public function testAddInvalidGlobalErrorHandler()
-    {
-        $this->setExpectedException(
-            'fXmlRpc\Exception\InvalidArgumentException',
-            'Expected parameter 1 to be of type "callable", "NULL" given'
-        );
-
-        $this->multicall->onError(null);
-    }
-
     public function testInvalidMethodType()
     {
         $this->setExpectedException(
@@ -252,6 +210,6 @@ class MulticallTest extends \PHPUnit_Framework_TestCase
             'Expected parameter 1 to be of type "string", "object" of type "stdClass" given'
         );
 
-        $this->multicall->addCall(new \stdClass());
+        $this->multicallBuilder->addCall(new \stdClass());
     }
 }

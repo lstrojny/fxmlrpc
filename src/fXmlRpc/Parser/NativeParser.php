@@ -29,7 +29,7 @@ use DateTimeZone;
 use fXmlRpc\Exception\MissingExtensionException;
 use fXmlRpc\Value\Base64;
 
-class NativeParser implements ParserInterface
+final class NativeParser implements ParserInterface
 {
     public function __construct()
     {
@@ -38,9 +38,7 @@ class NativeParser implements ParserInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function parse($xmlString, &$isFault)
     {
         $result = xmlrpc_decode($xmlString, 'UTF-8');

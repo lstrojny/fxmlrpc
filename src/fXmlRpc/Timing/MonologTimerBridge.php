@@ -25,7 +25,7 @@ namespace fXmlRpc\Timing;
 
 use Monolog\Logger;
 
-class MonologTimerBridge extends AbstractTimerBridge
+final class MonologTimerBridge extends AbstractTimerBridge
 {
     /**
      * Create new monolog bridge
@@ -44,9 +44,7 @@ class MonologTimerBridge extends AbstractTimerBridge
         $this->messageTemplate = $messageTemplate ?: $this->messageTemplate;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function recordTiming($callTime, $method, array $arguments)
     {
         $level = $this->getLevel($callTime);

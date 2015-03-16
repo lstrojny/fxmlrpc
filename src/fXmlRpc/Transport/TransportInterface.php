@@ -23,8 +23,7 @@
  */
 namespace fXmlRpc\Transport;
 
-use fXmlRpc\Exception\HttpException;
-use fXmlRpc\Exception\TransportException;
+use fXmlRpc\Exception\AbstractTransportException;
 
 /**
  * Transport interface
@@ -35,13 +34,12 @@ use fXmlRpc\Exception\TransportException;
 interface TransportInterface
 {
     /**
-     * Send XML/RPC request
+     * Send XML/RPC request over the wire and return the payload
      *
-     * @param  string             $uri
-     * @param  string             $payload
-     * @throws HttpException      If an HTTP exception occurred
-     * @throws TransportException If a transport error occurred
+     * @param  string                     $endpoint
+     * @param  string                     $payload
+     * @throws AbstractTransportException If a transport error occurred
      * @return string
      */
-    public function send($uri, $payload);
+    public function send($endpoint, $payload);
 }

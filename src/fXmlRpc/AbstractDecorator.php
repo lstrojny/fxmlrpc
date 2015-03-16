@@ -30,78 +30,22 @@ namespace fXmlRpc;
  */
 abstract class AbstractDecorator implements ClientInterface
 {
-    /**
-     * @var ClientInterface
-     */
+    /** @var ClientInterface */
     protected $wrapped;
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function __construct(ClientInterface $wrapped)
     {
         $this->wrapped = $wrapped;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setUri($uri)
-    {
-        return $this->wrapped->setUri($uri);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUri()
-    {
-        return $this->wrapped->getUri();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function prependParams(array $params)
-    {
-        return $this->wrapped->prependParams($params);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPrependParams()
-    {
-        return $this->wrapped->getPrependParams();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function appendParams(array $params)
-    {
-        return $this->wrapped->appendParams($params);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAppendParams()
-    {
-        return $this->wrapped->getAppendParams();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function call($methodName, array $arguments = [])
     {
         return $this->wrapped->call($methodName, $arguments);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    /** {@inheritdoc} */
     public function multicall()
     {
         return $this->wrapped->multicall();

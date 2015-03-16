@@ -21,42 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Transport;
+namespace fXmlRpc\Integration;
 
-use Amp\Artax\Client;
-use Amp\Artax\Request;
-use Amp\Artax\SocketException;
-use fXmlRpc\Exception\HttpException;
-use fXmlRpc\Exception\TcpException;
+use fXmlRpc\Client;
 
-final class ArtaxBrowserBridge extends AbstractHttpTransport
+/**
+ * @large
+ * @group integration
+ * @group node
+ */
+class NodeCallClientIntegrationTest extends AbstractCallClientIntegrationTest
 {
-    private $client;
+    protected static $endpoint = 'http://127.0.0.1:9090/';
 
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
+    protected static $errorEndpoint = 'http://127.0.0.1:9091/';
 
-    public function send($uri, $payload)
+    protected static $command = 'exec node server.js';
+
+    /** @dataProvider getClientsOnly */
+    public function testServerNotReachableViaTcpIp(Client $client)
     {
-        $request = (new Request())
-            ->setUri($uri)
-            ->setMethod('POST')
-            ->setBody($payload)
-            ->setProtocol('1.1')
-            ->setAllHeaders($this->getHeaders(true));
+        $client->setUri('http://127.0.0.1:12345/');
 
         try {
-            $response = $this->client->request($request)->wait();
-        } catch (SocketException $e) {
-            throw TcpException::transportError($e);
+            $client->call('system.failure');
+            $this->fail('Exception expected');
+        } catch (\fXmlRpc\Exception\TransportException $e) {
+            $this->assertInstanceOf('fXmlRpc\Exception\TransportException', $e);
+            $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
+            $this->assertInstanceOf('RuntimeException', $e);
+            $this->assertStringStartsWith('Transport error occurred:', $e->getMessage());
+            $this->assertSame(0, $e->getCode());
         }
+    }
 
-        if ($response->getStatus() !== 200) {
-            throw HttpException::httpError('Invalid response code', $response->getStatus());
-        }
-
-        return $response->getBody();
+    /** @dataProvider getClientsOnly */
+    public function testServerReturnsInvalidResult(Client $client)
+    {
+        $this->executeSystemFailureTest($client);
     }
 }

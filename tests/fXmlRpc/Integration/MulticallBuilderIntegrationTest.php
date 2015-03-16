@@ -21,86 +21,85 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+namespace fXmlRpc\Integration;
 
-namespace fXmlPRC\Integration;
-
-use fXmlRpc\ClientInterface;
+use fXmlRpc\MulticallClientInterface;
 
 /**
  * @large
  * @group integration
- * @group external
+ * @group python
  */
-class MulticallTest extends AbstractCombinatoricsClientTest
+class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractIntegrationTest
 {
-    /**
-     * @var string
-     */
-    protected static $endpoint = 'http://betty.userland.com/RPC2';
+    protected static $enabled = false;
 
-    /**
-     * @var mixed
-     */
+    protected static $endpoint = 'http://127.0.0.1:28000';
+
+    protected static $errorEndpoint = 'http://127.0.0.1:28001';
+
+    protected static $command = 'exec python server.py';
+
+    /** @var mixed */
     private $expected;
 
-    /**
-     * @var int
-     */
+    /** @var integer */
     private $handlerInvoked = 0;
 
-    /**
-     * @var int
-     */
-    protected $clientsLimit = 5;
-
-    /**
-     * @dataProvider getClients
-     */
-    public function testMulticallWithError(ClientInterface $client)
+    public function setUp()
     {
-        $this->expected = $expected = array(
+        $this->markTestSkipped('Multicall integration tests need to be ported to node.js');
+    }
+
+    /** @dataProvider getClients */
+    public function testMulticallWithError(MulticallClientInterface $client)
+    {
+        $this->handlerInvoked = 0;
+        $this->expected = array(
             array(
-                'faultCode'   => 7,
-                'faultString' => 'Can\'t evaluate the expression because the name "invalidMethod" hasn\'t been defined.'
+                'faultCode'   => 1,
+                'faultString' => '<type \'exceptions.Exception\'>:method "invalidMethod" is not supported'
             )
         );
 
         $result = $client->multicall()
-            ->addCall('examples.invalidMethod')
+            ->addCall('invalidMethod')
             ->onError(array($this, 'handler'))
             ->execute();
 
         $this->assertSame(1, $this->handlerInvoked);
-        $this->assertSame($expected, $result);
+        $this->assertSame($this->expected, $result);
     }
 
-    /**
-     * @dataProvider getClients
-     */
-    public function testSimpleMulticall(ClientInterface $client)
+    /** @dataProvider getClients */
+    public function testSimpleMulticall(MulticallClientInterface $client)
     {
-        $this->expected = $expected = array(
-            array('Idaho'),
-            array('Michigan'),
-            array('New York'),
-            array('Tennessee')
+        $this->handlerInvoked = 0;
+        $this->expected = array(
+            array(0),
+            array(1),
+            array(2),
+            array(3),
+            array(4),
         );
 
         $result = $client->multicall()
-            ->addCall('examples.getStateName', array(12))
-            ->addCall('examples.getStateName', array(22))
-            ->addCall('examples.getStateName', array(32))
-            ->addCall('examples.getStateName', array(42))
+            ->addCall('system.echo', array(0))
+            ->addCall('system.echo', array(1))
+            ->addCall('system.echo', array(2))
+            ->addCall('system.echo', array(3))
+            ->addCall('system.echo', array(4))
             ->onSuccess(array($this, 'handler'))
             ->execute();
 
-        $this->assertSame($expected, $result);
-        $this->assertSame(4, $this->handlerInvoked);
+        $this->assertSame($this->expected, $result);
+        $this->assertSame(5, $this->handlerInvoked);
     }
 
     public function handler($result)
     {
         $this->handlerInvoked++;
-        $this->assertSame(array_shift($this->expected), $result);
+        $this->assertSame(current($this->expected), $result);
+        next($this->expected);
     }
 }
