@@ -13,6 +13,7 @@
 
 ## Latest improvements
 
+ - `[BC]` PSR-4 for autoloading (see #29)
  - `[BC]` Rename `fXmlRpc\Multicall` to `fXmlRpc\MulticallBuilder`
  - `[BC]` Make the surface of the `ClientInterface` signifcantly smaller (see #24 for details)
  - `[BC]` Replaces built-in transports with [Ivory HTTP Adapter](https://github.com/egeloen/ivory-http-adapter). PECL HTTP is no longer supported. Contribution by [Márk Sági-Kazár](https://github.com/sagikazarmark)
