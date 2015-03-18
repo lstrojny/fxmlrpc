@@ -35,6 +35,6 @@
         "psr-4": {"fXmlRpc\\": "tests/fXmlRpc"}
     },
     "extra": {
-        "branch-alias": {"dev-develop": "1.0-dev"}
+        "branch-alias": {"dev-master": "1.0-dev"}
     }
 }
