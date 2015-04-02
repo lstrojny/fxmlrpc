@@ -112,7 +112,8 @@ abstract class AbstractClientBasedIntegrationTest extends \PHPUnit_Framework_Tes
         $zendFrameworkOneLogger = new \Zend_Log(new \Zend_Log_Writer_Null());
 
         $zendFrameworkTwoLogger = new \Zend\Log\Logger();
-        $zendFrameworkTwoLogger->addWriter(new \Zend\Log\Writer\Noop());
+        $writer = class_exists('Zend\Log\Writer\Noop') ? new \Zend\Log\Writer\Noop() : new \Zend\Log\Writer\Null();
+        $zendFrameworkTwoLogger->addWriter($writer);
 
         $monolog = new \Monolog\Logger('test');
         $monolog->pushHandler(new \Monolog\Handler\NullHandler());
