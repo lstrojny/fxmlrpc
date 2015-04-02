@@ -88,7 +88,8 @@ final class XmlReaderParserBitmaskGenerator
                 'base64',
                 'nil',
                 'dom',
-                '#text'
+                '#text',
+                'value',
             ],
             'expectedForStruct' => ['member', 'struct', 'value'],
             'expectedForData' => ['data', 'value', 'array'],

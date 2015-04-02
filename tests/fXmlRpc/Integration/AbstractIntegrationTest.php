@@ -180,24 +180,6 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         return [new \fXmlRpc\Transport\HttpAdapterTransport(\Ivory\HttpAdapter\HttpAdapterFactory::guess())];
     }
 
-    private function getTimerBridges()
-    {
-        $zendFrameworkOneLogger = new \Zend_Log(new \Zend_Log_Writer_Null());
-
-        $zendFrameworkTwoLogger = new \Zend\Log\Logger();
-        $zendFrameworkTwoLogger->addWriter(new \Zend\Log\Writer\Null());
-
-        $monolog = new \Monolog\Logger('test');
-        $monolog->pushHandler(new \Monolog\Handler\NullHandler());
-
-        return array(
-            new \fXmlRpc\Timing\ZendFrameworkOneTimerBridge($zendFrameworkOneLogger),
-            new \fXmlRpc\Timing\ZendFrameworkTwoTimerBridge($zendFrameworkTwoLogger),
-            new \fXmlRpc\Timing\MonologTimerBridge($monolog),
-            null
-        );
-    }
-
     private function generateAllPossibleCombinations(array $combinations, array &$clients)
     {
         if ($combinations) {

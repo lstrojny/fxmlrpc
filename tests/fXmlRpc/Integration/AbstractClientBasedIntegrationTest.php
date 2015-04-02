@@ -107,12 +107,12 @@ abstract class AbstractClientBasedIntegrationTest extends \PHPUnit_Framework_Tes
         return [new \fXmlRpc\Transport\HttpAdapterTransport(\Ivory\HttpAdapter\HttpAdapterFactory::guess())];
     }
 
-    private function getTimerBridges()
+    protected function getTimerBridges()
     {
         $zendFrameworkOneLogger = new \Zend_Log(new \Zend_Log_Writer_Null());
 
         $zendFrameworkTwoLogger = new \Zend\Log\Logger();
-        $zendFrameworkTwoLogger->addWriter(new \Zend\Log\Writer\Null());
+        $zendFrameworkTwoLogger->addWriter(new \Zend\Log\Writer\Noop());
 
         $monolog = new \Monolog\Logger('test');
         $monolog->pushHandler(new \Monolog\Handler\NullHandler());

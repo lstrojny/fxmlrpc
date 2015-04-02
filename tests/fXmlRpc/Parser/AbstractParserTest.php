@@ -674,4 +674,27 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(), $this->parser->parse($string, $isFault));
         $this->assertFalse($isFault);
     }
+
+    public function testEmptyStructMember()
+    {
+        $string = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodResponse>
+                <params>
+                    <param>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>FIRST</name>
+                                    <value></value>
+                                </member>
+                            </struct>
+                        </value>
+                    </param>
+                </params>
+            </methodResponse>';
+
+        $isFault = false;
+        $this->assertSame(array('FIRST' => ''), $this->parser->parse($string, $isFault));
+        $this->assertFalse($isFault);
+    }
 }
