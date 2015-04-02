@@ -168,8 +168,9 @@ class XmlReaderParser implements ParserInterface
                             break;
 
                         case 'value':
-                            $nextExpectedElements = 0b011111111111111111100100000;
+                            $nextExpectedElements = 0b011111111111111111100110000;
                             $type = 'value';
+                            $aggregates[$depth + 1] = '';
                             break;
 
                         case 'base64':
