@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "egeloen/http-adapter": "0.7.*",
+        "egeloen/http-adapter": "0.7.*"
     },
     "require-dev": {
         "php": ">=5.4.0",
