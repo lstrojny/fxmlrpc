@@ -10,8 +10,10 @@
             "homepage": "http://usrportage.de"
         }
     ],
+    "require": {
+        "php": ">=5.4"
+    },
     "require-dev": {
-        "php": ">=5.4.0",
         "egeloen/http-adapter": "0.6.*@dev",
         "zendframework/zend-log": "~2",
         "zendframework/zendframework1": "~1.12.4",
