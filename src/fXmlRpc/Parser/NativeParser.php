@@ -26,7 +26,7 @@ namespace fXmlRpc\Parser;
 
 use DateTime;
 use DateTimeZone;
-use fXmlRpc\Exception\MissingExtensionException;
+use fXmlRpc\Exception\MissingDependencyException;
 use fXmlRpc\Value\Base64;
 
 final class NativeParser implements ParserInterface
@@ -34,7 +34,7 @@ final class NativeParser implements ParserInterface
     public function __construct()
     {
         if (!extension_loaded('xmlrpc')) {
-            throw MissingExtensionException::extensionMissing('xmlrpc');
+            throw MissingDependencyException::optionalExtensionMissing('xmlrpc');
         }
     }
 
