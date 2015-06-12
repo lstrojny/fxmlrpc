@@ -11,6 +11,43 @@
  - Relentlessly unit- and integration tested
  - Implements all known XML/RPC extensions
 
+## Upgrading to 0.20.x
+TBD
+
+## Upgrading to 0.10.x
+0.10.x comes with a couple of breaking changes, see the migration guide below.
+
+### Ivory HTTP adapter
+We used to ship our own bridges for interoperability with various HTTP clients but moved that responsibility to a 3rd party library called [Ivory HTTP Adapter](https://github.com/egeloen/ivory-http-adapter).
+*IMPORTANT NOTE:* the library is not installed by default as you could choose to use fxmlrpc with just your own implementation of the `fXmlRpc\Transport\TransportInterface`. To install the library – and that’s what you most likely want – add this line to your `composer.json`
+
+```
+"egeloen/http-adapter": "~0.6"
+```
+
+… and run `composer update`
+
+### Instantiating an HTTP transport
+In order to use the new adapters, you need to change how you instantiate fXmlRpc and its transport. This is how instantiating a custom transport looked before:
+
+```php
+$httpClient = new GuzzleHttp\Client();
+$client = new fXmlRpc\Client(
+    'http://endpoint.com',
+    new fXmlRpc\Transport\Guzzle4Bridge($httpClient)
+);
+```
+
+This is how you do it now:
+```php
+$httpClient = new GuzzleHttp\Client();
+$httpClient->...();
+$client = new fXmlRpc\Client(
+    'http://endpoint.com',
+    new fXmlRpc\Transport\HttpAdapterTransport(new Ivory\HttpAdapter\GuzzleHttpAdapter($httpClient))
+);
+```
+
 ## Latest improvements
 
  - `[BC]` PSR-4 for autoloading (see #29)

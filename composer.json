@@ -14,7 +14,7 @@
         "php": ">=5.4"
     },
     "require-dev": {
-        "egeloen/http-adapter": "0.6.*@dev",
+        "egeloen/http-adapter": "~0.6",
         "zendframework/zend-log": "~2",
         "zendframework/zendframework1": "~1.12.4",
         "monolog/monolog": ">=1.1",
