@@ -44,7 +44,7 @@ $httpClient = new GuzzleHttp\Client();
 $httpClient->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\HttpAdapterTransport(new Ivory\HttpAdapter\GuzzleHttpAdapter($httpClient))
+    new fXmlRpc\Transport\HttpAdapterTransport(new Ivory\HttpAdapter\GuzzleHttpHttpAdapter($httpClient))
 );
 ```
 
@@ -203,7 +203,7 @@ $httpClient = new GuzzleHttp\Client();
 $httpClient->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\GuzzleHttpAdapter($httpClient))
+    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\GuzzleHttpHttpAdapter($httpClient))
 );
 ```
 
