@@ -27,43 +27,93 @@ use fXmlRpc\Client;
 
 /**
  * Class RecorderTest
+ *
  * @author Piotr Olaszewski <piotroo89 [%] gmail dot com>
  */
 class RecorderTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var TransportInterface */
+    private $transport;
+
     /** @var Recorder */
     private $recorder;
-    private $expectedResponse = '<?xml version="1.0"?><methodResponse><params><param><value><string>Returned string</string></value></param></params></methodResponse>';
+
+    /** @var Client */
+    private $client;
+
+    private $expectedRequest = '<?xml version="1.0" encoding="UTF-8"?>
+<methodCall>
+    <methodName>TestMethod</methodName>
+    <params>
+        <param><value><string>param1</string></value></param>
+        <param><value><int>2</int></value></param>
+        <param><value><struct><member><name>param3</name><value><boolean>1</boolean></value></member></struct></value></param>
+    </params>
+</methodCall>';
+
+    private $expectedResponse = '<?xml version="1.0"?>
+<methodResponse>
+    <params>
+        <param><value><string>Returned string</string></value></param>
+    </params>
+</methodResponse>';
 
     public function setUp()
     {
         parent::setUp();
-        $transport = $this->getMock('fXmlRpc\Transport\TransportInterface');
-        $transport
-            ->expects($this->once())
-            ->method('send')
-            ->willReturn($this->expectedResponse);
-        $this->recorder = new Recorder($transport);
+        $this->transport = $this->getMock('fXmlRpc\Transport\TransportInterface');
+        $this->recorder = new Recorder($this->transport);
+        $this->client = new Client('http://foo.com', $this->recorder);
     }
 
     public function testReturnLastRequest()
     {
-        $client = new Client('http://foo.com', $this->recorder);
-        $client->call('TestMethod', ['param1', 2, ['param3' => true]]);
+        $this->transportOk();
+        $this->client->call('TestMethod', ['param1', 2, ['param3' => true]]);
 
         $lastRequest = $this->recorder->getLastRequest();
 
-        $expected = '<?xml version="1.0" encoding="UTF-8"?><methodCall><methodName>TestMethod</methodName><params><param><value><string>param1</string></value></param><param><value><int>2</int></value></param><param><value><struct><member><name>param3</name><value><boolean>1</boolean></value></member></struct></value></param></params></methodCall>';
-        $this->assertEquals($expected, $lastRequest);
+        $this->assertXmlStringEqualsXmlString($this->expectedRequest, $lastRequest);
     }
 
     public function testReturnLastResponse()
     {
-        $client = new Client('http://foo.com', $this->recorder);
-        $client->call('TestMethod', ['param1', 2, ['param3' => true]]);
+        $this->transportOk();
+        $this->client->call('TestMethod', ['param1', 2, ['param3' => true]]);
 
         $lastResponse = $this->recorder->getLastResponse();
 
-        $this->assertEquals($this->expectedResponse, $lastResponse);
+        $this->assertXmlStringEqualsXmlString($this->expectedResponse, $lastResponse);
+    }
+
+    public function testReturnXmlForRequestAndNullForResponseWhenTransportThrowsException()
+    {
+        try {
+            $this->transportFail();
+            $this->client->call('TestMethod', ['param1', 2, ['param3' => true]]);
+        } catch (\Exception $e) {
+        }
+
+        $lastRequest = $this->recorder->getLastRequest();
+        $lastResponse = $this->recorder->getLastResponse();
+
+        $this->assertNotNull($lastRequest);
+        $this->assertNull($lastResponse);
+    }
+
+    private function transportOk()
+    {
+        $this->transport
+            ->expects($this->once())
+            ->method('send')
+            ->willReturn($this->expectedResponse);
+    }
+
+    private function transportFail()
+    {
+        $this->transport
+            ->expects($this->once())
+            ->method('send')
+            ->willThrowException(new \Exception());
     }
 }

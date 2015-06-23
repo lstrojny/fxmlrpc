@@ -32,8 +32,12 @@ class Recorder implements TransportInterface
 {
     /** @var TransportInterface */
     private $transport;
-    private $lastRequest;
-    private $lastResponse;
+
+    /** @var string|null */
+    private $lastRequest = null;
+
+    /** @var string|null */
+    private $lastResponse = null;
 
     public function __construct(TransportInterface $transport)
     {
@@ -51,7 +55,7 @@ class Recorder implements TransportInterface
     /**
      * Returns the XML sent in the last request.
      *
-     * @return string
+     * @return string|null
      */
     public function getLastRequest()
     {
@@ -61,7 +65,7 @@ class Recorder implements TransportInterface
     /**
      * Returns the XML received in the last response.
      *
-     * @return string
+     * @return string|null
      */
     public function getLastResponse()
     {
