@@ -27,4 +27,4 @@ script: vendor/bin/phpunit ${PHPUNIT_FLAGS}
 
 after_script:
   - if [[ "$COVERAGE" = true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [[ "$COVERAGE" = true ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.xml; fi
+  - if [[ "$COVERAGE" = true ]]; then php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml; fi
