@@ -39,6 +39,9 @@ class Recorder implements TransportInterface
     /** @var string|null */
     private $lastResponse = null;
 
+    /** @var \Exception|null */
+    private $lastException = null;
+
     public function __construct(TransportInterface $transport)
     {
         $this->transport = $transport;
@@ -47,9 +50,22 @@ class Recorder implements TransportInterface
     /** {@inheritdoc} */
     public function send($endpoint, $payload)
     {
+        $this->cleanFields();
         $this->lastRequest = $payload;
-        $this->lastResponse = $this->transport->send($endpoint, $payload);
+        try {
+            $this->lastResponse = $this->transport->send($endpoint, $payload);
+        } catch (\Exception $e) {
+            $this->lastException = $e;
+            throw new $e;
+        }
         return $this->lastResponse;
+    }
+
+    private function cleanFields()
+    {
+        $this->lastRequest = null;
+        $this->lastResponse = null;
+        $this->lastException = null;
     }
 
     /**
@@ -70,5 +86,15 @@ class Recorder implements TransportInterface
     public function getLastResponse()
     {
         return $this->lastResponse;
+    }
+
+    /**
+     * Returns exception when last request fail.
+     *
+     * @return \Exception|null
+     */
+    public function getLastException()
+    {
+        return $this->lastException;
     }
 }

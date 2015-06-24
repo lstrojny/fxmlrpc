@@ -101,10 +101,42 @@ class RecorderTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($lastResponse);
     }
 
+    public function testReturnLastException()
+    {
+        try {
+            $this->transportFail();
+            $this->client->call('TestMethod', ['param1', 2, ['param3' => true]]);
+        } catch (\Exception $e) {
+        }
+
+        $lastException = $this->recorder->getLastException();
+
+        $this->assertInstanceOf('\Exception', $lastException);
+    }
+
+    public function testIsLastResponseNotContainXmlFromPreviousRequest()
+    {
+        $this->transportOk();
+        $this->client->call('TestMethod', ['param1', 2, ['param3' => true]]);
+        try {
+            $this->transportFail();
+            $this->client->call('TestMethod', ['param1', 2, ['param3' => true]]);
+        } catch (\Exception $e) {
+        }
+
+        $lastRequest = $this->recorder->getLastRequest();
+        $lastResponse = $this->recorder->getLastResponse();
+        $lastException = $this->recorder->getLastException();
+
+        $this->assertNotNull($lastRequest);
+        $this->assertNull($lastResponse);
+        $this->assertInstanceOf('\Exception', $lastException);
+    }
+
     private function transportOk()
     {
         $this->transport
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('send')
             ->willReturn($this->expectedResponse);
     }
@@ -112,7 +144,7 @@ class RecorderTest extends \PHPUnit_Framework_TestCase
     private function transportFail()
     {
         $this->transport
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('send')
             ->willThrowException(new \Exception());
     }
