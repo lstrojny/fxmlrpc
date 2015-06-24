@@ -50,6 +50,7 @@ $client = new fXmlRpc\Client(
 
 ## Latest improvements
 
+ - `[FEATURE]` Transport decorator which contains XML of the last request, response and exception (see #47).
  - `[BC]` PSR-4 for autoloading (see #29)
  - `[BC]` Rename `fXmlRpc\Multicall` to `fXmlRpc\MulticallBuilder`
  - `[BC]` Make the surface of the `ClientInterface` signifcantly smaller (see #24 for details)
@@ -142,6 +143,20 @@ $proxy = new fXmlRpc\Proxy(new fXmlRpc\Client('http://endpoint.com'));
 // Call system.echo
 $proxy->system->echo('Hello World!');
 ```
+
+#### Tracking XML of the request and response
+```php
+<?php
+$transport = new fXmlRpc\Transport\HttpAdapterTransport(...);
+$recorder = new Recorder($transport);
+$client = new Client('http://foo.com', $recorder);
+$client->call('TestMethod', ['param1', 2, ['param3' => true]]);
+
+$lastRequest = $recorder->getLastRequest();
+$lastResponse = $recorder->getLastResponse();
+```
+
+If exception occur in the transport layer you can get it using `getLastException()`.
 
 ### Helpful abstraction for multicall requests
 ```php
