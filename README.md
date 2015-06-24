@@ -50,7 +50,7 @@ $client = new fXmlRpc\Client(
 
 ## Latest improvements
 
- - `[FEATURE]` Transport decorator which contains XML of the last request, response and exception (see #47).
+ - `[FEATURE]` Transport decorator which contains XML of the last request, response and exception (see #47, contribution by [Piotr Olaszewski](https://github.com/piotrooo))
  - `[BC]` PSR-4 for autoloading (see #29)
  - `[BC]` Rename `fXmlRpc\Multicall` to `fXmlRpc\MulticallBuilder`
  - `[BC]` Make the surface of the `ClientInterface` signifcantly smaller (see #24 for details)
