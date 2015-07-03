@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Parser;
 
 class NativeParserTest extends AbstractParserTest
@@ -33,5 +32,10 @@ class NativeParserTest extends AbstractParserTest
         }
 
         $this->parser = new NativeParser();
+    }
+
+    public function createParserWithoutValidation()
+    {
+        return new NativeParser(false);
     }
 }

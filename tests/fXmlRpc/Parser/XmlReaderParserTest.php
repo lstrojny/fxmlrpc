@@ -35,6 +35,11 @@ class XmlReaderParserTest extends AbstractParserTest
         $this->parser = new XmlReaderParser();
     }
 
+    public function createParserWithoutValidation()
+    {
+        return new XmlReaderParser(false);
+    }
+
     public function testApacheI1ExtensionValue()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
