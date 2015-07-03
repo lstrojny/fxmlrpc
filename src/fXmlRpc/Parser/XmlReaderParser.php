@@ -23,13 +23,13 @@
  */
 namespace fXmlRpc\Parser;
 
-use fXmlRpc\Exception\ParserException;
-use fXmlRpc\Value\Base64;
-use XMLReader;
-use fXmlRpc\Exception\MissingExtensionException;
 use DateTime;
 use DateTimeZone;
 use DOMDocument;
+use fXmlRpc\Exception\MissingExtensionException;
+use fXmlRpc\Exception\ParserException;
+use fXmlRpc\Value\Base64;
+use XMLReader;
 
 final class XmlReaderParser implements ParserInterface
 {
@@ -45,8 +45,10 @@ final class XmlReaderParser implements ParserInterface
     {
         $useErrors = libxml_use_internal_errors(true);
 
+        XmlChecker::isValid($xmlString);
+
         $xml = new XMLReader();
-        $xml->xml($xmlString, 'UTF-8', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS  | LIBXML_PARSEHUGE);
+        $xml->xml($xmlString, 'UTF-8', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS | LIBXML_PARSEHUGE);
         $xml->setParserProperty(XMLReader::VALIDATE, false);
         $xml->setParserProperty(XMLReader::LOADDTD, false);
 
@@ -291,7 +293,7 @@ final class XmlReaderParser implements ParserInterface
                         case 'i4':
                         case 'i2':
                         case 'i1':
-                            $value = (int) $xml->value;
+                            $value = (int)$xml->value;
                             break;
 
                         case 'boolean':
@@ -301,7 +303,7 @@ final class XmlReaderParser implements ParserInterface
                         case 'double':
                         case 'float':
                         case 'bigdecimal':
-                            $value = (float) $xml->value;
+                            $value = (float)$xml->value;
                             break;
 
                         case 'dateTime.iso8601':

@@ -21,30 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Parser;
 
-class NativeParserTest extends AbstractParserTest
+use fXmlRpc\Exception\ParserException;
+
+/**
+ * Class XmlChecker to check is correct XML
+ * @author Piotr Olaszewski <piotroo89@gmail.com>
+ */
+class XmlChecker
 {
-    public function setUp()
+    /**
+     * @param string $toCheck
+     * @throws ParserException
+     */
+    public static function isValid($toCheck)
     {
-        if (!extension_loaded('xmlrpc')) {
-            $this->markTestSkipped('ext/xmlrpc not available');
+        libxml_use_internal_errors(true);
+
+        $xml = simplexml_load_string($toCheck);
+        if ($xml === false) {
+            throw ParserException::xmlIsString($toCheck);
         }
-
-        $this->parser = new NativeParser();
-    }
-
-    public function testThrowExceptionWhenIsString()
-    {
-        $string = 'returned string';
-
-        $isFault = true;
-
-        $this->setExpectedException(
-            'fXmlRpc\Exception\ParserException',
-            'Invalid XML. Expected XML, string given: "returned string"'
-        );
-        $this->parser->parse($string, $isFault);
     }
 }
