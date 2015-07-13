@@ -697,4 +697,17 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array('FIRST' => ''), $this->parser->parse($string, $isFault));
         $this->assertFalse($isFault);
     }
+
+    public function testThrowExceptionWhenIsString()
+    {
+        $string = 'returned string';
+
+        $isFault = true;
+
+        $this->setExpectedException(
+            'fXmlRpc\Exception\ParserException',
+            'Invalid XML. Expected XML, string given: "returned string"'
+        );
+        $this->parser->parse($string, $isFault);
+    }
 }

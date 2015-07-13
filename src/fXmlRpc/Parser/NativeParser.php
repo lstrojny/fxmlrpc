@@ -41,7 +41,9 @@ final class NativeParser implements ParserInterface
     /** {@inheritdoc} */
     public function parse($xmlString, &$isFault)
     {
-        XmlChecker::isValid($xmlString);
+        libxml_use_internal_errors(true);
+
+        XmlChecker::validXml($xmlString);
 
         $result = xmlrpc_decode($xmlString, 'UTF-8');
 

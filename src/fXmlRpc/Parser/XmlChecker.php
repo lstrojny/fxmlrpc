@@ -29,19 +29,17 @@ use fXmlRpc\Exception\ParserException;
  * Class XmlChecker to check is correct XML
  * @author Piotr Olaszewski <piotroo89@gmail.com>
  */
-class XmlChecker
+final class XmlChecker
 {
     /**
      * @param string $toCheck
      * @throws ParserException
      */
-    public static function isValid($toCheck)
+    public static function validXml($toCheck)
     {
-        libxml_use_internal_errors(true);
-
         $xml = simplexml_load_string($toCheck);
         if ($xml === false) {
-            throw ParserException::xmlIsString($toCheck);
+            throw ParserException::notXml($toCheck);
         }
     }
 }

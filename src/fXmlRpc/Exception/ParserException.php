@@ -49,7 +49,7 @@ final class ParserException extends RuntimeException
         );
     }
 
-    public static function xmlIsString($string)
+    public static function notXml($string)
     {
         return new static(sprintf('Invalid XML. Expected XML, string given: "%s"', $string));
     }

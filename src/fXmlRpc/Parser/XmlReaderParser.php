@@ -45,7 +45,7 @@ final class XmlReaderParser implements ParserInterface
     {
         $useErrors = libxml_use_internal_errors(true);
 
-        XmlChecker::isValid($xmlString);
+        XmlChecker::validXml($xmlString);
 
         $xml = new XMLReader();
         $xml->xml($xmlString, 'UTF-8', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS | LIBXML_PARSEHUGE);
