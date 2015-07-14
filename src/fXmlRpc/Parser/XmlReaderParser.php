@@ -38,7 +38,7 @@ final class XmlReaderParser implements ParserInterface
      */
     private $validateCorrectXml;
 
-    public function __construct()
+    public function __construct($validateCorrectXml = true)
     {
         if (!extension_loaded('xmlreader')) {
             throw MissingExtensionException::extensionMissing('xmlreader');
