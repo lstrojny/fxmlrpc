@@ -33,11 +33,17 @@ use XMLReader;
 
 final class XmlReaderParser implements ParserInterface
 {
+    /**
+     * @var bool
+     */
+    private $validateCorrectXml;
+
     public function __construct()
     {
         if (!extension_loaded('xmlreader')) {
             throw MissingExtensionException::extensionMissing('xmlreader');
         }
+        $this->validateCorrectXml = $validateCorrectXml;
     }
 
     /** {@inheritdoc} */
@@ -45,7 +51,9 @@ final class XmlReaderParser implements ParserInterface
     {
         $useErrors = libxml_use_internal_errors(true);
 
-        XmlChecker::validXml($xmlString);
+        if ($this->validateCorrectXml) {
+            XmlChecker::validXml($xmlString);
+        }
 
         $xml = new XMLReader();
         $xml->xml($xmlString, 'UTF-8', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS | LIBXML_PARSEHUGE);
