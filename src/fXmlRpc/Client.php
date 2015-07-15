@@ -23,6 +23,7 @@
  */
 namespace fXmlRpc;
 
+use fXmlRpc\Exception\MissingDependencyException;
 use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Parser\XmlReaderParser;
 use fXmlRpc\Serializer\SerializerInterface;
@@ -41,10 +42,10 @@ final class Client implements ClientInterface
     /** @var TransportInterface */
     private $transport;
 
-    /** @var Parser\ParserInterface */
+    /** @var ParserInterface */
     private $parser;
 
-    /** @var Serializer\SerializerInterface */
+    /** @var SerializerInterface */
     private $serializer;
 
     /** @var array */
@@ -59,10 +60,10 @@ final class Client implements ClientInterface
      * If no specific transport, parser or serializer is passed, default implementations
      * are used.
      *
-     * @param string                         $uri
-     * @param TransportInterface             $transport
-     * @param Parser\ParserInterface         $parser
-     * @param Serializer\SerializerInterface $serializer
+     * @param string $uri
+     * @param TransportInterface $transport
+     * @param ParserInterface $parser
+     * @param SerializerInterface $serializer
      */
     public function __construct(
         $uri = null,
@@ -72,9 +73,9 @@ final class Client implements ClientInterface
     )
     {
         $this->uri = $uri;
-        $this->transport = $transport ?: new HttpAdapterTransport(HttpAdapterFactory::guess());
-        $this->parser = $parser ?: new XmlReaderParser();
-        $this->serializer = $serializer ?: new XmlWriterSerializer();
+        $this->transport = $transport ?: $this->getDefaultTransport();
+        $this->parser = $parser ?: $this->getDefaultParser();
+        $this->serializer = $serializer ?: $this->getDefaultSerializer();
     }
 
     /**
@@ -164,5 +165,27 @@ final class Client implements ClientInterface
     public function multicall()
     {
         return new MulticallBuilder($this);
+    }
+
+    /** @return TransportInterface */
+    private function getDefaultTransport()
+    {
+        if (!class_exists('Ivory\HttpAdapter\HttpAdapterFactory')) {
+            throw MissingDependencyException::composerPackageMissing('egeloen/http-adapter');
+        }
+
+        return new HttpAdapterTransport(HttpAdapterFactory::guess());
+    }
+
+    /** @return ParserInterface */
+    private function getDefaultParser()
+    {
+        return new XmlReaderParser();
+    }
+
+    /** SerializerInterface */
+    private function getDefaultSerializer()
+    {
+        return new XmlWriterSerializer();
     }
 }

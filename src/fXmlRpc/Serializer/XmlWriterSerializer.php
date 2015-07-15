@@ -29,7 +29,7 @@ use DateTime;
 use fXmlRpc\Value\Base64Interface;
 use fXmlRpc\ExtensionSupportInterface;
 use fXmlRpc\Exception\SerializationException;
-use fXmlRpc\Exception\MissingExtensionException;
+use fXmlRpc\Exception\MissingDependencyException;
 
 final class XmlWriterSerializer implements SerializerInterface, ExtensionSupportInterface
 {
@@ -42,7 +42,7 @@ final class XmlWriterSerializer implements SerializerInterface, ExtensionSupport
     public function __construct()
     {
         if (!extension_loaded('xmlwriter')) {
-            throw MissingExtensionException::extensionMissing('xmlwriter');
+            throw MissingDependencyException::optionalExtensionMissing('xmlwriter');
         }
 
         $this->writer = new XMLWriter();

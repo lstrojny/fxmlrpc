@@ -25,6 +25,7 @@
         "internations/kodierungsregelwerksammlung": "dev-master"
     },
     "suggest": {
+        "egeloen/http-adapter": "To use the HTTP adapter",
         "zendframework/zend-log": "To use ZF2 Zend\\Log\\Logger as a logger",
         "zendframework/zendframework1": "To use ZF1 Log",
         "guzzle/guzzle": "To integrate Guzzle as HTTP client",

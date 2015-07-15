@@ -23,10 +23,20 @@
  */
 namespace fXmlRpc\Exception;
 
-final class MissingExtensionException extends RuntimeException
+final class MissingDependencyException extends RuntimeException
 {
-    public static function extensionMissing($extension)
+    public static function optionalExtensionMissing($extension)
     {
-        return new static(sprintf('PHP extension "ext/%s" is required but not installed', $extension));
+        return new static(sprintf('Optional PHP extension "ext/%s" is not installed', $extension));
+    }
+
+    public static function composerPackageMissing($package)
+    {
+        return new static(
+            sprintf(
+                'Optional composer package "%1$s" is required but not installed. Run "php composer require %1$s"',
+                $package
+            )
+        );
     }
 }

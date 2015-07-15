@@ -26,14 +26,14 @@ namespace fXmlRpc\Serializer;
 use DateTime;
 use fXmlRpc\Value\Base64Interface;
 use fXmlRpc\Exception\SerializationException;
-use fXmlRpc\Exception\MissingExtensionException;
+use fXmlRpc\Exception\MissingDependencyException;
 
 final class NativeSerializer implements SerializerInterface
 {
     public function __construct()
     {
         if (!extension_loaded('xmlrpc')) {
-            throw MissingExtensionException::extensionMissing('xmlrpc');
+            throw MissingDependencyException::optionalExtensionMissing('xmlrpc');
         }
     }
 
