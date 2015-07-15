@@ -33,14 +33,14 @@ final class NativeParser implements ParserInterface
     /**
      * @var bool
      */
-    private $validateCorrectXml;
+    private $validateResponse;
 
-    public function __construct($validateCorrectXml = true)
+    public function __construct($validateResponse = true)
     {
         if (!extension_loaded('xmlrpc')) {
             throw MissingExtensionException::extensionMissing('xmlrpc');
         }
-        $this->validateCorrectXml = $validateCorrectXml;
+        $this->validateResponse = $validateResponse;
     }
 
     /** {@inheritdoc} */
@@ -48,7 +48,7 @@ final class NativeParser implements ParserInterface
     {
         libxml_use_internal_errors(true);
 
-        if ($this->validateCorrectXml) {
+        if ($this->validateResponse) {
             XmlChecker::validXml($xmlString);
         }
 

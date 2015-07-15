@@ -36,14 +36,14 @@ final class XmlReaderParser implements ParserInterface
     /**
      * @var bool
      */
-    private $validateCorrectXml;
+    private $validateResponse;
 
-    public function __construct($validateCorrectXml = true)
+    public function __construct($validateResponse = true)
     {
         if (!extension_loaded('xmlreader')) {
             throw MissingExtensionException::extensionMissing('xmlreader');
         }
-        $this->validateCorrectXml = $validateCorrectXml;
+        $this->validateResponse = $validateResponse;
     }
 
     /** {@inheritdoc} */
@@ -51,7 +51,7 @@ final class XmlReaderParser implements ParserInterface
     {
         $useErrors = libxml_use_internal_errors(true);
 
-        if ($this->validateCorrectXml) {
+        if ($this->validateResponse) {
             XmlChecker::validXml($xmlString);
         }
 
