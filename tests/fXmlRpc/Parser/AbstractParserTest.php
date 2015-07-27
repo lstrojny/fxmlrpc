@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Parser;
 
 use DateTime;
@@ -32,6 +31,9 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 {
     /** @var ParserInterface */
     protected $parser;
+
+    /** @return ParserInterface */
+    abstract public function getParserWithoutValidation();
 
     public static function provideSimpleTypes()
     {
@@ -702,12 +704,20 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
     {
         $string = 'returned string';
 
-        $isFault = true;
-
         $this->setExpectedException(
             'fXmlRpc\Exception\ParserException',
             'Invalid XML. Expected XML, string given: "returned string"'
         );
         $this->parser->parse($string, $isFault);
+    }
+
+    public function testNovalidateWhenResponseIsString()
+    {
+        $string = 'returned string';
+
+        $parser = $this->getParserWithoutValidation();
+
+        $parse = $parser->parse($string, $isFault);
+        $this->assertNull($parse);
     }
 }

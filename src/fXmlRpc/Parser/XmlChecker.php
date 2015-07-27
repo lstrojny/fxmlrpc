@@ -32,14 +32,14 @@ use fXmlRpc\Exception\ParserException;
 final class XmlChecker
 {
     /**
-     * @param string $toCheck
+     * @param string $xml
      * @throws ParserException
      */
-    public static function validXml($toCheck)
+    public static function validXml($xml)
     {
-        $xml = simplexml_load_string($toCheck);
-        if ($xml === false) {
-            throw ParserException::notXml($toCheck);
+        $isCorrect = simplexml_load_string($xml);
+        if ($isCorrect === false) {
+            throw ParserException::notXml($xml);
         }
     }
 }
