@@ -35,7 +35,7 @@ class XmlReaderParserTest extends AbstractParserTest
         $this->parser = new XmlReaderParser();
     }
 
-    public function getParserWithoutValidation()
+    public function createParserWithoutValidation()
     {
         return new XmlReaderParser(false);
     }

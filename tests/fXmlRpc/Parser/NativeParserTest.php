@@ -34,7 +34,7 @@ class NativeParserTest extends AbstractParserTest
         $this->parser = new NativeParser();
     }
 
-    public function getParserWithoutValidation()
+    public function createParserWithoutValidation()
     {
         return new NativeParser(false);
     }

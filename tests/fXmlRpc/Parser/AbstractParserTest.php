@@ -33,7 +33,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
     protected $parser;
 
     /** @return ParserInterface */
-    abstract public function getParserWithoutValidation();
+    abstract protected function createParserWithoutValidation();
 
     public static function provideSimpleTypes()
     {
@@ -715,7 +715,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
     {
         $string = 'returned string';
 
-        $parser = $this->getParserWithoutValidation();
+        $parser = $this->createParserWithoutValidation();
 
         $parse = $parser->parse($string, $isFault);
         $this->assertNull($parse);
