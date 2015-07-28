@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Parser;
 
 use DateTime;
@@ -31,16 +30,28 @@ use fXmlRpc\Value\Base64;
 
 final class NativeParser implements ParserInterface
 {
-    public function __construct()
+    /**
+     * @var bool
+     */
+    private $validateResponse;
+
+    public function __construct($validateResponse = true)
     {
         if (!extension_loaded('xmlrpc')) {
             throw MissingExtensionException::extensionMissing('xmlrpc');
         }
+        $this->validateResponse = $validateResponse;
     }
 
     /** {@inheritdoc} */
     public function parse($xmlString, &$isFault)
     {
+        libxml_use_internal_errors(true);
+
+        if ($this->validateResponse) {
+            XmlChecker::validXml($xmlString);
+        }
+
         $result = xmlrpc_decode($xmlString, 'UTF-8');
 
         $isFault = false;

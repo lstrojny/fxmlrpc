@@ -21,36 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Exception;
+namespace fXmlRpc\Parser;
 
-final class ParserException extends RuntimeException
+use fXmlRpc\Exception\ParserException;
+
+/**
+ * Class XmlChecker to check is correct XML
+ * @author Piotr Olaszewski <piotroo89@gmail.com>
+ */
+final class XmlChecker
 {
-    public static function unexpectedTag($tagName, $elements, array $definedVariables, $depth, $xml)
+    /**
+     * @param string $xml
+     * @throws ParserException
+     */
+    public static function validXml($xml)
     {
-        $expectedElements = [];
-        foreach ($definedVariables as $variableName => $variable) {
-            if (substr($variableName, 0, 4) !== 'flag') {
-                continue;
-            }
-
-            if (($elements & $variable) === $variable) {
-                $expectedElements[] = substr($variableName, 4);
-            }
+        $isCorrect = simplexml_load_string($xml);
+        if ($isCorrect === false) {
+            throw ParserException::notXml($xml);
         }
-
-        return new static(
-            sprintf(
-                'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
-                implode('", "', $expectedElements),
-                $tagName,
-                $depth,
-                $xml
-            )
-        );
-    }
-
-    public static function notXml($string)
-    {
-        return new static(sprintf('Invalid XML. Expected XML, string given: "%s"', $string));
     }
 }
