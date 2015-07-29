@@ -151,13 +151,7 @@ final class Client implements ClientInterface
         $params = array_merge($this->prependParams, $params, $this->appendParams);
         $payload = $this->serializer->serialize($methodName, $params);
         $response = $this->transport->send($this->uri, $payload);
-        $result = $this->parser->parse($response, $isFault);
-
-        if ($isFault) {
-            throw ResponseException::fault($result);
-        }
-
-        return $result;
+        return $this->parser->parse($response);
     }
 
     /** {@inheritdoc} */

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 namespace fXmlRpc\Parser;
+
 use fXmlRpc\Exception\RuntimeException;
 
 /**
@@ -32,10 +33,9 @@ interface ParserInterface
     /**
      * Parse XML string into PHP representation
      *
-     * @param  string  $xmlString
-     * @param  boolean $isFault
+     * @param  string $xmlString
      * @throws RuntimeException
      * @return mixed
      */
-    public function parse($xmlString, &$isFault);
+    public function parse($xmlString);
 }
