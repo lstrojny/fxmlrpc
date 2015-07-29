@@ -50,6 +50,7 @@ $client = new fXmlRpc\Client(
 
 ## Latest improvements
 
+ - `[FEATURE]` Add XML validation on the client side. Configurable but enabled per default
  - `[FEATURE]` Transport decorator which contains XML of the last request, response and exception (see #47, contribution by [Piotr Olaszewski](https://github.com/piotrooo))
  - `[BC]` PSR-4 for autoloading (see #29)
  - `[BC]` Rename `fXmlRpc\Multicall` to `fXmlRpc\MulticallBuilder`
