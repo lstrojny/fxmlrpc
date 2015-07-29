@@ -12,7 +12,8 @@
  - Implements all known XML/RPC extensions
 
 ## Upgrading to 0.20.x
-TBD
+We change `ParserInterface::parse()` method interface, now isn't required to pass second parameter (`$isFault`),
+parser should throw an exception `FaultException` when fault message is encountered in server response.
 
 ## Upgrading to 0.10.x
 0.10.x comes with a couple of breaking changes, see the migration guide below.
@@ -50,6 +51,7 @@ $client = new fXmlRpc\Client(
 
 ## Latest improvements
 
+ - `[IMPROVEMENT]` Refactor parsers throw fault exception instead of client
  - `[FEATURE]` Add XML validation on the client side. Configurable but enabled per default
  - `[FEATURE]` Transport decorator which contains XML of the last request, response and exception (see #47, contribution by [Piotr Olaszewski](https://github.com/piotrooo))
  - `[BC]` PSR-4 for autoloading (see #29)

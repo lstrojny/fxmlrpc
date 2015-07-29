@@ -26,6 +26,8 @@ namespace fXmlRpc\Integration;
 use fXmlRpc;
 use fXmlRpc\Client;
 use fXmlRpc\CallClientInterface;
+use fXmlRpc\Exception\FaultException;
+use fXmlRpc\Exception\HttpException;
 
 abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
 {
@@ -127,7 +129,7 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
         try {
             $client->call('system.fault');
             $this->fail('Expected exception');
-        } catch (fXmlRpc\Exception\ResponseException $e) {
+        } catch (FaultException $e) {
             $this->assertContains('ERROR', $e->getMessage());
             $this->assertContains('ERROR', $e->getFaultString());
             $this->assertSame(0, $e->getCode());
@@ -142,7 +144,7 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
         try {
             $client->call('system.failure');
             $this->fail('Exception expected');
-        } catch (\fXmlRpc\Exception\HttpException $e) {
+        } catch (HttpException $e) {
             $this->assertInstanceOf('fXmlRpc\Exception\AbstractTransportException', $e);
             $this->assertInstanceOf('fXmlRpc\Exception\ExceptionInterface', $e);
             $this->assertInstanceOf('RuntimeException', $e);
