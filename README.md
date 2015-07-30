@@ -12,7 +12,8 @@
  - Implements all known XML/RPC extensions
 
 ## Upgrading to 0.20.x
-TBD
+We change `ParserInterface::parse()` method interface, now isn't required to pass second parameter (`$isFault`),
+parser should throw an exception `FaultException` when fault message is encountered in server response.
 
 ## Upgrading to 0.10.x
 0.10.x comes with a couple of breaking changes, see the migration guide below.
