@@ -25,7 +25,7 @@ namespace fXmlRpc\Parser;
 
 use DateTime;
 use DateTimeZone;
-use fXmlRpc\Exception\ResponseException;
+use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Value\Base64;
 
 abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
@@ -397,7 +397,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
         try {
             $this->parser->parse($xml);
-        } catch (ResponseException $e) {
+        } catch (FaultException $e) {
             $this->assertEquals(123, $e->getFaultCode());
             $this->assertEquals('ERROR', $e->getFaultString());
         }

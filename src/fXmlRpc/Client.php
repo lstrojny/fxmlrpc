@@ -27,7 +27,6 @@ use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Parser\XmlReaderParser;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Serializer\XmlWriterSerializer;
-use fXmlRpc\Exception\ResponseException;
 use fXmlRpc\Exception\InvalidArgumentException;
 use fXmlRpc\Transport\HttpAdapterTransport;
 use fXmlRpc\Transport\TransportInterface;

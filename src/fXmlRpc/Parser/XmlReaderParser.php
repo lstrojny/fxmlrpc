@@ -28,7 +28,7 @@ use DateTimeZone;
 use DOMDocument;
 use fXmlRpc\Exception\MissingExtensionException;
 use fXmlRpc\Exception\ParserException;
-use fXmlRpc\Exception\ResponseException;
+use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Value\Base64;
 use XMLReader;
 
@@ -367,7 +367,7 @@ final class XmlReaderParser implements ParserInterface
         $result = $aggregates ? array_pop($aggregates[0]) : null;
 
         if ($isFault) {
-            throw ResponseException::fault($result);
+            throw FaultException::fault($result);
         }
 
         return $result;

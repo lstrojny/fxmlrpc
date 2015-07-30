@@ -26,7 +26,7 @@ namespace fXmlRpc\Parser;
 use DateTime;
 use DateTimeZone;
 use fXmlRpc\Exception\MissingExtensionException;
-use fXmlRpc\Exception\ResponseException;
+use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Value\Base64;
 
 final class NativeParser implements ParserInterface
@@ -84,7 +84,7 @@ final class NativeParser implements ParserInterface
         if (is_array($result)) {
             reset($result);
             if (xmlrpc_is_fault($result)) {
-                throw ResponseException::fault($result);
+                throw FaultException::fault($result);
             }
         }
 
