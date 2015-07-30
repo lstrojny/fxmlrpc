@@ -116,6 +116,7 @@ final class XmlReaderParser implements ParserInterface
             if ($nextExpectedElements !== null &&
                 ($flag = isset(${'flag' . $tagName}) ? ${'flag' . $tagName} : -1) &&
                 ($nextExpectedElements & $flag) !== $flag) {
+                libxml_use_internal_errors($useErrors);
                 throw ParserException::unexpectedTag(
                     $tagName,
                     $nextExpectedElements,
