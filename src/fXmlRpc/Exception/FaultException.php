@@ -23,34 +23,25 @@
  */
 namespace fXmlRpc\Exception;
 
-final class ParserException extends RuntimeException
+final class FaultException extends RuntimeException
 {
-    public static function unexpectedTag($tagName, $elements, array $definedVariables, $depth, $xml)
+    private $faultCode;
+
+    public static function fault($response)
     {
-        $expectedElements = [];
-        foreach ($definedVariables as $variableName => $variable) {
-            if (substr($variableName, 0, 4) !== 'flag') {
-                continue;
-            }
+        $exception = new static(isset($response['faultString']) ? $response['faultString'] : 'Unknown');
+        $exception->faultCode = isset($response['faultCode']) ? $response['faultCode'] : 0;
 
-            if (($elements & $variable) === $variable) {
-                $expectedElements[] = substr($variableName, 4);
-            }
-        }
-
-        return new static(
-            sprintf(
-                'Invalid XML. Expected one of "%s", got "%s" on depth %d (context: "%s")',
-                implode('", "', $expectedElements),
-                $tagName,
-                $depth,
-                $xml
-            )
-        );
+        return $exception;
     }
 
-    public static function notXml($string)
+    public function getFaultString()
     {
-        return new static(sprintf('Invalid XML. Expected XML, string given: "%s"', $string));
+        return $this->getMessage();
+    }
+
+    public function getFaultCode()
+    {
+        return $this->faultCode;
     }
 }

@@ -21,17 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Parser;
 
 use DateTime;
 use DateTimeZone;
+use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Value\Base64;
 
 abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 {
     /** @var ParserInterface */
     protected $parser;
+
+    /** @return ParserInterface */
+    abstract protected function createParserWithoutValidation();
 
     public static function provideSimpleTypes()
     {
@@ -56,7 +59,9 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 'dateTime.iso8601',
                 '19980717T14:08:55'
             ),
-            array(Base64::deserialize('Zm9vYmFy'), 'base64', 'Zm9vYmFy', function($v){return $v->getDecoded();}),
+            array(Base64::deserialize('Zm9vYmFy'), 'base64', 'Zm9vYmFy', function ($v) {
+                return $v->getDecoded();
+            }),
             array('Ümläuts', 'string', '&#220;ml&#228;uts'),
         );
     }
@@ -77,14 +82,12 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             $serializedValue
         );
 
-        $isFault = true;
-        $result = $this->parser->parse($xml, $isFault);
+        $result = $this->parser->parse($xml);
         if ($callback === null) {
             $this->assertEquals($expectedValue, $result);
         } else {
             $this->assertSame($callback($expectedValue), $callback($result));
         }
-        $this->assertFalse($isFault);
     }
 
     /** @dataProvider provideSimpleTypes */
@@ -102,9 +105,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             $serializedType
         );
 
-        $isFault = true;
-        $this->assertEquals(null, $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertEquals(null, $this->parser->parse($xml));
     }
 
     /** @dataProvider provideSimpleTypes */
@@ -123,9 +124,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             $serializedType
         );
 
-        $isFault = true;
-        $this->assertEquals(null, $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertEquals(null, $this->parser->parse($xml));
     }
 
     public function testParsingListResponse()
@@ -146,9 +145,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $result = $this->parser->parse($string, $isFault);
-        $this->assertFalse($isFault);
+        $result = $this->parser->parse($string);
         $this->assertSame(array('Str 0', 'Str 1'), $result);
         $this->assertSame('Str 0', current($result));
         $this->assertSame('Str 1', end($result));
@@ -186,12 +183,10 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
         $this->assertSame(
             array(array('Str 00', 'Str 01'), array('Str 10', 'Str 11')),
-            $this->parser->parse($string, $isFault)
+            $this->parser->parse($string)
         );
-        $this->assertFalse($isFault);
     }
 
     public function testParsingStructs()
@@ -220,12 +215,10 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
         $this->assertSame(
             array('FIRST' => 'ONE', 'SECOND' => 'TWO', 'THIRD' => 'THREE'),
-            $this->parser->parse($string, $isFault)
+            $this->parser->parse($string)
         );
-        $this->assertFalse($isFault);
     }
 
     public function testParsingStructsInStructs()
@@ -272,15 +265,13 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
         $this->assertSame(
             array(
                 'FIRST' => array('ONE' => 1, 'TWO' => 2),
                 'SECOND' => array('ONE ONE' => 11, 'TWO TWO' => 22),
             ),
-            $this->parser->parse($string, $isFault)
+            $this->parser->parse($string)
         );
-        $this->assertFalse($isFault);
     }
 
     public function testParsingListsInStructs()
@@ -347,15 +338,13 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
         $this->assertSame(
             array(
                 'FIRST' => array(array(' Str 00', ' Str 01'), array(' Str 10', ' Str 11')),
                 'SECOND' => array(array('Str 30', 'Str 31'), array('Str 40', 'Str 41')),
             ),
-            $this->parser->parse($string, $isFault)
+            $this->parser->parse($string)
         );
-        $this->assertFalse($isFault);
     }
 
     public function testEmptyString()
@@ -369,9 +358,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
                 </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame(' ', $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame(' ', $this->parser->parse($xml));
     }
 
     public function testImplicitString()
@@ -385,9 +372,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
                 </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame('STRING', $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame('STRING', $this->parser->parse($xml));
     }
 
     public function testParsingFaultCode()
@@ -410,15 +395,12 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </fault>
             </methodResponse>';
 
-        $isFault = false;
-        $this->assertSame(
-            array(
-                'faultCode' => 123,
-                'faultString' => 'ERROR',
-            ),
-            $this->parser->parse($xml, $isFault)
-        );
-        $this->assertTrue($isFault);
+        try {
+            $this->parser->parse($xml);
+        } catch (FaultException $e) {
+            $this->assertEquals(123, $e->getFaultCode());
+            $this->assertEquals('ERROR', $e->getFaultString());
+        }
     }
 
     public function testNilValue()
@@ -434,13 +416,10 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
         $this->assertSame(
             null,
-            $this->parser->parse($xml, $isFault)
+            $this->parser->parse($xml)
         );
-
-        $this->assertFalse($isFault);
     }
 
     public function testApacheNilExtensionValue()
@@ -458,10 +437,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             null,
-            $this->parser->parse($xml, $isFault)
+            $this->parser->parse($xml)
         );
-
-        $this->assertFalse($isFault);
     }
 
     public function testParsingBase64WithNewlinesAsPythonXmlRpcEncodes()
@@ -479,11 +456,9 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             </params>
         </methodResponse>";
 
-        $value = $this->parser->parse($xml, $isFault);
+        $value = $this->parser->parse($xml);
         $this->assertSame('HELLO WORLD', $value->getDecoded());
         $this->assertSame('SEVMTE8gV09STEQ=', $value->getEncoded());
-
-        $this->assertFalse($isFault);
     }
 
     public function testParsingInvalidMultipleParams()
@@ -503,10 +478,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             </params>
         </methodResponse>";
 
-        $value = $this->parser->parse($xml, $isFault);
+        $value = $this->parser->parse($xml);
         $this->assertSame('p3', $value);
-
-        $this->assertFalse($isFault);
     }
 
     public function testEntities_PreDefined_Name()
@@ -518,9 +491,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $value = $this->parser->parse($xml, $isFault);
+        $value = $this->parser->parse($xml);
         $this->assertSame('"&\'<>', $value);
-        $this->assertFalse($isFault);
     }
 
     public function testEntities_PreDefined_Value()
@@ -532,9 +504,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $value = $this->parser->parse($xml, $isFault);
+        $value = $this->parser->parse($xml);
         $this->assertSame('"&\'<>', $value);
-        $this->assertFalse($isFault);
     }
 
     public function testEntities_UnicodeEntitiesNumeric()
@@ -550,9 +521,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $value = $this->parser->parse($xml, $isFault);
+        $value = $this->parser->parse($xml);
         $this->assertSame('ΔЙקم๗あ叶葉말', $value);
-        $this->assertFalse($isFault);
     }
 
     public function testEntities_UnicodeEntitiesHex()
@@ -568,9 +538,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $value = $this->parser->parse($xml, $isFault);
+        $value = $this->parser->parse($xml);
         $this->assertSame('ΔЙקم๗あ叶葉말', $value);
-        $this->assertFalse($isFault);
     }
 
     public function testXmlComments()
@@ -597,9 +566,8 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
             <!-- Comment -->
         ';
 
-        $value = $this->parser->parse($xml, $isFault);
+        $value = $this->parser->parse($xml);
         $this->assertSame('value', $value);
-        $this->assertFalse($isFault);
     }
 
     public function testXxeAttack_1()
@@ -612,8 +580,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $value = $this->parser->parse($xml, $isFault);
-        $this->assertFalse($isFault);
+        $value = $this->parser->parse($xml);
         $this->assertSame('', $value);
     }
 
@@ -632,9 +599,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $result = $this->parser->parse($string, $isFault);
-        $this->assertFalse($isFault);
+        $result = $this->parser->parse($string);
         $this->assertSame(array(), $result);
     }
 
@@ -652,9 +617,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame(array(), $this->parser->parse($string, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame(array(), $this->parser->parse($string));
     }
 
     public function testEmptyStruct_2()
@@ -670,9 +633,7 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame(array(), $this->parser->parse($string, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame(array(), $this->parser->parse($string));
     }
 
     public function testEmptyStructMember()
@@ -693,8 +654,27 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
                 </params>
             </methodResponse>';
 
-        $isFault = false;
-        $this->assertSame(array('FIRST' => ''), $this->parser->parse($string, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame(array('FIRST' => ''), $this->parser->parse($string));
+    }
+
+    public function testThrowExceptionWhenIsString()
+    {
+        $string = 'returned string';
+
+        $this->setExpectedException(
+            'fXmlRpc\Exception\ParserException',
+            'Invalid XML. Expected XML, string given: "returned string"'
+        );
+        $this->parser->parse($string);
+    }
+
+    public function testNovalidateWhenResponseIsString()
+    {
+        $string = 'returned string';
+
+        $parser = $this->createParserWithoutValidation();
+
+        $parse = $parser->parse($string);
+        $this->assertNull($parse);
     }
 }

@@ -21,27 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Exception;
+namespace fXmlRpc\Parser;
 
-final class ResponseException extends RuntimeException
+use fXmlRpc\Exception\ParserException;
+
+/**
+ * Class XmlChecker to check is correct XML
+ * @author Piotr Olaszewski <piotroo89@gmail.com>
+ */
+final class XmlChecker
 {
-    private $faultCode;
-
-    public static function fault($response)
+    /**
+     * @param string $xml
+     * @throws ParserException
+     */
+    public static function validXml($xml)
     {
-        $exception = new static(isset($response['faultString']) ? $response['faultString'] : 'Unknown');
-        $exception->faultCode = isset($response['faultCode']) ? $response['faultCode'] : 0;
+        $useErrors = libxml_use_internal_errors(true);
 
-        return $exception;
-    }
+        $isCorrect = simplexml_load_string($xml);
+        if ($isCorrect === false) {
+            libxml_use_internal_errors($useErrors);
+            throw ParserException::notXml($xml);
+        }
 
-    public function getFaultString()
-    {
-        return $this->getMessage();
-    }
-
-    public function getFaultCode()
-    {
-        return $this->faultCode;
+        libxml_use_internal_errors($useErrors);
     }
 }

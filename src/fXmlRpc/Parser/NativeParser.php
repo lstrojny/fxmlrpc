@@ -21,29 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace fXmlRpc\Parser;
 
 use DateTime;
 use DateTimeZone;
 use fXmlRpc\Exception\MissingExtensionException;
+use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Value\Base64;
 
 final class NativeParser implements ParserInterface
 {
-    public function __construct()
+    /** @var bool */
+    private $validateResponse;
+
+    public function __construct($validateResponse = true)
     {
         if (!extension_loaded('xmlrpc')) {
             throw MissingExtensionException::extensionMissing('xmlrpc');
         }
+        $this->validateResponse = $validateResponse;
     }
 
     /** {@inheritdoc} */
-    public function parse($xmlString, &$isFault)
+    public function parse($xmlString)
     {
-        $result = xmlrpc_decode($xmlString, 'UTF-8');
+        if ($this->validateResponse) {
+            XmlChecker::validXml($xmlString);
+        }
 
-        $isFault = false;
+        $result = xmlrpc_decode($xmlString, 'UTF-8');
 
         $toBeVisited = [&$result];
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
@@ -77,7 +83,9 @@ final class NativeParser implements ParserInterface
 
         if (is_array($result)) {
             reset($result);
-            $isFault = xmlrpc_is_fault($result);
+            if (xmlrpc_is_fault($result)) {
+                throw FaultException::fault($result);
+            }
         }
 
         return $result;

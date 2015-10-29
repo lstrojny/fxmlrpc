@@ -12,7 +12,8 @@
  - Implements all known XML/RPC extensions
 
 ## Upgrading to 0.20.x
-TBD
+We change `ParserInterface::parse()` method interface, now isn't required to pass second parameter (`$isFault`),
+parser should throw an exception `FaultException` when fault message is encountered in server response.
 
 ## Upgrading to 0.10.x
 0.10.x comes with a couple of breaking changes, see the migration guide below.
@@ -44,12 +45,15 @@ $httpClient = new GuzzleHttp\Client();
 $httpClient->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\HttpAdapterTransport(new Ivory\HttpAdapter\GuzzleHttpAdapter($httpClient))
+    new fXmlRpc\Transport\HttpAdapterTransport(new Ivory\HttpAdapter\GuzzleHttpHttpAdapter($httpClient))
 );
 ```
 
 ## Latest improvements
 
+ - `[IMPROVEMENT]` Refactor parsers throw fault exception instead of client
+ - `[FEATURE]` Add XML validation on the client side. Configurable but enabled per default
+ - `[FEATURE]` Transport decorator which contains XML of the last request, response and exception (see #47, contribution by [Piotr Olaszewski](https://github.com/piotrooo))
  - `[BC]` PSR-4 for autoloading (see #29)
  - `[BC]` Rename `fXmlRpc\Multicall` to `fXmlRpc\MulticallBuilder`
  - `[BC]` Make the surface of the `ClientInterface` signifcantly smaller (see #24 for details)
@@ -143,6 +147,20 @@ $proxy = new fXmlRpc\Proxy(new fXmlRpc\Client('http://endpoint.com'));
 $proxy->system->echo('Hello World!');
 ```
 
+#### Tracking XML of the request and response
+```php
+<?php
+$transport = new fXmlRpc\Transport\HttpAdapterTransport(...);
+$recorder = new Recorder($transport);
+$client = new Client('http://foo.com', $recorder);
+$client->call('TestMethod', ['param1', 2, ['param3' => true]]);
+
+$lastRequest = $recorder->getLastRequest();
+$lastResponse = $recorder->getLastResponse();
+```
+
+If exception occur in the transport layer you can get it using `getLastException()`.
+
 ### Helpful abstraction for multicall requests
 ```php
 <?php
@@ -203,7 +221,7 @@ $httpClient = new GuzzleHttp\Client();
 $httpClient->...();
 $client = new fXmlRpc\Client(
     'http://endpoint.com',
-    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\GuzzleHttpAdapter($httpClient))
+    new fXmlRpc\Transport\HttpAdapterTransport(new \Ivory\HttpAdapter\GuzzleHttpHttpAdapter($httpClient))
 );
 ```
 

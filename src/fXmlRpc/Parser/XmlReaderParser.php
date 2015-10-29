@@ -23,30 +23,39 @@
  */
 namespace fXmlRpc\Parser;
 
-use fXmlRpc\Exception\ParserException;
-use fXmlRpc\Value\Base64;
-use XMLReader;
-use fXmlRpc\Exception\MissingExtensionException;
 use DateTime;
 use DateTimeZone;
 use DOMDocument;
+use fXmlRpc\Exception\MissingExtensionException;
+use fXmlRpc\Exception\ParserException;
+use fXmlRpc\Exception\FaultException;
+use fXmlRpc\Value\Base64;
+use XMLReader;
 
 final class XmlReaderParser implements ParserInterface
 {
-    public function __construct()
+    /** @var bool */
+    private $validateResponse;
+
+    public function __construct($validateResponse = true)
     {
         if (!extension_loaded('xmlreader')) {
             throw MissingExtensionException::extensionMissing('xmlreader');
         }
+        $this->validateResponse = $validateResponse;
     }
 
     /** {@inheritdoc} */
-    public function parse($xmlString, &$isFault)
+    public function parse($xmlString)
     {
+        if ($this->validateResponse) {
+            XmlChecker::validXml($xmlString);
+        }
+
         $useErrors = libxml_use_internal_errors(true);
 
         $xml = new XMLReader();
-        $xml->xml($xmlString, 'UTF-8', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS  | LIBXML_PARSEHUGE);
+        $xml->xml($xmlString, 'UTF-8', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS | LIBXML_PARSEHUGE);
         $xml->setParserProperty(XMLReader::VALIDATE, false);
         $xml->setParserProperty(XMLReader::LOADDTD, false);
 
@@ -85,26 +94,29 @@ final class XmlReaderParser implements ParserInterface
         $depth = 0;
         $nextExpectedElements = 0b000000000000000000000000001;
         $i = 0;
+        $isFault = false;
         while ($xml->read()) {
             $i++;
             $nodeType = $xml->nodeType;
 
             if (($nodeType === XMLReader::COMMENT || $nodeType === XMLReader::DOC_TYPE) ||
                 (
-                   $nodeType === XMLReader::SIGNIFICANT_WHITESPACE &&
-                   ($nextExpectedElements & 0b000000000000000000100000000) !== 0b000000000000000000100000000)
-                ) {
+                    $nodeType === XMLReader::SIGNIFICANT_WHITESPACE &&
+                    ($nextExpectedElements & 0b000000000000000000100000000) !== 0b000000000000000000100000000)
+            ) {
                 continue;
             }
 
             if ($nodeType === XMLReader::ENTITY_REF) {
+                libxml_use_internal_errors($useErrors);
                 return '';
             }
 
             $tagName = $xml->localName;
             if ($nextExpectedElements !== null &&
                 ($flag = isset(${'flag' . $tagName}) ? ${'flag' . $tagName} : -1) &&
-                ($nextExpectedElements & $flag) !== $flag) {
+                ($nextExpectedElements & $flag) !== $flag
+            ) {
                 throw ParserException::unexpectedTag(
                     $tagName,
                     $nextExpectedElements,
@@ -132,7 +144,7 @@ final class XmlReaderParser implements ParserInterface
 
                         case 'fault':
                             $isFault = true;
-                            // Break intentionally omitted
+                        // Break intentionally omitted
                         case 'param':
                             // Next: value
                             $nextExpectedElements = 0b000000000000000000000010000;
@@ -140,7 +152,7 @@ final class XmlReaderParser implements ParserInterface
 
                         case 'array':
                             $aggregates[++$depth] = [];
-                            // Break intentionally omitted
+                        // Break intentionally omitted
                         case 'data':
                             // Next: array, data, value
                             $nextExpectedElements = 0b100000000000000000000110000;
@@ -243,7 +255,7 @@ final class XmlReaderParser implements ParserInterface
                         case 'array':
                         case 'struct':
                             --$depth;
-                            // Break intentionally omitted
+                        // Break intentionally omitted
                         case 'string':
                         case 'int':
                         case 'biginteger':
@@ -291,7 +303,7 @@ final class XmlReaderParser implements ParserInterface
                         case 'i4':
                         case 'i2':
                         case 'i1':
-                            $value = (int) $xml->value;
+                            $value = (int)$xml->value;
                             break;
 
                         case 'boolean':
@@ -301,7 +313,7 @@ final class XmlReaderParser implements ParserInterface
                         case 'double':
                         case 'float':
                         case 'bigdecimal':
-                            $value = (float) $xml->value;
+                            $value = (float)$xml->value;
                             break;
 
                         case 'dateTime.iso8601':
@@ -352,6 +364,12 @@ final class XmlReaderParser implements ParserInterface
 
         libxml_use_internal_errors($useErrors);
 
-        return $aggregates ? array_pop($aggregates[0]) : null;
+        $result = $aggregates ? array_pop($aggregates[0]) : null;
+
+        if ($isFault) {
+            throw FaultException::fault($result);
+        }
+
+        return $result;
     }
 }
