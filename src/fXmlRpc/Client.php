@@ -27,7 +27,6 @@ use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Parser\XmlReaderParser;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Serializer\XmlWriterSerializer;
-use fXmlRpc\Exception\ResponseException;
 use fXmlRpc\Exception\InvalidArgumentException;
 use fXmlRpc\Transport\HttpAdapterTransport;
 use fXmlRpc\Transport\TransportInterface;
@@ -151,11 +150,7 @@ final class Client implements ClientInterface
         $params = array_merge($this->prependParams, $params, $this->appendParams);
         $payload = $this->serializer->serialize($methodName, $params);
         $response = $this->transport->send($this->uri, $payload);
-        $result = $this->parser->parse($response, $isFault);
-
-        if ($isFault) {
-            throw ResponseException::fault($result);
-        }
+        $result = $this->parser->parse($response);
 
         return $result;
     }
