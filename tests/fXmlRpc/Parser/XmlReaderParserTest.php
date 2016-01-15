@@ -53,9 +53,7 @@ class XmlReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame(1, $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame(1, $this->parser->parse($xml));
     }
 
     public function testApacheI2ExtensionValue()
@@ -71,9 +69,7 @@ class XmlReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame(1, $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame(1, $this->parser->parse($xml));
     }
 
     public function testApacheI8ExtensionValue()
@@ -89,9 +85,7 @@ class XmlReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame('9223372036854775808', $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame('9223372036854775808', $this->parser->parse($xml));
     }
 
     public function testApacheBigIntegerExtensionValue()
@@ -107,9 +101,7 @@ class XmlReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame('9223372036854775808', $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame('9223372036854775808', $this->parser->parse($xml));
     }
 
     public function testApacheBigDecimalExtensionValue()
@@ -125,9 +117,7 @@ class XmlReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml));
     }
 
     public function testApacheFloatExtensionValue()
@@ -143,9 +133,7 @@ class XmlReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml, $isFault));
-        $this->assertFalse($isFault);
+        $this->assertSame(-100000000000000000.1234, $this->parser->parse($xml));
     }
 
     public function testApacheDomExtension()
@@ -155,11 +143,9 @@ class XmlReaderParserTest extends AbstractParserTest
                 <params><param><value><ex:dom><foo><bar>baz</bar></foo></ex:dom></value></param></params>
         </methodResponse>';
 
-        $isFault = true;
-        $result = $this->parser->parse($xml, $isFault);
+        $result = $this->parser->parse($xml);
         $this->assertInstanceOf('DOMDocument', $result);
         $this->assertXmlStringEqualsXmlString('<foo><bar>baz</bar></foo>', $result->saveXML());
-        $this->assertFalse($isFault);
     }
 
     public function testApacheDateTimeExtension()
@@ -169,11 +155,9 @@ class XmlReaderParserTest extends AbstractParserTest
             <params><param><value><ex:dateTime>2013-12-09T14:26:40.448+01:00</ex:dateTime></value></param></params>
         </methodResponse>';
 
-        $isFault = true;
-        $result = $this->parser->parse($xml, $isFault);
+        $result = $this->parser->parse($xml);
         $this->assertInstanceOf('DateTime', $result);
         $this->assertSame('2013-12-09T14:26:40.448000+01:00', $result->format('Y-m-d\TH:i:s.uP'));
-        $this->assertFalse($isFault);
     }
 
     public function testEmptyArray_2()
@@ -190,9 +174,7 @@ class XmlReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $result = $this->parser->parse($string, $isFault);
-        $this->assertFalse($isFault);
+        $result = $this->parser->parse($string);
         $this->assertSame(array(), $result);
     }
 
@@ -209,9 +191,7 @@ class XmlReaderParserTest extends AbstractParserTest
                 </params>
             </methodResponse>';
 
-        $isFault = true;
-        $result = $this->parser->parse($string, $isFault);
-        $this->assertFalse($isFault);
+        $result = $this->parser->parse($string);
         $this->assertSame(array(), $result);
     }
 
@@ -228,6 +208,6 @@ class XmlReaderParserTest extends AbstractParserTest
             'fXmlRpc\Exception\RuntimeException',
             'Invalid XML. Expected one of "params", "fault", got "invalidTag" on depth 1 (context: "<invalidTag/>")'
         );
-        $this->parser->parse($string, $isFault);
+        $this->parser->parse($string);
     }
 }

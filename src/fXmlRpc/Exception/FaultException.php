@@ -23,7 +23,7 @@
  */
 namespace fXmlRpc\Exception;
 
-final class ResponseException extends RuntimeException
+final class FaultException extends RuntimeException
 {
     private $faultCode;
 

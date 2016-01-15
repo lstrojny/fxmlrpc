@@ -127,7 +127,7 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
         try {
             $client->call('system.fault');
             $this->fail('Expected exception');
-        } catch (fXmlRpc\Exception\ResponseException $e) {
+        } catch (fXmlRpc\Exception\FaultException $e) {
             $this->assertContains('ERROR', $e->getMessage());
             $this->assertContains('ERROR', $e->getFaultString());
             $this->assertSame(0, $e->getCode());
