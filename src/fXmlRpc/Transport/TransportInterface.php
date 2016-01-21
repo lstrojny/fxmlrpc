@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2012-2015
+ * Copyright (C) 2012-2016
  * Lars Strojny, InterNations GmbH <lars.strojny@internations.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
