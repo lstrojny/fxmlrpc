@@ -50,7 +50,7 @@ $client = new fXmlRpc\Client(
 
 ## Latest improvements
 
- - `[IMPROVEMENT]` Refactor parsers throw fault exception instead of client
+ - `[IMPROVEMENT]` Refactor parsers throw fault exception instead of client (see #53, contribution by [Piotr Olaszewski](https://github.com/piotrooo))
  - `[FEATURE]` Add XML validation on the client side. Configurable but enabled per default
  - `[FEATURE]` Transport decorator which contains XML of the last request, response and exception (see #47, contribution by [Piotr Olaszewski](https://github.com/piotrooo))
  - `[BC]` PSR-4 for autoloading (see #29)
