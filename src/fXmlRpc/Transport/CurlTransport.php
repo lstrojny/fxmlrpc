@@ -55,6 +55,10 @@ final class CurlTransport extends AbstractHttpTransport
         }
     }
 
+     public function setCurlOpt($option,$value){
+        curl_setopt($this->handle,$option,$value);
+    }
+
     /** {@inheritdoc} */
     public function send($uri, $payload)
     {
