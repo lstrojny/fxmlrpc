@@ -53,7 +53,12 @@ final class HttpAdapterTransport implements TransportInterface
                 $payload
             );
 
-            return $this->client->sendRequest($request)->getBody();
+            $response = $this->client->sendRequest($request);
+            if ($response->getStatusCode() !== 200) {
+                throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
+            }
+
+            return (string) $response->getBody();
 
         } catch (PsrHttpException $e) {
             $response = $e->getResponse();
