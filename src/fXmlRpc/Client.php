@@ -23,14 +23,15 @@
  */
 namespace fXmlRpc;
 
+use fXmlRpc\Exception\InvalidArgumentException;
 use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Parser\XmlReaderParser;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Serializer\XmlWriterSerializer;
-use fXmlRpc\Exception\InvalidArgumentException;
 use fXmlRpc\Transport\HttpAdapterTransport;
 use fXmlRpc\Transport\TransportInterface;
-use Ivory\HttpAdapter\HttpAdapterFactory;
+use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\MessageFactoryDiscovery;
 
 final class Client implements ClientInterface
 {
@@ -71,7 +72,8 @@ final class Client implements ClientInterface
     )
     {
         $this->uri = $uri;
-        $this->transport = $transport ?: new HttpAdapterTransport(HttpAdapterFactory::guess());
+        $this->transport = $transport
+            ?: new HttpAdapterTransport(MessageFactoryDiscovery::find(), HttpClientDiscovery::find());
         $this->parser = $parser ?: new XmlReaderParser();
         $this->serializer = $serializer ?: new XmlWriterSerializer();
     }
@@ -150,9 +152,8 @@ final class Client implements ClientInterface
         $params = array_merge($this->prependParams, $params, $this->appendParams);
         $payload = $this->serializer->serialize($methodName, $params);
         $response = $this->transport->send($this->uri, $payload);
-        $result = $this->parser->parse($response);
 
-        return $result;
+        return $this->parser->parse($response);
     }
 
     /** {@inheritdoc} */

@@ -177,7 +177,13 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
 
     private function getTransport()
     {
-        return [new \fXmlRpc\Transport\HttpAdapterTransport(\Ivory\HttpAdapter\HttpAdapterFactory::guess())];
+        $messageFactory = new \Http\Message\MessageFactory\DiactorosMessageFactory();
+        return [
+            new \fXmlRpc\Transport\HttpAdapterTransport(
+                $messageFactory,
+                new \Http\Adapter\Guzzle5\Client(new \GuzzleHttp\Client(), $messageFactory)
+            )
+        ];
     }
 
     private function generateAllPossibleCombinations(array $combinations, array &$clients)

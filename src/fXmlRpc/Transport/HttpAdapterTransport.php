@@ -25,32 +25,46 @@ namespace fXmlRpc\Transport;
 
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TransportException;
-use Ivory\HttpAdapter\HttpAdapterException;
-use Ivory\HttpAdapter\HttpAdapterInterface;
+use Http\Client\Exception as ClientException;
+use Http\Client\Exception\HttpException as PsrHttpException;
+use Http\Client\HttpClient;
+use Http\Message\MessageFactory;
 
 final class HttpAdapterTransport implements TransportInterface
 {
-    /** @var HttpAdapterInterface */
-    private $httpAdapter;
+    private $messageFactory;
 
-    public function __construct(HttpAdapterInterface $httpAdapter)
+    private $client;
+
+    public function __construct(MessageFactory $messageFactory, HttpClient $client)
     {
-        $this->httpAdapter = $httpAdapter;
+        $this->client = $client;
+        $this->messageFactory = $messageFactory;
     }
 
     /** {@inheritdoc} */
     public function send($endpoint, $payload)
     {
         try {
-            $response = $this->httpAdapter->post($endpoint, ['Content-Type' => 'text/xml; charset=UTF-8'], $payload);
-        } catch (HttpAdapterException $e) {
+            $request = $this->messageFactory->createRequest(
+                'POST',
+                $endpoint,
+                ['Content-Type' => 'text/xml; charset=UTF-8'],
+                $payload
+            );
+
+            $response = $this->client->sendRequest($request);
+            if ($response->getStatusCode() !== 200) {
+                throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
+            }
+
+            return (string) $response->getBody();
+
+        } catch (PsrHttpException $e) {
+            $response = $e->getResponse();
+            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
+        } catch (ClientException $e) {
             throw TransportException::transportError($e);
         }
-
-        if ($response->getStatusCode() !== 200) {
-            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
-        }
-
-        return (string) $response->getBody();
     }
 }
