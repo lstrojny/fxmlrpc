@@ -40,8 +40,6 @@ final class NativeSerializer implements SerializerInterface
     /** {@inheritdoc} */
     public function serialize($method, array $params = [])
     {
-        var_dump($this->convert($params));
-
         return xmlrpc_encode_request(
             $method,
             $this->convert($params),
