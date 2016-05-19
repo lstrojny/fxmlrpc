@@ -13,7 +13,8 @@
     "require": {
         "php": ">=5.4",
         "php-http/httplug": "~1",
-        "php-http/discovery": "^0.8.0"
+        "php-http/discovery": "^0.8.0",
+        "php-http/message-factory": "^1.0"
     },
     "require-dev": {
         "zendframework/zend-log": "~2",
@@ -24,9 +25,9 @@
         "symfony/process": "~2.1",
         "lstrojny/hmmmath": "dev-master",
         "internations/kodierungsregelwerksammlung": "dev-master",
+        "guzzlehttp/guzzle": "^6.2",
         "php-http/message": "^1.2",
-        "php-http/curl-client": "^1.4",
-        "zendframework/zend-diactoros": "^1.3"
+        "php-http/guzzle6-adapter": "^1.1"
     },
     "suggest": {
         "zendframework/zend-log": "To use ZF2 Zend\\Log\\Logger as a logger",

@@ -12,8 +12,9 @@ php:
 matrix:
   allow_failures:
     - php: hhvm
-  include:
     - php: 5.4
+  include:
+    - php: 5.5
       env:
         - COMPOSER_FLAGS="--prefer-stable --prefer-lowest"
         - PHPUNIT_FLAGS="--coverage-text --coverage-clover=coverage.xml --stop-on-error"
