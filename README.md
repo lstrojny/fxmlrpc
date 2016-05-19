@@ -11,14 +11,34 @@
  - Relentlessly unit- and integration tested
  - Implements all known XML/RPC extensions
 
-## Upgrading to 0.20.x
-We change ParserInterface::parse() method interface, now isn't required to pass second parameter ($isFault), parser should throw an exception FaultException when fault message is encountered in server response.
+## Upgrading to 0.12.x
+Instead of `egeloen/http-adapter`, we now use the PSR-7 compatible `php-http/httplug`. You will have to change your custom HTTP client implementation and pass a `Http\Message\MessageFactory` implementation and a `Http\Client\HttpClient` to the `HttpAdapterTransport`. You have to choose three packages for that: a message implementation and a fitting factory and an HTTP client. Two widespread message implementations are [zend-diactoros](https://github.com/zendframework/zend-diactoros) [guzzle/psr7](https://github.com/guzzle/psr7). Message factories for both implementations are available in [php-http/message](https://github.com/php-http/message). For HTTP clients you can pick e.g. [php-http/guzzle6-adapter](https://github.com/php-http/guzzle6-adapter), [php-http/guzzle5-adapter](https://github.com/php-http/guzzle5-adapter), [php-http/curl-client](https://github.com/php-http/curl-client) or [php-http/buzz-adapter](https://github.com/php-http/buzz-adapter).
+
+### Install dependencies
+
+```
+composer require zendframework/zend-diactoros php-http/message php-http/guzzle6-adapter
+```
+
+### Instantiating `HttpAdapterTransport`
+An example instantiation using Guzzle6:
+```php
+$httpClient = new GuzzleHttp\Client();
+$httpClient->...();
+$client = new fXmlRpc\Client(
+    'http://endpoint.com',
+    new fXmlRpc\Transport\HttpAdapterTransport(
+        new \Http\Message\MessageFactory\DiactorosMessageFactory(),
+        new \Http\Adapter\Guzzle6\Client($httpClient)
+    )
+);
+```
+
+## Upgrading to 0.11.x
+We change `ParserInterface::parse()` method interface, now isn't required to pass second parameter ($isFault), parser should throw an exception FaultException when fault message is encountered in server response.
 
 ## Upgrading to 0.10.x
-0.10.x comes with a couple of breaking changes, see the migration guide below.
-
-### Ivory HTTP adapter
-We used to ship our own bridges for interoperability with various HTTP clients but moved that responsibility to a 3rd party library called [Ivory HTTP Adapter](https://github.com/egeloen/ivory-http-adapter).
+0.10.x comes with a couple of breaking changes: We used to ship our own bridges for interoperability with various HTTP clients but moved that responsibility to a 3rd party library called [Ivory HTTP Adapter](https://github.com/egeloen/ivory-http-adapter).
 *IMPORTANT NOTE:* the library is not installed by default as you could choose to use fxmlrpc with just your own implementation of the `fXmlRpc\Transport\TransportInterface`. To install the library – and that’s what you most likely want – add this line to your `composer.json`
 
 ```
@@ -49,7 +69,8 @@ $client = new fXmlRpc\Client(
 ```
 
 ## Latest improvements
-
+ - `[BC]` PSR-7 support
+ - `[IMPROVEMENT]` PHP7 compatibility
  - `[IMPROVEMENT]` Refactor parsers throw fault exception instead of client (see #53, contribution by [Piotr Olaszewski](https://github.com/piotrooo))
  - `[FEATURE]` Add XML validation on the client side. Configurable but enabled per default
  - `[FEATURE]` Transport decorator which contains XML of the last request, response and exception (see #47, contribution by [Piotr Olaszewski](https://github.com/piotrooo))

@@ -33,8 +33,10 @@
         "zendframework/zend-log": "To use ZF2 Zend\\Log\\Logger as a logger",
         "zendframework/zendframework1": "To use ZF1 Log",
         "monolog/monolog": "To integrate monolog as logger",
-        "php-http/message": "For PSR-7 compatible message factories",
-        "php-http/curl-client": "A simple PSR-7 compatible HTTP client"
+        "php-http/message": "For PSR-7 message factories",
+        "php-http/curl-client": "A simple PSR-7 compatible HTTP client",
+        "php-http/guzzle6-adapter": "Guzzle 6 PSR-7 adapter",
+        "php-http/guzzle5-adapter": "Guzzle 5 PSR-7 adapter"
     },
     "autoload": {
         "psr-4": {"fXmlRpc\\": "src/fXmlRpc"}
