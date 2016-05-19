@@ -11,24 +11,29 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "php-http/httplug": "~1",
+        "php-http/discovery": "^0.8.0"
     },
     "require-dev": {
-        "egeloen/http-adapter": "~0.6",
         "zendframework/zend-log": "~2",
         "zendframework/zendframework1": "~1.12.4",
         "monolog/monolog": ">=1.1",
         "psr/log": "*",
         "phpunit/phpunit": "~4",
         "symfony/process": "~2.1",
-        "lstrojny/hmmmath": "*",
-        "internations/kodierungsregelwerksammlung": "dev-master"
+        "lstrojny/hmmmath": "dev-master",
+        "internations/kodierungsregelwerksammlung": "dev-master",
+        "php-http/message": "^1.2",
+        "php-http/curl-client": "^1.4",
+        "zendframework/zend-diactoros": "^1.3"
     },
     "suggest": {
         "zendframework/zend-log": "To use ZF2 Zend\\Log\\Logger as a logger",
         "zendframework/zendframework1": "To use ZF1 Log",
-        "guzzle/guzzle": "To integrate Guzzle as HTTP client",
-        "monolog/monolog": "To integrate monolog as logger"
+        "monolog/monolog": "To integrate monolog as logger",
+        "php-http/message": "For PSR-7 compatible message factories",
+        "php-http/curl-client": "A simple PSR-7 compatible HTTP client"
     },
     "autoload": {
         "psr-4": {"fXmlRpc\\": "src/fXmlRpc"}
