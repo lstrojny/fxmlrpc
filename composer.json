@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.6",
         "php-http/httplug": "~1",
-        "php-http/discovery": "^0.8.0",
+        "php-http/discovery": "^1.0",
         "php-http/message-factory": "^1.0"
     },
     "require-dev": {
@@ -26,7 +26,7 @@
         "lstrojny/hmmmath": "dev-master",
         "internations/kodierungsregelwerksammlung": "dev-master",
         "php-http/message": "^1.2",
-        "php-http/guzzle5-adapter": "^0.5.0",
+        "php-http/guzzle5-adapter": "^1.0",
         "zendframework/zend-diactoros": "^1.3"
     },
     "suggest": {
