@@ -32,6 +32,8 @@ use fXmlRpc\Value\Base64;
 
 final class NativeParser implements ParserInterface
 {
+    const LIBXML_PARSEHUGE_THRESHOLD = 1024 * 1024 * 10;
+
     /**
      * @var bool
      */
@@ -54,7 +56,7 @@ final class NativeParser implements ParserInterface
 
         $result = xmlrpc_decode($xmlString, 'UTF-8');
 
-        if ($result === null && strlen($xmlString) > (1024 * 1024 * 10)) {
+        if ($result === null && strlen($xmlString) > static::LIBXML_PARSEHUGE_THRESHOLD) {
             throw ParserException::xmlrpcExtensionLibxmlParsehugeNotSupported();
         }
 
