@@ -23,6 +23,8 @@
  */
 namespace fXmlRpc\Parser;
 
+use fXmlRpc\Exception\ParserException;
+
 class NativeParserTest extends AbstractParserTest
 {
     public function setUp()
@@ -37,5 +39,16 @@ class NativeParserTest extends AbstractParserTest
     public function createParserWithoutValidation()
     {
         return new NativeParser(false);
+    }
+
+    public function testExceptionIsThrownIfXmlIsTooBig()
+    {
+        $parser = new NativeParser(false);
+
+        $this->setExpectedException(
+            ParserException::class,
+            'Parsing huge XML responses using libxml’s LIBXML_PARSEHUGE flag is not supported in ext/xmlrpc'
+        );
+        $parser->parse(str_repeat('0', 1024 * 1024 * 10 + 1));
     }
 }

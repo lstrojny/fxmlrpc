@@ -53,4 +53,11 @@ final class ParserException extends RuntimeException
     {
         return new static(sprintf('Invalid XML. Expected XML, string given: "%s"', $string));
     }
+
+    public static function xmlrpcExtensionLibxmlParsehugeNotSupported()
+    {
+        return new static(
+            'Parsing huge XML responses using libxml’s LIBXML_PARSEHUGE flag is not supported in ext/xmlrpc'
+        );
+    }
 }

@@ -27,6 +27,7 @@ use DateTime;
 use DateTimeZone;
 use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Exception\MissingExtensionException;
+use fXmlRpc\Exception\ParserException;
 use fXmlRpc\Value\Base64;
 
 final class NativeParser implements ParserInterface
@@ -52,6 +53,10 @@ final class NativeParser implements ParserInterface
         }
 
         $result = xmlrpc_decode($xmlString, 'UTF-8');
+
+        if ($result === null && strlen($xmlString) > (1024 * 1024 * 10)) {
+            throw ParserException::xmlrpcExtensionLibxmlParsehugeNotSupported();
+        }
 
         $toBeVisited = [&$result];
         while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
