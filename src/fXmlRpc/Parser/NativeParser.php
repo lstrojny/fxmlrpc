@@ -47,6 +47,15 @@ final class NativeParser implements ParserInterface
         $this->validateResponse = $validateResponse;
     }
 
+    /**
+     * @param string $xmlString
+     * @return bool
+     */
+    public static function isBiggerThanParseLimit($xmlString)
+    {
+        return strlen($xmlString) > static::LIBXML_PARSEHUGE_THRESHOLD;
+    }
+
     /** {@inheritdoc} */
     public function parse($xmlString)
     {
@@ -56,7 +65,7 @@ final class NativeParser implements ParserInterface
 
         $result = xmlrpc_decode($xmlString, 'UTF-8');
 
-        if ($result === null && strlen($xmlString) > static::LIBXML_PARSEHUGE_THRESHOLD) {
+        if ($result === null && self::isBiggerThanParseLimit($xmlString)) {
             throw ParserException::xmlrpcExtensionLibxmlParsehugeNotSupported();
         }
 
