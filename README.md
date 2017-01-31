@@ -12,9 +12,27 @@
  - Implements all known XML/RPC extensions
 
 ## Upgrading to 0.12.x
-Instead of `egeloen/http-adapter`, we now use the PSR-7 compatible `php-http/httplug`. You will have to change your custom HTTP client implementation and pass a `Http\Message\MessageFactory` implementation and a `Http\Client\HttpClient` to the `HttpAdapterTransport`. You have to choose three packages for that: a message implementation and a fitting factory and an HTTP client. Two widespread message implementations are [zend-diactoros](https://github.com/zendframework/zend-diactoros) [guzzle/psr7](https://github.com/guzzle/psr7). Message factories for both implementations are available in [php-http/message](https://github.com/php-http/message). For HTTP clients you can pick e.g. [php-http/guzzle6-adapter](https://github.com/php-http/guzzle6-adapter), [php-http/guzzle5-adapter](https://github.com/php-http/guzzle5-adapter), [php-http/curl-client](https://github.com/php-http/curl-client) or [php-http/buzz-adapter](https://github.com/php-http/buzz-adapter).
+Instead of `egeloen/http-adapter`, we now use the PSR-7 compatible `php-http/httplug`. You will have to change your custom HTTP client implementation and pass a `Http\Message\MessageFactory` implementation and a `Http\Client\HttpClient` to the `HttpAdapterTransport`.
+See below for details.
+
+## Installation
+To install fxmlrpc run this command:
+
+```
+composer require lstrojny/fxmlrpc
+```
 
 ### Install dependencies
+
+You must choose three packages for for the business of HTTP:
+  - an HTTP message implementation
+  - An compatible HTTP message factory implementation
+  - A compatible HTTP client
+  
+Two widespread message implementations are [zend-diactoros](https://github.com/zendframework/zend-diactoros) and [guzzle/psr7](https://github.com/guzzle/psr7). Message factories for both implementations are available in [php-http/message](https://github.com/php-http/message).
+For HTTP clients you can pick e.g. [php-http/guzzle6-adapter](https://github.com/php-http/guzzle6-adapter), [php-http/guzzle5-adapter](https://github.com/php-http/guzzle5-adapter), [php-http/curl-client](https://github.com/php-http/curl-client) or [php-http/buzz-adapter](https://github.com/php-http/buzz-adapter).
+
+Example:
 
 ```
 composer require zendframework/zend-diactoros php-http/message php-http/guzzle6-adapter
