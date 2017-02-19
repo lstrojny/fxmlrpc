@@ -25,9 +25,10 @@
 namespace fXmlRpc\Timing;
 
 use fXmlRpc\ClientInterface;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
-class TimingDecoratorTest extends \PHPUnit_Framework_TestCase
+class TimingDecoratorTest extends TestCase
 {
     /** @var ClientInterface|MockObject */
     private $wrapped;

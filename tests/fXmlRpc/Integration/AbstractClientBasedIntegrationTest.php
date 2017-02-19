@@ -25,8 +25,9 @@
 namespace fXmlRpc\Integration;
 
 use fXmlRpc;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractClientBasedIntegrationTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractClientBasedIntegrationTest extends TestCase
 {
     protected $disabledExtensions = array();
 

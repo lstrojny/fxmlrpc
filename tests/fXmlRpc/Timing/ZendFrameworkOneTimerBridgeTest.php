@@ -24,10 +24,11 @@
 
 namespace fXmlRpc\Timing;
 
+use PHPUnit\Framework\TestCase;
 use Zend_Log;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
-class ZendFrameworkOneTimerBridgeTest extends \PHPUnit_Framework_TestCase
+class ZendFrameworkOneTimerBridgeTest extends TestCase
 {
     /** @var Zend_Log|MockObject */
     private $log;

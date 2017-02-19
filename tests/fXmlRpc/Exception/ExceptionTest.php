@@ -23,9 +23,10 @@
  */
 namespace fXmlRpc\Exception;
 
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-class ExceptionTest extends \PHPUnit_Framework_TestCase
+class ExceptionTest extends TestCase
 {
     public function testFoo()
     {

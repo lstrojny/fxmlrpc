@@ -24,13 +24,14 @@
 
 namespace fXmlRpc;
 
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 class NullDecorator extends AbstractDecorator
 {
 }
 
-class AbstractDecoratorTest extends \PHPUnit_Framework_TestCase
+class AbstractDecoratorTest extends TestCase
 {
     /** @var ClientInterface|MockObject */
     private $wrapped;

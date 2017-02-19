@@ -24,9 +24,10 @@
 
 namespace fXmlRpc;
 
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
-class MulticallBuilderTest extends \PHPUnit_Framework_TestCase
+class MulticallBuilderTest extends TestCase
 {
     /** @var ClientInterface|MockObject */
     private $client;
@@ -36,7 +37,7 @@ class MulticallBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->client = $this->getMock('fXmlRpc\ClientInterface');
+        $this->client = $this->createMock('fXmlRpc\ClientInterface');
         $this->multicallBuilder = new MulticallBuilder($this->client);
     }
 
@@ -205,10 +206,8 @@ class MulticallBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidMethodType()
     {
-        $this->setExpectedException(
-            'fXmlRpc\Exception\InvalidArgumentException',
-            'Expected parameter 1 to be of type "string", "object" of type "stdClass" given'
-        );
+        $this->expectException('fXmlRpc\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Expected parameter 1 to be of type "string", "object" of type "stdClass" given');
 
         $this->multicallBuilder->addCall(new \stdClass());
     }

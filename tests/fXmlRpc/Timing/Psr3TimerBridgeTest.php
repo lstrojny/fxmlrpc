@@ -24,18 +24,19 @@
 
 namespace fXmlRpc\Timing;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
-class Psr3TimerBridgeTest extends \PHPUnit_Framework_TestCase
+class Psr3TimerBridgeTest extends TestCase
 {
     /** @var LoggerInterface|MockObject */
     private $logger;
 
     public function setUp()
     {
-        $this->logger = $this->getMock('Psr\Log\LoggerInterface');
+        $this->logger = $this->createMock('Psr\Log\LoggerInterface');
     }
 
     public function testDelegatesLogging()

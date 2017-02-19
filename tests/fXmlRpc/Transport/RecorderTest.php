@@ -25,6 +25,7 @@ namespace fXmlRpc\Transport;
 
 use Exception;
 use fXmlRpc\Client;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_MockObject_Matcher_Invocation as InvocationMatcher;
 
@@ -33,7 +34,7 @@ use PHPUnit_Framework_MockObject_Matcher_Invocation as InvocationMatcher;
  *
  * @author Piotr Olaszewski <piotroo89 [%] gmail dot com>
  */
-class RecorderTest extends \PHPUnit_Framework_TestCase
+class RecorderTest extends TestCase
 {
     /** @var TransportInterface|MockObject */
     private $transport;
@@ -67,7 +68,7 @@ class RecorderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->transport = $this->getMock('fXmlRpc\Transport\TransportInterface');
+        $this->transport = $this->createMock('fXmlRpc\Transport\TransportInterface');
         $this->recorder = new Recorder($this->transport);
         $this->client = new Client('http://foo.com', $this->recorder);
         $this->exception = new Exception();

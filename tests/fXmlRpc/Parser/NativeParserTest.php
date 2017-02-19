@@ -45,10 +45,9 @@ class NativeParserTest extends AbstractParserTest
     {
         $parser = new NativeParser(false);
 
-        $this->setExpectedException(
-            ParserException::class,
-            'Parsing huge XML responses using libxml’s LIBXML_PARSEHUGE flag is not supported in ext/xmlrpc'
-        );
+        $this->expectException(ParserException::class);
+
+        $this->expectExceptionMessage('Parsing huge XML responses using libxml’s LIBXML_PARSEHUGE flag is not supported in ext/xmlrpc');
         $parser->parse(str_repeat('0', 1024 * 1024 * 10 + 1));
     }
 }

@@ -25,9 +25,10 @@
 namespace fXmlRpc\Timing;
 
 use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
-class MonologTimerBridgeTest extends \PHPUnit_Framework_TestCase
+class MonologTimerBridgeTest extends TestCase
 {
     /** @var Logger|MockObject */
     private $monolog;

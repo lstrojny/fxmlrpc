@@ -19,9 +19,9 @@
     "require-dev": {
         "zendframework/zend-log": "~2",
         "zendframework/zendframework1": "~1.12.4",
-        "monolog/monolog": ">=1.1",
+        "monolog/monolog": "~1",
         "psr/log": "*",
-        "phpunit/phpunit": "~4",
+        "phpunit/phpunit": "~6",
         "symfony/process": "~2.1",
         "lstrojny/hmmmath": "dev-master",
         "internations/kodierungsregelwerksammlung": "dev-master",

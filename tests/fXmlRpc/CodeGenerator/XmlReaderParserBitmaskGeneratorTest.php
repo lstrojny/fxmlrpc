@@ -24,7 +24,9 @@
 
 namespace fXmlRpc\CodeGenerator;
 
-class XmlReaderParserBitmaskGeneratorTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class XmlReaderParserBitmaskGeneratorTest extends TestCase
 {
     /** @var XmlReaderParserBitmaskGenerator */
     private $generator;

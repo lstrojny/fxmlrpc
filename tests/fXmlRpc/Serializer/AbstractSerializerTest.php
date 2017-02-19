@@ -27,8 +27,9 @@ namespace fXmlRpc\Serializer;
 use DateTime;
 use DateTimeZone;
 use fXmlRpc\Value\Base64;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractSerializerTest extends TestCase
 {
     /** @var SerializerInterface */
     protected $serializer;
@@ -451,10 +452,9 @@ abstract class AbstractSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $resource = stream_context_create();
 
-        $this->setExpectedException(
-            'fXmlRpc\Exception\SerializationException',
-            'Could not serialize resource of type "stream-context"'
-        );
+        $this->expectException('fXmlRpc\Exception\SerializationException');
+
+        $this->expectExceptionMessage('Could not serialize resource of type "stream-context"');
         $this->serializer->serialize('method', array($resource));
     }
 

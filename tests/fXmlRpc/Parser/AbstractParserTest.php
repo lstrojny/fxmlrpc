@@ -27,8 +27,9 @@ use DateTime;
 use DateTimeZone;
 use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Value\Base64;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractParserTest extends TestCase
 {
     /** @var ParserInterface */
     protected $parser;
@@ -661,10 +662,9 @@ abstract class AbstractParserTest extends \PHPUnit_Framework_TestCase
     {
         $string = 'returned string';
 
-        $this->setExpectedException(
-            'fXmlRpc\Exception\ParserException',
-            'Invalid XML. Expected XML, string given: "returned string"'
-        );
+        $this->expectException('fXmlRpc\Exception\ParserException');
+
+        $this->expectExceptionMessage('Invalid XML. Expected XML, string given: "returned string"');
         $this->parser->parse($string);
     }
 

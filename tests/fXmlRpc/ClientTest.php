@@ -27,9 +27,10 @@ namespace fXmlRpc;
 use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Transport\TransportInterface;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
     /** @var SerializerInterface|MockObject */
     private $serializer;
@@ -45,9 +46,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->serializer = $this->getMock('fXmlRpc\Serializer\SerializerInterface');
-        $this->parser = $this->getMock('fXmlRpc\Parser\ParserInterface');
-        $this->transport = $this->getMock('fXmlRpc\Transport\TransportInterface');
+        $this->serializer = $this->createMock('fXmlRpc\Serializer\SerializerInterface');
+        $this->parser = $this->createMock('fXmlRpc\Parser\ParserInterface');
+        $this->transport = $this->createMock('fXmlRpc\Transport\TransportInterface');
 
         $this->client = new Client('http://foo.com', $this->transport, $this->parser, $this->serializer);
     }
@@ -132,19 +133,15 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidMethodName()
     {
-        $this->setExpectedException(
-            'fXmlRpc\Exception\InvalidArgumentException',
-            'Expected parameter 0 to be of type "string", "object" of type "stdClass" given'
-        );
+        $this->expectException('fXmlRpc\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Expected parameter 0 to be of type "string", "object" of type "stdClass" given');
         $this->client->call(new \stdClass());
     }
 
     public function testInvalidUri()
     {
-        $this->setExpectedException(
-            'fXmlRpc\Exception\InvalidArgumentException',
-            'Expected parameter 0 to be of type "string", "object" of type "stdClass" given'
-        );
+        $this->expectException('fXmlRpc\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Expected parameter 0 to be of type "string", "object" of type "stdClass" given');
         $this->client->setUri(new \stdClass());
     }
 

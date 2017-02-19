@@ -204,10 +204,9 @@ class XmlReaderParserTest extends AbstractParserTest
 
         $isFault = true;
 
-        $this->setExpectedException(
-            'fXmlRpc\Exception\RuntimeException',
-            'Invalid XML. Expected one of "params", "fault", got "invalidTag" on depth 1 (context: "<invalidTag/>")'
-        );
+        $this->expectException('fXmlRpc\Exception\RuntimeException');
+
+        $this->expectExceptionMessage('Invalid XML. Expected one of "params", "fault", got "invalidTag" on depth 1 (context: "<invalidTag/>")');
         $this->parser->parse($string);
     }
 }
