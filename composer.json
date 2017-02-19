@@ -18,7 +18,7 @@
     },
     "require-dev": {
         "zendframework/zend-log": "~2",
-        "zendframework/zendframework1": "~1.12.4",
+        "zendframework/zendframework1": "~1",
         "monolog/monolog": "~1",
         "psr/log": "*",
         "phpunit/phpunit": "~6",
