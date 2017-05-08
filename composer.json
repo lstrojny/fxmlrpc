@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": "~7",
+        "php": "~7.1",
         "php-http/httplug": "~1",
         "php-http/discovery": "^1.0",
         "php-http/message-factory": "^1.0"
