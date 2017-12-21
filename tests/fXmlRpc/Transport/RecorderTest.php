@@ -25,9 +25,9 @@ namespace fXmlRpc\Transport;
 
 use Exception;
 use fXmlRpc\Client;
+use PHPUnit\Framework\MockObject\Matcher\Invocation as InvocationMatcher;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use PHPUnit_Framework_MockObject_Matcher_Invocation as InvocationMatcher;
 
 /**
  * Class RecorderTest
