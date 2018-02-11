@@ -5,7 +5,7 @@
 
  - A convenient, object oriented API (similar to the XML/RPC client in Zend Framework)
  - Very fast serializing and parsing of the XML payloads involved
- - Stick to the HTTP client you already use provided by [Ivory Http Adapter](https://github.com/egeloen/ivory-http-adapter)
+ - Stick to the HTTP client you already use provided by [HTTPlug](http://httplug.io/)
  - Licensed under the terms of the liberal MIT license
  - Supports modern standards: easy installation via composer, fully PSR-0, PSR-1 and PSR-2 compatible
  - Relentlessly unit- and integration tested
