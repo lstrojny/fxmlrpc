@@ -23,89 +23,16 @@
  */
 namespace fXmlRpc\Parser;
 
-use DateTime;
-use DateTimeZone;
-use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Exception\MissingExtensionException;
-use fXmlRpc\Exception\ParserException;
-use fXmlRpc\Value\Base64;
 
-final class NativeParser implements ParserInterface
+final class NativeParser extends ParserWrapper
 {
-    const LIBXML_PARSEHUGE_THRESHOLD = 1024 * 1024 * 10;
-
-    /**
-     * @var bool
-     */
-    private $validateResponse;
-
     public function __construct($validateResponse = true)
     {
         if (!extension_loaded('xmlrpc')) {
             throw MissingExtensionException::extensionMissing('xmlrpc');
         }
-        $this->validateResponse = $validateResponse;
-    }
 
-    /**
-     * @param string $xmlString
-     * @return bool
-     */
-    public static function isBiggerThanParseLimit($xmlString)
-    {
-        return strlen($xmlString) > static::LIBXML_PARSEHUGE_THRESHOLD;
-    }
-
-    /** {@inheritdoc} */
-    public function parse($xmlString)
-    {
-        if ($this->validateResponse) {
-            XmlChecker::validXml($xmlString);
-        }
-
-        $result = xmlrpc_decode($xmlString, 'UTF-8');
-
-        if ($result === null && self::isBiggerThanParseLimit($xmlString)) {
-            throw ParserException::xmlrpcExtensionLibxmlParsehugeNotSupported();
-        }
-
-        $toBeVisited = [&$result];
-        while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
-
-            $type = gettype($value);
-            if ($type === 'object') {
-                $xmlRpcType = $value->{'xmlrpc_type'};
-                if ($xmlRpcType === 'datetime') {
-                    $value = DateTime::createFromFormat(
-                        'Ymd\TH:i:s',
-                        $value->scalar,
-                        isset($timezone) ? $timezone : $timezone = new DateTimeZone('UTC')
-                    );
-
-                } elseif ($xmlRpcType === 'base64') {
-                    if ($value->scalar !== '') {
-                        $value = Base64::serialize($value->scalar);
-                    } else {
-                        $value = null;
-                    }
-                }
-
-            } elseif ($type === 'array') {
-                foreach ($value as &$element) {
-                    $toBeVisited[] = &$element;
-                }
-            }
-
-            array_shift($toBeVisited);
-        }
-
-        if (is_array($result)) {
-            reset($result);
-            if (xmlrpc_is_fault($result)) {
-                throw FaultException::fault($result);
-            }
-        }
-
-        return $result;
+        parent::__construct(new \Fxmlrpc\Serialization\Parser\NativeParser($validateResponse));
     }
 }

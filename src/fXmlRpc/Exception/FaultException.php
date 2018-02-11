@@ -27,14 +27,6 @@ final class FaultException extends RuntimeException
 {
     private $faultCode;
 
-    public static function fault($response)
-    {
-        $exception = new static(isset($response['faultString']) ? $response['faultString'] : 'Unknown');
-        $exception->faultCode = isset($response['faultCode']) ? $response['faultCode'] : 0;
-
-        return $exception;
-    }
-
     public function getFaultString()
     {
         return $this->getMessage();
@@ -43,5 +35,13 @@ final class FaultException extends RuntimeException
     public function getFaultCode()
     {
         return $this->faultCode;
+    }
+
+    public static function fromFault(\Fxmlrpc\Serialization\Exception\FaultException $fault)
+    {
+        $e = new static($fault->getMessage(), 0, $fault);
+        $e->faultCode = $fault->getCode();
+
+        return $e;
     }
 }

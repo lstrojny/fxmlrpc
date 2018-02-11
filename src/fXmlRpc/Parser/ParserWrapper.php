@@ -23,28 +23,30 @@
  */
 namespace fXmlRpc\Parser;
 
+use fXmlRpc\Exception\FaultException;
 use fXmlRpc\Exception\ParserException;
+use Fxmlrpc\Serialization\Parser;
 
-/**
- * Class XmlChecker to check is correct XML
- * @author Piotr Olaszewski <piotroo89@gmail.com>
- */
-final class XmlChecker
+abstract class ParserWrapper implements ParserInterface
 {
     /**
-     * @param string $xml
-     * @throws ParserException
+     * @var Parser
      */
-    public static function validXml($xml)
+    private $parser;
+
+    public function __construct(Parser $parser)
     {
-        $useErrors = libxml_use_internal_errors(true);
+        $this->parser = $parser;
+    }
 
-        $isCorrect = simplexml_load_string($xml);
-        if ($isCorrect === false) {
-            libxml_use_internal_errors($useErrors);
-            throw ParserException::notXml($xml);
+    public function parse($xmlString)
+    {
+        try {
+            return $this->parser->parse($xmlString);
+        } catch (\Fxmlrpc\Serialization\Exception\FaultException $e) {
+            throw FaultException::fromFault($e);
+        } catch (\Fxmlrpc\Serialization\Exception\ParserException $e) {
+            throw new ParserException($e->getMessage(), $e->getCode(), $e);
         }
-
-        libxml_use_internal_errors($useErrors);
     }
 }

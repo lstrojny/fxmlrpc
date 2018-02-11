@@ -23,24 +23,10 @@
  */
 namespace fXmlRpc\Parser;
 
-final class BestParserDelegate implements ParserInterface
+final class BestParserDelegate extends ParserWrapper
 {
-    /** @var NativeParser */
-    private $nativeParser;
-
-    /** @var XmlReaderParser */
-    private $xmlReaderParser;
-
     public function __construct($validateResponse = true)
     {
-        $this->nativeParser = new NativeParser($validateResponse);
-        $this->xmlReaderParser = new XmlReaderParser($validateResponse);
-    }
-
-    public function parse($xmlString)
-    {
-        return !NativeParser::isBiggerThanParseLimit($xmlString)
-            ? $this->nativeParser->parse($xmlString)
-            : $this->xmlReaderParser->parse($xmlString);
+        parent::__construct(new \Fxmlrpc\Serialization\Parser\BestParserDelegate($validateResponse));
     }
 }
