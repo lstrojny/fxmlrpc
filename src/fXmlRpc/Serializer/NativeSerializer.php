@@ -23,60 +23,16 @@
  */
 namespace fXmlRpc\Serializer;
 
-use DateTime;
 use fXmlRpc\Exception\MissingExtensionException;
-use fXmlRpc\Exception\SerializationException;
-use fXmlRpc\Value\Base64Interface;
 
-final class NativeSerializer implements SerializerInterface
+final class NativeSerializer extends SerializerWrapper
 {
     public function __construct()
     {
         if (!extension_loaded('xmlrpc')) {
             throw MissingExtensionException::extensionMissing('xmlrpc');
         }
-    }
 
-    /** {@inheritdoc} */
-    public function serialize($method, array $params = [])
-    {
-        return xmlrpc_encode_request(
-            $method,
-            $this->convert($params),
-            ['encoding' => 'UTF-8', 'escaping' => 'markup', 'verbosity' => 'no_white_space']
-        );
-    }
-
-    private function convert(array $params)
-    {
-        foreach ($params as $key => $value) {
-            $type = gettype($value);
-
-            if ($type === 'array') {
-                $params[$key] = $this->convert($value);
-
-            } elseif ($type === 'object') {
-                if ($value instanceof DateTime) {
-                    $params[$key] = (object) [
-                        'xmlrpc_type' => 'datetime',
-                        'scalar'      => $value->format('Ymd\TH:i:s'),
-                        'timestamp'   => $value->format('u'),
-                    ];
-
-                } elseif ($value instanceof Base64Interface) {
-                    $params[$key] = (object) [
-                        'xmlrpc_type' => 'base64',
-                        'scalar'      => $value->getDecoded(),
-                    ];
-
-                } else {
-                    $params[$key] = get_object_vars($value);
-                }
-            } elseif ($type === 'resource') {
-                throw SerializationException::invalidType($value);
-            }
-        }
-
-        return $params;
+        parent::__construct(new \Fxmlrpc\Serialization\Serializer\NativeSerializer());
     }
 }

@@ -21,8 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Value;
 
-interface Base64Interface extends \Fxmlrpc\Serialization\Value\Base64
+namespace fXmlRpc\Serializer;
+
+use fXmlRpc\Exception\SerializationException;
+use Fxmlrpc\Serialization\Exception\SerializerException;
+use Fxmlrpc\Serialization\Serializer;
+
+abstract class SerializerWrapper implements SerializerInterface
 {
+    /**
+     * @var Serializer
+     */
+    protected $serializer;
+
+    public function __construct(Serializer $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+    /** {@inheritdoc} */
+    public function serialize($method, array $params = [])
+    {
+        try {
+            return $this->serializer->serialize($method, $params);
+        } catch (SerializerException $e) {
+            throw new SerializationException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
 }

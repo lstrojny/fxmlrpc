@@ -21,8 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace fXmlRpc\Value;
 
-interface Base64Interface extends \Fxmlrpc\Serialization\Value\Base64
+namespace fXmlRpc\Serializer;
+
+use Fxmlrpc\Serialization\ExtensionSupport;
+
+trait ExtensionSupportWrapper
 {
+    /**
+     * @var ExtensionSupport
+     */
+    protected $serializer;
+
+    /** {@inheritdoc} */
+    public function enableExtension($extension)
+    {
+        $this->serializer->enableExtension($extension);
+    }
+
+    /** {@inheritdoc} */
+    public function disableExtension($extension)
+    {
+        $this->serializer->disableExtension($extension);
+    }
+
+    /** {@inheritdoc} */
+    public function isExtensionEnabled($extension)
+    {
+        return $this->serializer->isExtensionEnabled($extension);
+    }
 }

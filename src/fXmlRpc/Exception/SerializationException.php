@@ -25,8 +25,4 @@ namespace fXmlRpc\Exception;
 
 final class SerializationException extends RuntimeException
 {
-    public static function invalidType($value)
-    {
-        return new static(sprintf('Could not serialize %s of type "%s"', gettype($value), get_resource_type($value)));
-    }
 }
