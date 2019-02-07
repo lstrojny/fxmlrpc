@@ -181,7 +181,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         return [
             new \fXmlRpc\Transport\HttpAdapterTransport(
                 $messageFactory,
-                new \Http\Adapter\Guzzle5\Client(new \GuzzleHttp\Client(), $messageFactory)
+                new \Http\Adapter\Guzzle6\Client(new \GuzzleHttp\Client())
             )
         ];
     }
