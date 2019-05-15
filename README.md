@@ -1,7 +1,7 @@
 # fxmlrpc: really fast XML/RPC for PHP
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lstrojny/fxmlrpc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.svg)](http://travis-ci.org/lstrojny/fxmlrpc) [![Dependency Status](https://www.versioneye.com/user/projects/523ed7eb632bac1b0600bae8/badge.png)](https://www.versioneye.com/user/projects/523ed7eb632bac1b0600bae8) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/lstrojny/fxmlrpc.svg)](http://isitmaintained.com/project/lstrojny/fxmlrpc "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/lstrojny/fxmlrpc.svg)](http://isitmaintained.com/project/lstrojny/fxmlrpc "Percentage of issues still open")
+[![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.svg)](http://travis-ci.org/lstrojny/fxmlrpc) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/lstrojny/fxmlrpc.svg)](http://isitmaintained.com/project/lstrojny/fxmlrpc "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/lstrojny/fxmlrpc.svg)](http://isitmaintained.com/project/lstrojny/fxmlrpc "Percentage of issues still open")
 
  - A convenient, object oriented API (similar to the XML/RPC client in Zend Framework)
  - Very fast serializing and parsing of the XML payloads involved
