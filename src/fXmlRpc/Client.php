@@ -28,10 +28,10 @@ use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Parser\XmlReaderParser;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Serializer\XmlWriterSerializer;
-use fXmlRpc\Transport\HttpAdapterTransport;
+use fXmlRpc\Transport\PsrTransport;
 use fXmlRpc\Transport\TransportInterface;
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 
 final class Client implements ClientInterface
 {
@@ -73,7 +73,7 @@ final class Client implements ClientInterface
     {
         $this->uri = $uri;
         $this->transport = $transport
-            ?: new HttpAdapterTransport(MessageFactoryDiscovery::find(), HttpClientDiscovery::find());
+            ?: new PsrTransport(Psr17FactoryDiscovery::findRequestFactory(), Psr18ClientDiscovery::find());
         $this->parser = $parser ?: new XmlReaderParser();
         $this->serializer = $serializer ?: new XmlWriterSerializer();
     }
