@@ -27,7 +27,7 @@ use fXmlRpc\Exception\ParserException;
 
 class NativeParserTest extends AbstractParserTest
 {
-    public function setUp()
+    protected function setUp(): void
     {
         if (!extension_loaded('xmlrpc')) {
             $this->markTestSkipped('ext/xmlrpc not available');

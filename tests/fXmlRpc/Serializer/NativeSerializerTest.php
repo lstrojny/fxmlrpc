@@ -26,7 +26,7 @@ namespace fXmlRpc\Serializer;
 
 class NativeSerializerTest extends AbstractSerializerTest
 {
-    public function setUp()
+    protected function setUp(): void
     {
         if (!extension_loaded('xmlrpc')) {
             $this->markTestSkipped('ext/xmlrpc not available');

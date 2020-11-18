@@ -28,7 +28,7 @@ use fXmlRpc\Parser\ParserInterface;
 use fXmlRpc\Serializer\SerializerInterface;
 use fXmlRpc\Transport\TransportInterface;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ClientTest extends TestCase
 {
@@ -44,7 +44,7 @@ class ClientTest extends TestCase
     /** @var Client */
     private $client;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->serializer = $this->createMock('fXmlRpc\Serializer\SerializerInterface');
         $this->parser = $this->createMock('fXmlRpc\Parser\ParserInterface');

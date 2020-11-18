@@ -31,7 +31,7 @@ class XmlReaderParserBitmaskGeneratorTest extends TestCase
     /** @var XmlReaderParserBitmaskGenerator */
     private $generator;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->generator = new XmlReaderParserBitmaskGenerator();
     }

@@ -25,7 +25,7 @@
 namespace fXmlRpc;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class NullDecorator extends AbstractDecorator
 {
@@ -39,7 +39,7 @@ class AbstractDecoratorTest extends TestCase
     /** @var AbstractDecorator */
     private $decorator;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->wrapped = $this
             ->getMockBuilder('fXmlRpc\ClientInterface')
