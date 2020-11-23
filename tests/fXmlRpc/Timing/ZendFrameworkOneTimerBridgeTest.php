@@ -26,14 +26,14 @@ namespace fXmlRpc\Timing;
 
 use PHPUnit\Framework\TestCase;
 use Zend_Log;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ZendFrameworkOneTimerBridgeTest extends TestCase
 {
     /** @var Zend_Log|MockObject */
     private $log;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->log = $this->getMockBuilder('Zend_Log')
             ->disableOriginalClone()

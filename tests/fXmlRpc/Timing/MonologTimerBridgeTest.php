@@ -26,14 +26,14 @@ namespace fXmlRpc\Timing;
 
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MonologTimerBridgeTest extends TestCase
 {
     /** @var Logger|MockObject */
     private $monolog;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->monolog = $this
             ->getMockBuilder('Monolog\Logger')

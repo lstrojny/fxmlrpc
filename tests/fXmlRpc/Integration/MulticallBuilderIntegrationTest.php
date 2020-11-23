@@ -46,7 +46,7 @@ class MulticallBuilderIntegrationBasedIntegrationTest extends AbstractIntegratio
     /** @var integer */
     private $handlerInvoked = 0;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->markTestSkipped('Multicall integration tests need to be ported to node.js');
     }

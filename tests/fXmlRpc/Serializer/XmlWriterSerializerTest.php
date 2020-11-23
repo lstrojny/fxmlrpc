@@ -28,7 +28,7 @@ use fXmlRpc\ExtensionSupportInterface;
 
 class XmlWriterSerializerTest extends AbstractSerializerTest
 {
-    public function setUp()
+    protected function setUp(): void
     {
         $this->serializer = new XmlWriterSerializer();
     }

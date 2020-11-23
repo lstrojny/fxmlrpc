@@ -25,7 +25,7 @@
 namespace fXmlRpc;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MulticallBuilderTest extends TestCase
 {
@@ -35,7 +35,7 @@ class MulticallBuilderTest extends TestCase
     /** @var MulticallBuilderInterface */
     private $multicallBuilder;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->createMock('fXmlRpc\ClientInterface');
         $this->multicallBuilder = new MulticallBuilder($this->client);

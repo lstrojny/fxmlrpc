@@ -89,7 +89,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         static::stopServer();
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         if (static::$restartThreshold > 0 && ++self::$runCount !== static::$restartThreshold) {
             return;

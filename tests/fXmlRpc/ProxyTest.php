@@ -25,7 +25,7 @@
 namespace fXmlRpc;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ProxyTest extends TestCase
 {
@@ -35,7 +35,7 @@ class ProxyTest extends TestCase
     /** @var Proxy */
     private $proxy;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->getMockBuilder('fXmlRpc\ClientInterface')
             ->getMock();
