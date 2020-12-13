@@ -25,6 +25,7 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   coverage: pcov
                   tools: composer:v2
+                  extensions: xmlrpc, xmlreader
 
             - name: Install Node
               uses: actions/setup-node@v1
