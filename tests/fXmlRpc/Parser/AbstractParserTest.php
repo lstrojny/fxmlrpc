@@ -580,7 +580,7 @@ abstract class AbstractParserTest extends TestCase
             </methodResponse>';
 
         $value = $this->parser->parse($xml);
-        $this->assertSame('', $value);
+        $this->assertEmpty($value);
     }
 
     public function testEmptyArray_1()
