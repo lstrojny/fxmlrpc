@@ -21,7 +21,7 @@
         "zendframework/zendframework1": "~1",
         "monolog/monolog": "~1",
         "psr/log": "*",
-        "phpunit/phpunit": "^8.5 || ^9.5",
+        "phpunit/phpunit": "^8.5",
         "symfony/process": "~2.1",
         "lstrojny/hmmmath": "dev-master",
         "php-http/message": "^1.2",
