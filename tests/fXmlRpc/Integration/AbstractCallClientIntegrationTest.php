@@ -116,7 +116,7 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
             'el6' => 1234,
             'el7' => -1234,
             'el8' => 1234.12434,
-            'el9' => -1234.3245023,
+            'el9' => -1234.324502,
         );
         $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
