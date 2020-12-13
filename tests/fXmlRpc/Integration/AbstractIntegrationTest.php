@@ -65,7 +65,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         self::$server->stop();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::startServer();
     }
@@ -84,7 +84,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         }
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         static::stopServer();
     }
