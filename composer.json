@@ -24,7 +24,6 @@
         "phpunit/phpunit": "^7 || ^8 || ^9",
         "symfony/process": "~2.1",
         "lstrojny/hmmmath": "dev-master",
-        "internations/kodierungsregelwerksammlung": "dev-master",
         "php-http/message": "^1.2",
         "php-http/guzzle6-adapter": "^1.0 || ^2.0",
         "zendframework/zend-diactoros": "^1.3",
