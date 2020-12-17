@@ -21,5 +21,6 @@
     <php>
         <ini name="error_reporting" value="-1"/>
         <ini name="date.timezone" value="Europe/Berlin"/>
+        <ini name="precision" value="14"/>
     </php>
 </phpunit>
