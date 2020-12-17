@@ -23,7 +23,7 @@
         "psr/log": "*",
         "phpunit/phpunit": "^8.5",
         "symfony/process": "~2.1",
-        "lstrojny/hmmmath": "dev-master",
+        "lstrojny/hmmmath": "^0.8",
         "php-http/message": "^1.2",
         "php-http/guzzle7-adapter": "^0.1",
         "zendframework/zend-diactoros": "^1.3",
