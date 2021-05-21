@@ -65,7 +65,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         self::$server->stop();
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::startServer();
     }
@@ -84,7 +84,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         }
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         static::stopServer();
     }
@@ -181,7 +181,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
         return [
             new \fXmlRpc\Transport\HttpAdapterTransport(
                 $messageFactory,
-                new \Http\Adapter\Guzzle6\Client(new \GuzzleHttp\Client())
+                new \Http\Adapter\Guzzle7\Client(new \GuzzleHttp\Client())
             )
         ];
     }

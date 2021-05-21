@@ -25,7 +25,7 @@ namespace fXmlRpc\Transport;
 
 use Exception;
 use fXmlRpc\Client;
-use PHPUnit\Framework\MockObject\Matcher\Invocation as InvocationMatcher;
+use PHPUnit\Framework\MockObject\Rule\InvokedAtIndex as InvokedAtIndexMatcher;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -146,7 +146,7 @@ class RecorderTest extends TestCase
         $this->assertSame($this->exception, $lastException);
     }
 
-    private function transportOk(InvocationMatcher $matcher = null)
+    private function transportOk(InvokedAtIndexMatcher $matcher = null)
     {
         $matcher = $matcher ?: $this->once();
         $this->transport
@@ -155,7 +155,7 @@ class RecorderTest extends TestCase
             ->willReturn($this->expectedResponse);
     }
 
-    private function transportFail(InvocationMatcher $matcher = null)
+    private function transportFail(InvokedAtIndexMatcher $matcher = null)
     {
         $matcher = $matcher ?: $this->once();
         $this->transport

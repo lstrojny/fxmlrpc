@@ -116,7 +116,7 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
             'el6' => 1234,
             'el7' => -1234,
             'el8' => 1234.12434,
-            'el9' => -1234.3245023,
+            'el9' => -1234.324502,
         );
         $this->assertEquals($result, $client->call('system.echo', array($result)));
     }
@@ -128,8 +128,8 @@ abstract class AbstractCallClientIntegrationTest extends AbstractIntegrationTest
             $client->call('system.fault');
             $this->fail('Expected exception');
         } catch (fXmlRpc\Exception\FaultException $e) {
-            $this->assertContains('ERROR', $e->getMessage());
-            $this->assertContains('ERROR', $e->getFaultString());
+            $this->assertStringContainsString('ERROR', $e->getMessage());
+            $this->assertStringContainsString('ERROR', $e->getFaultString());
             $this->assertSame(0, $e->getCode());
             $this->assertSame(123, $e->getFaultCode());
         }
