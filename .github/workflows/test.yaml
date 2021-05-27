@@ -42,4 +42,4 @@ jobs:
               run: npm install
 
             - name: Run Tests
-              run: vendor/bin/phpunit
+              run: php -dprecision=14 vendor/bin/phpunit
