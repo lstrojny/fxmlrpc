@@ -1,7 +1,6 @@
 # fxmlrpc: really fast XML/RPC for PHP
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lstrojny/fxmlrpc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://secure.travis-ci.org/lstrojny/fxmlrpc.svg)](http://travis-ci.org/lstrojny/fxmlrpc) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/lstrojny/fxmlrpc.svg)](http://isitmaintained.com/project/lstrojny/fxmlrpc "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/lstrojny/fxmlrpc.svg)](http://isitmaintained.com/project/lstrojny/fxmlrpc "Percentage of issues still open")
+[![Test](https://github.com/lstrojny/fxmlrpc/actions/workflows/test.yaml/badge.svg)](https://github.com/lstrojny/fxmlrpc/actions/workflows/test.yaml)
 
  - A convenient, object oriented API (similar to the XML/RPC client in Zend Framework)
  - Very fast serializing and parsing of the XML payloads involved
@@ -28,7 +27,7 @@ You must choose three packages for for the business of HTTP:
   - A PSR-7 compatible HTTP message (request / response) implementation
   - A compatible HTTP message factory implementation to create HTTP messages
   - A PSR-7 compatible HTTP client
-  
+
 Two widespread message implementations are [zend-diactoros](https://github.com/zendframework/zend-diactoros) and [guzzle/psr7](https://github.com/guzzle/psr7). Message factories for both implementations are available in [php-http/message](https://github.com/php-http/message).
 For HTTP clients you can pick e.g. [php-http/guzzle6-adapter](https://github.com/php-http/guzzle6-adapter), [php-http/guzzle5-adapter](https://github.com/php-http/guzzle5-adapter), [php-http/curl-client](https://github.com/php-http/curl-client) or [php-http/buzz-adapter](https://github.com/php-http/buzz-adapter).
 

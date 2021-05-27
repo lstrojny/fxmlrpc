@@ -24,6 +24,7 @@
 
 namespace fXmlRpc\Serializer;
 
+use fXmlRpc\Value\Base64;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractSerializerTest extends TestCase
@@ -31,7 +32,25 @@ abstract class AbstractSerializerTest extends TestCase
     /** @var SerializerInterface */
     protected $serializer;
 
-    abstract public function provideTypes();
+    final public function provideTypes()
+    {
+        return array(
+            array('string', 'test string', 'test string'),
+            array('int', 2, '2'),
+            array('int', -2, '-2'),
+            array('double', 1.2, '1.2'),
+            array('double', -1.2, '-1.2'),
+            array('boolean', true, '1'),
+            array('boolean', false, '0'),
+            array(
+                'dateTime.iso8601',
+                \DateTime::createFromFormat('Y-m-d H:i:s', '1998-07-17 14:08:55', new \DateTimeZone('UTC')),
+                '19980717T14:08:55'
+            ),
+            array('base64', Base64::serialize('string'), "c3RyaW5n\n"),
+            array('string', 'Ümläuts', '&#220;ml&#228;uts'),
+        );
+    }
 
     /**
      * @dataProvider provideTypes
