@@ -27,9 +27,14 @@ use DateTime;
 use fXmlRpc\Exception\MissingExtensionException;
 use fXmlRpc\Exception\SerializationException;
 use fXmlRpc\Value\Base64Interface;
+use function base64_encode;
+use function get_object_vars;
+use function random_bytes;
 
 final class NativeSerializer implements SerializerInterface
 {
+    private static $replacementTokens = [];
+
     public function __construct()
     {
         if (!extension_loaded('xmlrpc')) {
@@ -40,37 +45,44 @@ final class NativeSerializer implements SerializerInterface
     /** {@inheritdoc} */
     public function serialize($method, array $params = [])
     {
-        return xmlrpc_encode_request(
+        $request = xmlrpc_encode_request(
             $method,
-            $this->convert($params),
+            self::convert($params, $this),
             ['encoding' => 'UTF-8', 'escaping' => 'markup', 'verbosity' => 'no_white_space']
         );
+
+        return str_replace('<string>' . self::getReplacementToken('struct') . '</string>', '<struct/>', $request);
     }
 
-    private function convert(array $params)
+    private static function convert(array $params, NativeSerializer $instance): array
     {
         foreach ($params as $key => $value) {
             $type = gettype($value);
 
             if ($type === 'array') {
-                $params[$key] = $this->convert($value);
+                $params[$key] = self::convert($value, $instance);
 
             } elseif ($type === 'object') {
                 if ($value instanceof DateTime) {
                     $params[$key] = (object) [
                         'xmlrpc_type' => 'datetime',
-                        'scalar'      => $value->format('Ymd\TH:i:s'),
-                        'timestamp'   => $value->format('u'),
+                        'scalar' => $value->format('Ymd\TH:i:s'),
+                        'timestamp' => $value->format('u'),
                     ];
 
                 } elseif ($value instanceof Base64Interface) {
                     $params[$key] = (object) [
                         'xmlrpc_type' => 'base64',
-                        'scalar'      => $value->getDecoded(),
+                        'scalar' => $value->getDecoded(),
                     ];
 
                 } else {
-                    $params[$key] = get_object_vars($value);
+                    $struct = [];
+                    foreach (get_object_vars($value) as $structKey => $structValue) {
+                        // Tricks ext/xmlrpc into always handling this as a struct
+                        $struct[$structKey . "\0"] = $structValue;
+                    }
+                    $params[$key] = empty($struct) ? self::getReplacementToken('struct') : $struct;
                 }
             } elseif ($type === 'resource') {
                 throw SerializationException::invalidType($value);
@@ -78,5 +90,10 @@ final class NativeSerializer implements SerializerInterface
         }
 
         return $params;
+    }
+
+    private static function getReplacementToken(string $scope): string
+    {
+        return self::$replacementTokens[$scope] ?? (self::$replacementTokens[$scope] = bin2hex(random_bytes(12)));
     }
 }

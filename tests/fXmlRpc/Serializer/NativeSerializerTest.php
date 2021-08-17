@@ -43,8 +43,8 @@ class NativeSerializerTest extends AbstractSerializerTest
             array('string', 'test string', 'test string'),
             array('int', 2, '2'),
             array('int', -2, '-2'),
-            array('double', 1.2, '1.200000'),
-            array('double', -1.2, '-1.200000'),
+            array('double', 1.2, '1.2'),
+            array('double', -1.2, '-1.2'),
             array('boolean', true, '1'),
             array('boolean', false, '0'),
             array(

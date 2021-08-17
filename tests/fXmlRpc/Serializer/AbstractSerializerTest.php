@@ -437,7 +437,7 @@ abstract class AbstractSerializerTest extends TestCase
         $this->serializer->serialize('method', array($resource));
     }
 
-    public function testSerialeArray()
+    public function testSerializeArray()
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
             <methodCall>
@@ -460,6 +460,41 @@ abstract class AbstractSerializerTest extends TestCase
         $this->assertXmlStringEqualsXmlString(
             $xml,
             $this->serializer->serialize('method', [['_FCGI_' => 'some value']])
+        );
+    }
+
+    public function testSerializeArrayBug()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodCall>
+                <methodName>method</methodName>
+                <params>
+                    <param>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>0</name>
+                                    <value>
+                                        <string>foo</string>
+                                    </value>
+                                </member>
+                            </struct>
+                        </value>
+                    </param>
+                    <param>
+                        <value>
+                            <struct/>
+                        </value>
+                    </param>
+                </params>
+            </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize(
+                'method',
+                [(object)  [0 => 'foo'], (object) []]
+            )
         );
     }
 }
