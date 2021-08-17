@@ -188,6 +188,7 @@ abstract class AbstractSerializerTest extends TestCase
             $xml,
             $this->serializer->serialize('method', array(array(1 => 'ONE', 2 => 'TWO')))
         );
+        var_dump(ini_get('precision'));
     }
 
     public function testSerializingArraysNotStartingWithZeroWithGaps()
