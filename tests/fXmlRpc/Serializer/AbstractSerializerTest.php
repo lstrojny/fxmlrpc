@@ -164,14 +164,22 @@ abstract class AbstractSerializerTest extends TestCase
                     <methodName>method</methodName>
                     <params>
                         <param>
-                            <value>
-                                <array>
-                                    <data>
-                                        <value><string>ONE</string></value>
-                                        <value><string>TWO</string></value>
-                                    </data>
-                                </array>
-                            </value>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>1</name>
+                                    <value>
+                                        <string>ONE</string>
+                                    </value>
+                                </member>
+                                <member>
+                                    <name>2</name>
+                                    <value>
+                                        <string>TWO</string>
+                                    </value>
+                                </member>
+                            </struct>
+                        </value>
                         </param>
                     </params>
                 </methodCall>';
@@ -494,6 +502,54 @@ abstract class AbstractSerializerTest extends TestCase
             $this->serializer->serialize(
                 'method',
                 [(object)  [0 => 'foo'], (object) []]
+            )
+        );
+    }
+
+    public function testSerializeNonContiguousArray()
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <methodCall>
+                <methodName>method</methodName>
+                <params>
+                    <param>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>1</name>
+                                    <value>
+                                        <string>foo</string>
+                                    </value>
+                                </member>
+                            </struct>
+                        </value>
+                    </param>
+                    <param>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>0</name>
+                                    <value>
+                                        <string>foo</string>
+                                    </value>
+                                </member>
+                                <member>
+                                    <name>2</name>
+                                    <value>
+                                        <string>bar</string>
+                                    </value>
+                                </member>
+                            </struct>
+                        </value>
+                    </param>
+                </params>
+            </methodCall>';
+
+        $this->assertXmlStringEqualsXmlString(
+            $xml,
+            $this->serializer->serialize(
+                'method',
+                [[1 => 'foo'], [0 => 'foo', 2 => 'bar']]
             )
         );
     }

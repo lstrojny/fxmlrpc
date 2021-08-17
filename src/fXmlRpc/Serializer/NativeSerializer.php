@@ -47,22 +47,40 @@ final class NativeSerializer implements SerializerInterface
     {
         $request = xmlrpc_encode_request(
             $method,
-            self::convert($params, $this),
+            self::convert($params),
             ['encoding' => 'UTF-8', 'escaping' => 'markup', 'verbosity' => 'no_white_space']
         );
 
         return str_replace('<string>' . self::getReplacementToken('struct') . '</string>', '<struct/>', $request);
     }
 
-    private static function convert(array $params, NativeSerializer $instance): array
+    private static function convert(array $params): array
     {
         foreach ($params as $key => $value) {
             $type = gettype($value);
 
             if ($type === 'array') {
-                $params[$key] = self::convert($value, $instance);
 
-            } elseif ($type === 'object') {
+                /** Find out if it is a struct or an array */
+                $expectedIndex = 0;
+                $isStruct = false;
+                foreach ($value as $actualIndex => &$child) {
+                    if ($expectedIndex !== $actualIndex) {
+                        $isStruct = true;
+                        break;
+                    }
+                    $expectedIndex++;
+                }
+                $value = self::convert($value);
+                if ($isStruct) {
+                    $type = 'object';
+                    $value = (object) $value;
+                } else {
+                    $params[$key] = $value;
+                }
+            }
+
+            if ($type === 'object') {
                 if ($value instanceof DateTime) {
                     $params[$key] = (object) [
                         'xmlrpc_type' => 'datetime',
