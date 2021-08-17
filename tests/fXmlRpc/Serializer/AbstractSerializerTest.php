@@ -32,14 +32,19 @@ abstract class AbstractSerializerTest extends TestCase
     /** @var SerializerInterface */
     protected $serializer;
 
+    protected static function floatToString(float $float): string
+    {
+        return $float;
+    }
+
     public function provideTypes(): array
     {
         return array(
             array('string', 'test string', 'test string'),
             array('int', 2, '2'),
             array('int', -2, '-2'),
-            array('double', 1.2, '1.2'),
-            array('double', -1.2, '-1.2'),
+            array('double', 1.2, static::floatToString(1.2)),
+            array('double', -1.2, static::floatToString(-1.2)),
             array('boolean', true, '1'),
             array('boolean', false, '0'),
             array(

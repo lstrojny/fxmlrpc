@@ -24,8 +24,15 @@
 
 namespace fXmlRpc\Serializer;
 
+use function getenv;
+
 class NativeSerializerTest extends AbstractSerializerTest
 {
+    protected static function floatToString(float $float): string
+    {
+        return getenv('GITHUB_ACTIONS') === 'true' ? sprintf('%f', $float) : $float;
+    }
+
     protected function setUp(): void
     {
         if (!extension_loaded('xmlrpc')) {
