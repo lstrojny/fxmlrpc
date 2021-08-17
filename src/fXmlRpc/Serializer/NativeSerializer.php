@@ -70,16 +70,13 @@ final class NativeSerializer implements SerializerInterface
                     }
                     $expectedIndex++;
                 }
-                $value = self::convert($value);
                 if ($isStruct) {
-                    $type = 'object';
                     $value = (object) $value;
+                    goto struct;
                 } else {
-                    $params[$key] = $value;
+                    $params[$key] = self::convert($value);
                 }
-            }
-
-            if ($type === 'object') {
+            } elseif ($type === 'object') {
                 if ($value instanceof DateTime) {
                     $params[$key] = (object) [
                         'xmlrpc_type' => 'datetime',
@@ -94,9 +91,11 @@ final class NativeSerializer implements SerializerInterface
                     ];
 
                 } else {
+                    struct:
                     $struct = [];
-                    foreach (self::convert(get_object_vars($value)) as $structKey => $structValue) {
-                        // Tricks ext/xmlrpc into always handling this as a struct
+                    $value = self::convert(get_object_vars($value));
+                    foreach ($value as $structKey => $structValue) {
+                        // Tricks ext/xmlrpc into always handling this as a struct while still discarding the null-byte
                         $struct[$structKey . "\0"] = $structValue;
                     }
                     $params[$key] = empty($struct) ? self::getReplacementToken('struct') : $struct;
