@@ -24,6 +24,7 @@
 
 namespace fXmlRpc\Serializer;
 
+use fXmlRpc\Value\Base64;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractSerializerTest extends TestCase
@@ -31,7 +32,25 @@ abstract class AbstractSerializerTest extends TestCase
     /** @var SerializerInterface */
     protected $serializer;
 
-    abstract public function provideTypes();
+    public function provideTypes(): array
+    {
+        return array(
+            array('string', 'test string', 'test string'),
+            array('int', 2, '2'),
+            array('int', -2, '-2'),
+            array('double', 1.2, '1.2'),
+            array('double', -1.2, '-1.2'),
+            array('boolean', true, '1'),
+            array('boolean', false, '0'),
+            array(
+                'dateTime.iso8601',
+                \DateTime::createFromFormat('Y-m-d H:i:s', '1998-07-17 14:08:55', new \DateTimeZone('UTC')),
+                '19980717T14:08:55'
+            ),
+            array('base64', Base64::serialize('string'), "c3RyaW5n\n"),
+            array('string', 'Ümläuts', '&#220;ml&#228;uts'),
+        );
+    }
 
     /**
      * @dataProvider provideTypes
@@ -186,9 +205,8 @@ abstract class AbstractSerializerTest extends TestCase
 
         $this->assertXmlStringEqualsXmlString(
             $xml,
-            $this->serializer->serialize('method', array(array(1 => 'ONE', 2 => 'TWO')))
+            $this->serializer->serialize('method', [[1 => 'ONE', 2 => 'TWO']])
         );
-        var_dump(ini_get('precision'));
     }
 
     public function testSerializingArraysNotStartingWithZeroWithGaps()
@@ -487,6 +505,25 @@ abstract class AbstractSerializerTest extends TestCase
                                         <string>foo</string>
                                     </value>
                                 </member>
+                                <member>
+                                    <name>1</name>
+                                    <value>
+                                        <struct>
+                                            <member>
+                                                <name>0</name>
+                                                <value>
+                                                    <string>one</string>
+                                                </value>
+                                            </member>
+                                            <member>
+                                                <name>1</name>
+                                                <value>
+                                                    <string>two</string>
+                                                </value>
+                                            </member>
+                                        </struct>
+                                    </value>
+                                </member>
                             </struct>
                         </value>
                     </param>
@@ -502,7 +539,7 @@ abstract class AbstractSerializerTest extends TestCase
             $xml,
             $this->serializer->serialize(
                 'method',
-                [(object)  [0 => 'foo'], (object) []]
+                [(object)  [0 => 'foo', 1 => (object) ['one', 'two']], (object) []]
             )
         );
     }

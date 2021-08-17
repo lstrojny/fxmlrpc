@@ -27,7 +27,6 @@ use DateTime;
 use fXmlRpc\Exception\MissingExtensionException;
 use fXmlRpc\Exception\SerializationException;
 use fXmlRpc\Value\Base64Interface;
-use function base64_encode;
 use function get_object_vars;
 use function random_bytes;
 
@@ -96,7 +95,7 @@ final class NativeSerializer implements SerializerInterface
 
                 } else {
                     $struct = [];
-                    foreach (get_object_vars($value) as $structKey => $structValue) {
+                    foreach (self::convert(get_object_vars($value)) as $structKey => $structValue) {
                         // Tricks ext/xmlrpc into always handling this as a struct
                         $struct[$structKey . "\0"] = $structValue;
                     }
