@@ -24,10 +24,15 @@
 
 namespace fXmlRpc\Serializer;
 
-use fXmlRpc\Value\Base64;
+use function getenv;
 
 class NativeSerializerTest extends AbstractSerializerTest
 {
+    protected static function floatToString(float $float): string
+    {
+        return getenv('GITHUB_ACTIONS') === 'true' ? sprintf('%f', $float) : $float;
+    }
+
     protected function setUp(): void
     {
         if (!extension_loaded('xmlrpc')) {
@@ -35,25 +40,5 @@ class NativeSerializerTest extends AbstractSerializerTest
         }
 
         $this->serializer = new NativeSerializer();
-    }
-
-    public function provideTypes()
-    {
-        return array(
-            array('string', 'test string', 'test string'),
-            array('int', 2, '2'),
-            array('int', -2, '-2'),
-            array('double', 1.2, '1.200000'),
-            array('double', -1.2, '-1.200000'),
-            array('boolean', true, '1'),
-            array('boolean', false, '0'),
-            array(
-                'dateTime.iso8601',
-                \DateTime::createFromFormat('Y-m-d H:i:s', '1998-07-17 14:08:55', new \DateTimeZone('UTC')),
-                '19980717T14:08:55'
-            ),
-            array('base64', Base64::serialize('string'), "c3RyaW5n\n"),
-            array('string', 'Ümläuts', '&#220;ml&#228;uts'),
-        );
     }
 }
