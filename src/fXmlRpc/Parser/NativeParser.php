@@ -70,8 +70,8 @@ final class NativeParser implements ParserInterface
         }
 
         $toBeVisited = [&$result];
-        while (isset($toBeVisited[0]) && $value = &$toBeVisited[0]) {
-
+        while (isset($toBeVisited[0])) {
+            $value = &$toBeVisited[0];
             $type = gettype($value);
             if ($type === 'object') {
                 $xmlRpcType = $value->{'xmlrpc_type'};
