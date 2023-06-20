@@ -27,8 +27,8 @@ use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TransportException;
 use Http\Client\Exception as ClientException;
 use Http\Client\Exception\HttpException as PsrHttpException;
-use Http\Message\MessageFactory;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 final class HttpAdapterTransport implements TransportInterface
 {
@@ -36,7 +36,7 @@ final class HttpAdapterTransport implements TransportInterface
 
     private $client;
 
-    public function __construct(MessageFactory $messageFactory, ClientInterface $client)
+    public function __construct(RequestFactoryInterface $messageFactory, ClientInterface $client)
     {
         $this->client = $client;
         $this->messageFactory = $messageFactory;
