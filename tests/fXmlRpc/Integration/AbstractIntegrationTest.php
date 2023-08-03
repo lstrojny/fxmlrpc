@@ -177,7 +177,7 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
 
     private function getTransport()
     {
-        $messageFactory = new \Http\Message\MessageFactory\DiactorosMessageFactory();
+        $messageFactory = new \Laminas\Diactoros\RequestFactory();
         return [
             new \fXmlRpc\Transport\HttpAdapterTransport(
                 $messageFactory,
