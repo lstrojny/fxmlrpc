@@ -38,7 +38,7 @@ composer require php-http/message php-http/guzzle7-adapter
 ```
 
 ### Instantiating `HttpAdapterTransport`
-An example instantiation using Guzzle6:
+An example instantiation using Guzzle7:
 ```php
 $httpClient = new GuzzleHttp\Client();
 $httpClient->...();
