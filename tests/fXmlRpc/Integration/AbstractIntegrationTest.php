@@ -178,9 +178,11 @@ abstract class AbstractIntegrationTest extends AbstractClientBasedIntegrationTes
     private function getTransport()
     {
         $messageFactory = new \Laminas\Diactoros\RequestFactory();
+        $streamFactory = new \Laminas\Diactoros\StreamFactory();
         return [
             new \fXmlRpc\Transport\HttpAdapterTransport(
                 $messageFactory,
+                $streamFactory,
                 new \Http\Adapter\Guzzle7\Client(new \GuzzleHttp\Client())
             )
         ];
