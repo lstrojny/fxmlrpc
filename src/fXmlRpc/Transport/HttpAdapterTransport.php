@@ -25,45 +25,44 @@ namespace fXmlRpc\Transport;
 
 use fXmlRpc\Exception\HttpException;
 use fXmlRpc\Exception\TransportException;
-use Http\Client\Exception as ClientException;
-use Http\Client\Exception\HttpException as PsrHttpException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 final class HttpAdapterTransport implements TransportInterface
 {
     private $messageFactory;
 
+    private $streamFactory;
+
     private $client;
 
-    public function __construct(RequestFactoryInterface $messageFactory, ClientInterface $client)
-    {
+    public function __construct(
+        RequestFactoryInterface $messageFactory,
+        StreamFactoryInterface $streamFactory,
+        ClientInterface $client
+    ) {
         $this->client = $client;
         $this->messageFactory = $messageFactory;
+        $this->streamFactory = $streamFactory;
     }
 
     /** {@inheritdoc} */
     public function send($endpoint, $payload)
     {
         try {
-            $request = $this->messageFactory->createRequest(
-                'POST',
-                $endpoint,
-                ['Content-Type' => 'text/xml; charset=UTF-8'],
-                $payload
-            );
+            $request = $this->messageFactory->createRequest('POST', $endpoint)
+                ->withHeader('Content-Type', 'text/xml; charset=UTF-8')
+                ->withBody($this->streamFactory->createStream($payload));
 
             $response = $this->client->sendRequest($request);
             if ($response->getStatusCode() !== 200) {
                 throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
             }
 
-            return (string) $response->getBody();
-
-        } catch (PsrHttpException $e) {
-            $response = $e->getResponse();
-            throw HttpException::httpError($response->getReasonPhrase(), $response->getStatusCode());
-        } catch (ClientException $e) {
+            return (string)$response->getBody();
+        } catch (ClientExceptionInterface $e) {
             throw TransportException::transportError($e);
         }
     }

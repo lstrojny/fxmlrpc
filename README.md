@@ -12,7 +12,7 @@
  - Implements all known XML/RPC extensions
 
 ## Upgrading to 0.23.x
-Instead of `php-http/message-factory`, we now use the PSR-7 compatible `RequestFactoryInterface`. You will have to change your custom HTTP client implementation and pass a `Psr\Http\Message\RequestFactoryInterface` implementation and a `Http\Client\HttpClient` to the `HttpAdapterTransport`.
+Instead of `php-http/message-factory`, we now use the PSR-7 compatible `RequestFactoryInterface`. You will have to change your custom HTTP client implementation and pass a `Psr\Http\Message\RequestFactoryInterface` implementation, a `Psr\Http\Message\StreamFactoryInterface` and a `Http\Client\HttpClient` to the `HttpAdapterTransport`.
 See below for details.
 
 ## Installation
@@ -26,7 +26,7 @@ composer require lstrojny/fxmlrpc
 
 You must choose three packages for for the business of HTTP:
 - A PSR-7 compatible HTTP message (request / response) implementation
-- A compatible HTTP RequestFactoryInterface implementation to create HTTP messages
+- A compatible HTTP RequestFactoryInterface and StreamFactoryInterface implementations to create HTTP messages
 - A PSR-7 compatible HTTP client
 Two widespread message implementations are [laminas/laminas-diactoros](https://github.com/laminas/laminas-diactoros) and [guzzle/psr7](https://github.com/guzzle/psr7). Message factories for both implementations are available in [php-http/message](https://github.com/php-http/message).
 For HTTP clients you can pick e.g.[php-http/guzzle7-adapter](https://github.com/php-http/guzzle7-adapter), [php-http/guzzle6-adapter](https://github.com/php-http/guzzle6-adapter), [php-http/guzzle5-adapter](https://github.com/php-http/guzzle5-adapter), [php-http/curl-client](https://github.com/php-http/curl-client) or [php-http/buzz-adapter](https://github.com/php-http/buzz-adapter).
@@ -46,6 +46,7 @@ $client = new fXmlRpc\Client(
     'http://endpoint.com',
     new fXmlRpc\Transport\HttpAdapterTransport(
         new \Http\Message\MessageFactory\DiactorosMessageFactory(),
+        new \Http\Message\StreamFactory\DiactorosStreamFactory(),
         new \Http\Adapter\Guzzle7\Client($httpClient)
     )
 );
