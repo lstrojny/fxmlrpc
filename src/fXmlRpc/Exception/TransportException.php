@@ -32,6 +32,6 @@ final class TransportException extends RuntimeException
         $message = $error instanceof Exception ? $error->getMessage() : $error;
         $previous = $error instanceof Exception ? $error : null;
 
-        return new static('Transport error occurred: ' . $message, null, $previous);
+        return new static('Transport error occurred: ' . $message, 0, $previous);
     }
 }
