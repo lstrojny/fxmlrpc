@@ -50,11 +50,11 @@ interface MulticallBuilderInterface
      *
      * @param string $methodName
      * @param array $params
-     * @param callable $onSuccess
-     * @param callable $onError
+     * @param null|callable $onSuccess
+     * @param null|callable $onError
      * @return MulticallBuilderInterface
      */
-    public function addCall($methodName, array $params = [], callable $onSuccess = null, callable $onError = null);
+    public function addCall($methodName, array $params = [], ?callable $onSuccess = null, ?callable $onError = null);
 
     /**
      * Send the multicall request to the server

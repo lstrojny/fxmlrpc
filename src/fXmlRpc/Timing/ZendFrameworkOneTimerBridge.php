@@ -34,9 +34,9 @@ final class ZendFrameworkOneTimerBridge extends AbstractTimerBridge
      * Allows passing custom log level and message template (with sprintf() control characters) for log message
      * customization
      *
-     * @param Log $logger
-     * @param integer  $level
-     * @param string   $messageTemplate
+     * @param Log           $logger
+     * @param null|integer  $level
+     * @param null|string   $messageTemplate
      */
     public function __construct(Log $logger, $level = null, $messageTemplate = null)
     {
