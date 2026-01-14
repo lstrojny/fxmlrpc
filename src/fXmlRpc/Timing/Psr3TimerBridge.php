@@ -34,9 +34,9 @@ final class Psr3TimerBridge extends AbstractTimerBridge
      * Allows passing custom log level and message template (with sprintf() control characters) for log message
      * customization
      *
-     * @param LoggerInterface $logger
-     * @param integer         $level
-     * @param string          $messageTemplate
+     * @param LoggerInterface      $logger
+     * @param null|integer         $level
+     * @param null|string          $messageTemplate
      */
     public function __construct(LoggerInterface $logger, $level = null, $messageTemplate = null)
     {

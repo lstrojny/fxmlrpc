@@ -52,7 +52,7 @@ final class MulticallBuilder implements MulticallBuilderInterface
     }
 
     /** {@inheritdoc} */
-    public function addCall($methodName, array $params = [], callable $onSuccess = null, callable $onError = null)
+    public function addCall($methodName, array $params = [], ?callable $onSuccess = null, ?callable $onError = null)
     {
         if (!is_string($methodName)) {
             throw InvalidArgumentException::expectedParameter(1, 'string', $methodName);

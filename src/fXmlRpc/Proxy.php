@@ -40,7 +40,7 @@ class Proxy
     /**
      * @param ClientInterface $client
      * @param string          $namespaceSeparator
-     * @param string          $namespace
+     * @param null|string     $namespace
      */
     public function __construct(ClientInterface $client, $namespaceSeparator = '.', $namespace = null)
     {
